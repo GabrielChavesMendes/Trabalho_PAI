@@ -13,13 +13,9 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Dados locais grandes: versionar SOMENTE o CSV oficial em dados/
-dados/*
-!dados/.gitkeep
-!dados/BreastDCEDL_SPY1_min_crop_metadata.csv
-# Preservar os exemplos históricos de dataset/; ignorar novas entradas
+# Dataset: versionar apenas metadados oficiais, não imagens volumosas
 dataset/*
-!dataset/.gitkeep
+!dataset/BreastDCEDL_SPY1_min_crop_metadata.csv
 **/*.nii
 **/*.nii.gz
 **/*.tar.gz
@@ -48,4 +44,3 @@ resultados/*.npz
 *.fls
 *.fdb_latexmk
 
-# O ZIP final deve ser criado localmente e enviado no Canvas, não ao Git.
