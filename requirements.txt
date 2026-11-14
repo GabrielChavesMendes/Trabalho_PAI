@@ -9,7 +9,8 @@ opencv-python
 Pillow
 torch
 torchvision
-# tkinter normalmente é fornecido com a instalação padrão do Python no Windows.
+# Tkinter faz parte do Python padrão no Windows: verificar com `python -m tkinter`.
+# Não usar `pip install tkinter`. Em Linux, pode exigir pacote do sistema python3-tk.
 
 # Testes de desenvolvimento
 pytest
