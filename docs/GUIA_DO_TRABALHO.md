@@ -1,6 +1,6 @@
 # Guia de estudo e implementação — letras A–E
 
-Este guia é um roteiro de entendimento do grupo, não substitui o enunciado `trab.pdf`.
+Este guia é um roteiro de entendimento do grupo. O enunciado PDF original deve ficar em `docs/enunciado.pdf` (**ainda pendente de commit**).
 
 ## Conceitos principais
 - **pCR:** pathological complete response, resposta patológica completa ao tratamento. Classe 0 = ausente; classe 1 = presente.
