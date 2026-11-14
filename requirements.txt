@@ -10,3 +10,6 @@ Pillow
 torch
 torchvision
 # tkinter normalmente é fornecido com a instalação padrão do Python no Windows.
+
+# Testes de desenvolvimento
+pytest
