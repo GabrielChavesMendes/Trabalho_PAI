@@ -1,0 +1,49 @@
+# Ambientes Python e ferramentas
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Dataset real e metadados locais (não versionar 1,3 GB)
+dados/*
+!dados/.gitkeep
+dataset/*
+!dataset/.gitkeep
+**/*.nii
+**/*.nii.gz
+**/*.tar.gz
+**/*.zip
+
+# Checkpoints e artefatos pesados
+checkpoints/*
+!checkpoints/.gitkeep
+*.pth
+*.pt
+*.ckpt
+*.onnx
+runs/
+wandb/
+lightning_logs/
+resultados/*.npy
+resultados/*.npz
+
+# LaTeX temporários
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# O ZIP final deve ser criado localmente e enviado no Canvas, não ao Git.
