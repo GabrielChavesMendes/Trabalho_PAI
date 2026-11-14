@@ -30,13 +30,25 @@ Métricas: **sensibilidade, especificidade, precisão, acurácia e F1**, além d
 Carregar modelo realmente treinado, prever probabilidade pCR e sobrepor mapa de calor que evidencia regiões influentes para essa previsão. Comparar visualmente com a máscara — Grad-CAM não é segmentação.
 
 ## Passos de execução (a detalhar quando código estiver pronto)
-1. Configurar ambiente, extrair 1,3 GB em `dados/` e copiar CSV oficial.
+1. Configurar ambiente e extrair 1,3 GB do [Zenodo](https://zenodo.org/records/18114231) em `dados/BreastDCEDL_ISPY1_min_crop/` com subpastas `dce/` e `mask/`. CSV oficial já versionado em `dados/`.
 2. Rodar inspeção CSV/pacientes e pré-processamento do dataset.
 3. Validar a GUI e o corte/segmentação.
 4. Testar formatos dos 3 modelos e treinamento em pequeno subconjunto de treino **apenas para depuração**.
 5. Executar treinamento completo e avaliações comparativas, exportar métricas/checkpoints.
 6. Demonstrar inferência + Grad-CAM em GUI sem retreinamento.
 7. Integrar tudo no Python único, compilar relatório LaTeX e preparar entregas separadas.
+
+## Teste prático do primeiro módulo (#2)
+
+Executar na raiz do repositório:
+
+```bash
+python modulos/modulo_dataset.py
+python modulos/modulo_dataset.py --verificar-arquivos
+python -m pytest -q
+```
+
+O primeiro valida 172 pacientes, rótulos, índices de fases e conta os códigos de partição. O segundo confirma a existência das três imagens DCE e da máscara de cada paciente (depende dos 1,3 GB baixados). O terceiro roda testes automatizados de metadados e de caminhos. A leitura e visualização dos voxels será implementada na etapa seguinte.
 
 ## Pendências de validação
 - Verificar nos READMEs oficiais o significado exato de `test=0/1/2` antes de considerar treino/validação/teste definitivos.
