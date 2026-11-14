@@ -13,9 +13,11 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Dataset real e metadados locais (não versionar 1,3 GB)
+# Dados locais grandes: versionar SOMENTE o CSV oficial em dados/
 dados/*
 !dados/.gitkeep
+!dados/BreastDCEDL_SPY1_min_crop_metadata.csv
+# Preservar os exemplos históricos de dataset/; ignorar novas entradas
 dataset/*
 !dataset/.gitkeep
 **/*.nii
