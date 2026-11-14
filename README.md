@@ -4,6 +4,17 @@
 
 > **Estado:** preparação e implementação em andamento. A branch `develop` contém a estrutura inicial, sem substituir a implementação anterior preservada na `main`.
 
+## Integrantes e professor
+
+**Grupo G10**
+
+- Felipe Barros Ratton de Almeida
+- Gustavo Henrique Rodrigues de Castro
+- Gabriel Chaves Mendes
+- Alessandra Faria Rodrigues
+
+**Professor:** Alexei Manso Correa Machado
+
 ## Objetivo
 Treinar e avaliar **três modelos** (CNN autoral ≥5 camadas com parâmetros, ResNet50 ImageNet e MobileNetV2) para prever pCR a partir de imagens DCE-MRI. Comparar uma fase temporal isolada com a combinação de três fases e ao menos duas estratégias de cortes de volumes 3D.
 
@@ -18,7 +29,7 @@ Dataset obrigatório: **BreastDCEDL ISPY1 MinCrop**. Usar o link exato do enunci
 
 A estrutura local recomendada é:
 ```text
-dados/
+dataset/
 ├── BreastDCEDL_SPY1_min_crop_metadata.csv
 └── BreastDCEDL_ISPY1_min_crop/
     ├── dce/
@@ -28,14 +39,14 @@ O CSV oficial do Canvas possui **172 pacientes I-SPY1** (123 pCR=0, 49 pCR=1). O
 
 **Não incluir os arquivos de imagem nem pesos no Git ou no ZIP final.** Os arquivos de exemplo NIfTI e o CSV geral antigo foram removidos da branch `develop` para evitar confusão. Permanecem acessíveis no histórico Git. O `.gitignore` bloqueia a adição de novos volumes.
 
-## Enunciado oficial (arquivo pendente)
+## Enunciado oficial
 
-O PDF original do professor deve ser salvo em **`docs/enunciado.pdf`**. Esse arquivo ainda **não foi incluído nesta branch**, porque a integração atual não oferece upload direto do binário original. Faça o commit local do PDF para concluir a documentação do projeto.
+O PDF do enunciado já está versionado em **[`docs/enunciado.pdf`](docs/enunciado.pdf)**.
 
 ## Começando
 1. Instalar Python 3.10+ e ambiente virtual.
 2. Instalar dependências: `pip install -r requirements.txt`. Para PyTorch com GPU NVIDIA, escolher a distribuição compatível com o driver no site oficial.
-3. Baixar o arquivo do **link oficial exato** acima e extrair em `dados/BreastDCEDL_ISPY1_min_crop/`, de modo que `dce/` e `mask/` estejam imediatamente dentro dessa pasta. Se o descompactador produziu duas pastas com o mesmo nome, mover apenas a pasta interna que contém `dce/` e `mask/`. O CSV oficial do Canvas já está versionado em `dados/`.
+3. Baixar o arquivo do **link oficial exato** acima e extrair em `dataset/BreastDCEDL_ISPY1_min_crop/`, de modo que `dce/` e `mask/` estejam imediatamente dentro dessa pasta. Se o descompactador produziu duas pastas com o mesmo nome, mover apenas a pasta interna que contém `dce/` e `mask/`. O CSV oficial do Canvas já está versionado em `dataset/`.
 4. Implementar e executar cada etapa via as instruções do guia em `docs/GUIA_DO_TRABALHO.md`. Os módulos ainda são **temporários** e deverão ser integrados em **um único Python** na entrega.
 
 ## Tkinter no Windows
@@ -55,9 +66,9 @@ python -m pytest -q
 O segundo comando verifica **fisicamente** todas as fases DCE e máscaras: só executá-lo depois de extrair o dataset na estrutura indicada. O terceiro executa os testes do código de preparação. **Ainda não foi implementado treinamento ou leitura do conteúdo dos volumes**.
 
 ## Pastas
-- `docs/`: guia de conceitos/execução; adicionar o PDF original do professor como `docs/enunciado.pdf` (pendência de upload binário).
+- `docs/`: guia de conceitos/execução e o PDF original `docs/enunciado.pdf`.
 - `modulos/`: desenvolvimento das letras A–E antes da integração.
-- `dados/`: CSV oficial versionado; volumes locais NIfTI ignorados pelo Git.
+- `dataset/`: CSV oficial versionado; pasta `BreastDCEDL_ISPY1_min_crop/` baixada localmente e ignorada pelo Git.
 - `resultados/`: tabelas e gráficos compactos dos experimentos.
 - `checkpoints/`: pesos treinados, ignorados pelo Git.
 - `entrega_final_G10/`: material final a empacotar para Canvas; comprimir o conteúdo como `G10.zip`.
