@@ -8,4 +8,4 @@ Aqui serão construídos os componentes separadamente para testes e aprendizado:
 - `modulo_treinamento.py` — treinamento, validação, métricas e checkpoints; letra D.
 - `modulo_gradcam.py` — explicabilidade e visualização; letra E.
 
-**Os arquivos ainda NÃO foram implementados nesta branch**: nomes acima são contrato proposto. Na entrega, o código precisa estar integrado em **um único arquivo Python** funcional.
+**O módulo `modulo_dataset.py` já possui a primeira implementação de validação do CSV e construção de manifesto de arquivos.** Os demais módulos ainda precisam ser implementados: Na entrega, o código precisa estar integrado em **um único arquivo Python** funcional.
