@@ -1,0 +1,14 @@
+# Dependências de desenvolvimento
+numpy
+pandas
+scipy
+nibabel
+matplotlib
+scikit-learn
+opencv-python
+Pillow
+torch
+torchvision
+
+# Testes de desenvolvimento
+pytest
