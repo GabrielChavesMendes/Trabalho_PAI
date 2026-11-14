@@ -30,7 +30,7 @@ Métricas: **sensibilidade, especificidade, precisão, acurácia e F1**, além d
 Carregar modelo realmente treinado, prever probabilidade pCR e sobrepor mapa de calor que evidencia regiões influentes para essa previsão. Comparar visualmente com a máscara — Grad-CAM não é segmentação.
 
 ## Passos de execução (a detalhar quando código estiver pronto)
-1. Configurar ambiente e extrair 1,3 GB do [Zenodo](https://zenodo.org/records/18114231) em `dados/BreastDCEDL_ISPY1_min_crop/` com subpastas `dce/` e `mask/`. CSV oficial já versionado em `dados/`.
+1. Configurar ambiente e extrair 1,3 GB do [link exato do enunciado](https://zenodo.org/records/18114231/files/BreastDCEDL_ISPY1_min_crop.tar.gz?download=1) em `dados/BreastDCEDL_ISPY1_min_crop/` com subpastas `dce/` e `mask/`. CSV oficial já versionado em `dados/`.
 2. Rodar inspeção CSV/pacientes e pré-processamento do dataset.
 3. Validar a GUI e o corte/segmentação.
 4. Testar formatos dos 3 modelos e treinamento em pequeno subconjunto de treino **apenas para depuração**.
@@ -57,3 +57,7 @@ O primeiro valida 172 pacientes, rótulos, índices de fases e conta os códigos
 
 ## Arquivos obrigatórios
 Consultar `trab.pdf`: Python único, código com identificação dos integrantes, relatório SBC/LaTeX e PDF até 12 páginas, fontes/figuras, declaração de IA e ZIP até 10MB **sem dataset/pesos**. Os pesos são enviados na tarefa separada.
+
+## Interface Tkinter
+
+No Python padrão do Windows, verificar a instalação com `python -m tkinter`; não instalar por `pip install tkinter`, pois ele não é uma dependência publicada dessa forma no PyPI. Caso esteja ausente, corrigir a instalação do Python/Tcl-Tk.
