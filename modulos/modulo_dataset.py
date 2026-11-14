@@ -86,8 +86,8 @@ def resumo(tabela: pd.DataFrame) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description='Validar CSV e arquivos do I-SPY1 MinCrop (Issue #2).')
-    parser.add_argument('--csv', default='dados/BreastDCEDL_SPY1_min_crop_metadata.csv')
-    parser.add_argument('--dataset', default='dados/BreastDCEDL_ISPY1_min_crop')
+    parser.add_argument('--csv', default='dataset/BreastDCEDL_SPY1_min_crop_metadata.csv')
+    parser.add_argument('--dataset', default='dataset/BreastDCEDL_ISPY1_min_crop')
     parser.add_argument('--verificar-arquivos', action='store_true', help='Conferir fisicamente todos os NIfTI')
     args = parser.parse_args()
     try:
