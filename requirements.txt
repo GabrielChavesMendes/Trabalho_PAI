@@ -1,0 +1,12 @@
+# Dependências de desenvolvimento — alinhar versões entre os integrantes após testes
+numpy
+pandas
+scipy
+nibabel
+matplotlib
+scikit-learn
+opencv-python
+Pillow
+torch
+torchvision
+# tkinter normalmente é fornecido com a instalação padrão do Python no Windows.
