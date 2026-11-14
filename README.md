@@ -9,12 +9,12 @@ Treinar e avaliar **três modelos** (CNN autoral ≥5 camadas com parâmetros, R
 
 ## Dataset — leitura obrigatória para todos os integrantes
 
-**Download do dataset de 1,3 GB:** https://zenodo.org/records/18114231 (selecionar somente **BreastDCEDL_ISPY1_min_crop.tar.gz**). Link direto: https://zenodo.org/records/18114231/files/BreastDCEDL_ISPY1_min_crop.tar.gz?download=1
+**Download oficial (link exato do enunciado):** https://zenodo.org/records/18114231/files/BreastDCEDL_ISPY1_min_crop.tar.gz?download=1 (~1,3 GB). Cada integrante deve baixar este arquivo uma vez e extrair localmente.
 
 **Documentação:** consultar o artigo e os READMEs BreastDCEDL fornecidos no Canvas, especialmente o da versão MinCrop.
 
 ## Dados
-Dataset obrigatório: **BreastDCEDL ISPY1 MinCrop**, disponível em https://zenodo.org/records/18114231 — baixar exclusivamente `BreastDCEDL_ISPY1_min_crop.tar.gz` (~1,3GB).
+Dataset obrigatório: **BreastDCEDL ISPY1 MinCrop**. Usar o link exato do enunciado apresentado acima. Não baixar os subconjuntos DUKE ou ISPY2.
 
 A estrutura local recomendada é:
 ```text
@@ -26,13 +26,17 @@ dados/
 ```
 O CSV oficial do Canvas possui **172 pacientes I-SPY1** (123 pCR=0, 49 pCR=1). O CSV `dataset/BreastDCEDL_metadata_min_crop.csv` que já existia no repositório contém **2070 registros** de vários conjuntos; **não treinar indiscriminadamente com todos**. Os 172 registros I-SPY1 conferem com o CSV do Canvas.
 
-**Não incluir os arquivos de imagem nem pesos no Git ou no ZIP final.** A pasta `dataset/` histórica permanece no repo por enquanto, mas o novo `.gitignore` impede a adição de novos arquivos nessa pasta; arquivos já versionados continuam rastreados até remoção explícita.
+**Não incluir os arquivos de imagem nem pesos no Git ou no ZIP final.** A pasta histórica `dataset/` e seus arquivos anteriores permanecem preservados; o `.gitignore` impede adicionar novos volumes. Arquivos já versionados continuam rastreados. Não apagar nem substituir dados históricos sem verificar.
 
 ## Começando
 1. Instalar Python 3.10+ e ambiente virtual.
 2. Instalar dependências: `pip install -r requirements.txt`. Para PyTorch com GPU NVIDIA, escolher a distribuição compatível com o driver no site oficial.
-3. Baixar e extrair o dataset, mantendo a pasta PAI `dados/BreastDCEDL_ISPY1_min_crop/` que contém `dce/` e `mask/`. Se o extrator criou pasta duplicada, mova apenas a pasta interna que contém `dce/` e `mask/`. O CSV oficial do Canvas **já está versionado** em `dados/`.
+3. Baixar o arquivo do **link oficial exato** acima e extrair em `dados/BreastDCEDL_ISPY1_min_crop/`, de modo que `dce/` e `mask/` estejam imediatamente dentro dessa pasta. Se o descompactador produziu duas pastas com o mesmo nome, mover apenas a pasta interna que contém `dce/` e `mask/`. O CSV oficial do Canvas já está versionado em `dados/`.
 4. Implementar e executar cada etapa via as instruções do guia em `docs/GUIA_DO_TRABALHO.md`. Os módulos ainda são **temporários** e deverão ser integrados em **um único Python** na entrega.
+
+## Tkinter no Windows
+
+`tkinter` integra a distribuição tradicional de Python para Windows; **não é um pacote para listar no `requirements.txt`**. Antes de trabalhar com a GUI, testar: `python -m tkinter`. Se não abrir uma janela, reparar/reinstalar Python com suporte Tcl/Tk. Em Linux é comum instalar `python3-tk` pelo gerenciador do sistema, não por pip.
 
 ## Primeira implementação disponível — Issue #2
 
@@ -52,7 +56,7 @@ O segundo comando verifica **fisicamente** todas as fases DCE e máscaras: só e
 - `dados/`: CSV oficial versionado; volumes locais NIfTI ignorados pelo Git.
 - `resultados/`: tabelas e gráficos compactos dos experimentos.
 - `checkpoints/`: pesos treinados, ignorados pelo Git.
-- `entrega_final/`: material a empacotar para Canvas.
+- `entrega_final_G10/`: material final a empacotar para Canvas; comprimir o conteúdo como `G10.zip`.
 
 ## Fluxo Git
 Criar branches `feature/*` a partir de `develop`, enviar PRs para `develop`, integrar/testar; somente depois promover para `main`. Preservar trabalhos antigos para referência e refatorar/reutilizar apenas trechos validados com requisitos.
