@@ -18,3 +18,5 @@ Ao finalizar, compacte **o conteúdo desta pasta** (arquivos na raiz do ZIP), co
 **Prazo principal:** 16/11/2026, 19:00, sem atraso.
 
 > O `trabalho_pai.py` atual desta pasta é apenas um placeholder. Não é a entrega final e ainda não executa o trabalho.
+
+> O PDF de enunciado ficará em `docs/enunciado.pdf`, **fora** desta pasta de entrega; não incluí-lo no ZIP da atividade.
