@@ -6,7 +6,7 @@ import pytest
 
 from modulos.modulo_dataset import carregar_metadados, criar_manifesto, verificar_arquivos
 
-CSV = Path(__file__).resolve().parents[1] / "dados" / "BreastDCEDL_SPY1_min_crop_metadata.csv"
+CSV = Path(__file__).resolve().parents[1] / "dataset" / "BreastDCEDL_SPY1_min_crop_metadata.csv"
 
 
 def test_csv_oficial():
@@ -18,7 +18,7 @@ def test_csv_oficial():
 
 def test_caminhos_de_fases_nao_consecutivas():
     tabela = carregar_metadados(CSV)
-    manifesto = criar_manifesto(tabela, "dados/BreastDCEDL_ISPY1_min_crop")
+    manifesto = criar_manifesto(tabela, "dataset/BreastDCEDL_ISPY1_min_crop")
     assert len(manifesto) == 172
     assert len({p.identificador for p in manifesto}) == 172
     caso = next(p for p in manifesto if p.identificador == "ISPY1_1001")
