@@ -1,4 +1,4 @@
-# Dependências de desenvolvimento — alinhar versões entre os integrantes após testes
+# Dependências de desenvolvimento
 numpy
 pandas
 scipy
@@ -9,8 +9,6 @@ opencv-python
 Pillow
 torch
 torchvision
-# Tkinter faz parte do Python padrão no Windows: verificar com `python -m tkinter`.
-# Não usar `pip install tkinter`. Em Linux, pode exigir pacote do sistema python3-tk.
 
 # Testes de desenvolvimento
 pytest
