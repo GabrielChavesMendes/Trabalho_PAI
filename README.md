@@ -24,9 +24,13 @@ dados/
     ├── dce/
     └── mask/
 ```
-O CSV oficial do Canvas possui **172 pacientes I-SPY1** (123 pCR=0, 49 pCR=1). O CSV `dataset/BreastDCEDL_metadata_min_crop.csv` que já existia no repositório contém **2070 registros** de vários conjuntos; **não treinar indiscriminadamente com todos**. Os 172 registros I-SPY1 conferem com o CSV do Canvas.
+O CSV oficial do Canvas possui **172 pacientes I-SPY1** (123 pCR=0, 49 pCR=1). O CSV antigo de 2.070 pacientes foi removido da branch `develop` porque o projeto utiliza **somente os 172 pacientes I-SPY1**; o histórico Git conserva o arquivo antigo.
 
-**Não incluir os arquivos de imagem nem pesos no Git ou no ZIP final.** A pasta histórica `dataset/` e seus arquivos anteriores permanecem preservados; o `.gitignore` impede adicionar novos volumes. Arquivos já versionados continuam rastreados. Não apagar nem substituir dados históricos sem verificar.
+**Não incluir os arquivos de imagem nem pesos no Git ou no ZIP final.** Os arquivos de exemplo NIfTI e o CSV geral antigo foram removidos da branch `develop` para evitar confusão. Permanecem acessíveis no histórico Git. O `.gitignore` bloqueia a adição de novos volumes.
+
+## Enunciado oficial (arquivo pendente)
+
+O PDF original do professor deve ser salvo em **`docs/enunciado.pdf`**. Esse arquivo ainda **não foi incluído nesta branch**, porque a integração atual não oferece upload direto do binário original. Faça o commit local do PDF para concluir a documentação do projeto.
 
 ## Começando
 1. Instalar Python 3.10+ e ambiente virtual.
@@ -51,7 +55,7 @@ python -m pytest -q
 O segundo comando verifica **fisicamente** todas as fases DCE e máscaras: só executá-lo depois de extrair o dataset na estrutura indicada. O terceiro executa os testes do código de preparação. **Ainda não foi implementado treinamento ou leitura do conteúdo dos volumes**.
 
 ## Pastas
-- `docs/`: enunciado local e guia de conceitos/execução.
+- `docs/`: guia de conceitos/execução; adicionar o PDF original do professor como `docs/enunciado.pdf` (pendência de upload binário).
 - `modulos/`: desenvolvimento das letras A–E antes da integração.
 - `dados/`: CSV oficial versionado; volumes locais NIfTI ignorados pelo Git.
 - `resultados/`: tabelas e gráficos compactos dos experimentos.
