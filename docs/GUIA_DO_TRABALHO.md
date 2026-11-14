@@ -1,6 +1,6 @@
 # Guia de estudo e implementação — letras A–E
 
-Este guia é um roteiro de entendimento do grupo. O enunciado PDF original deve ficar em `docs/enunciado.pdf` (**ainda pendente de commit**).
+Este guia é um roteiro de entendimento do grupo. O enunciado PDF original está versionado em `docs/enunciado.pdf`.
 
 ## Conceitos principais
 - **pCR:** pathological complete response, resposta patológica completa ao tratamento. Classe 0 = ausente; classe 1 = presente.
@@ -30,7 +30,7 @@ Métricas: **sensibilidade, especificidade, precisão, acurácia e F1**, além d
 Carregar modelo realmente treinado, prever probabilidade pCR e sobrepor mapa de calor que evidencia regiões influentes para essa previsão. Comparar visualmente com a máscara — Grad-CAM não é segmentação.
 
 ## Passos de execução (a detalhar quando código estiver pronto)
-1. Configurar ambiente e extrair 1,3 GB do [link exato do enunciado](https://zenodo.org/records/18114231/files/BreastDCEDL_ISPY1_min_crop.tar.gz?download=1) em `dados/BreastDCEDL_ISPY1_min_crop/` com subpastas `dce/` e `mask/`. CSV oficial já versionado em `dados/`.
+1. Configurar ambiente e extrair 1,3 GB do [link exato do enunciado](https://zenodo.org/records/18114231/files/BreastDCEDL_ISPY1_min_crop.tar.gz?download=1) em `dataset/BreastDCEDL_ISPY1_min_crop/` com subpastas `dce/` e `mask/`. CSV oficial já versionado em `dataset/`.
 2. Rodar inspeção CSV/pacientes e pré-processamento do dataset.
 3. Validar a GUI e o corte/segmentação.
 4. Testar formatos dos 3 modelos e treinamento em pequeno subconjunto de treino **apenas para depuração**.
