@@ -94,7 +94,7 @@ def verificar_arquivos(manifesto: list[Paciente]) -> list[str]:
 
 
 def ler_volume(caminho: str | Path) -> tuple[np.ndarray, np.ndarray]:
-    """Lê um NIfTI 3D em float32, mantendo orientação e affine originais.
+    """Lê um NIfTI 3D [Z,256,256] em float32, preservando affine.
 
     A importação tardia permite validar o CSV mesmo sem o nibabel instalado.
     """
@@ -111,19 +111,23 @@ def ler_volume(caminho: str | Path) -> tuple[np.ndarray, np.ndarray]:
         dados = dados[..., 0]
     if dados.ndim != 3 or min(dados.shape) < 1:
         raise ValueError(f"Esperado NIfTI 3D, obtido {dados.shape}: {caminho}")
+    # O BreastDCEDL MinCrop armazena cada volume como [Z, H, W].
+    # A checagem evita extrair um plano [Z, W] confundindo o eixo de cortes.
+    if dados.shape[1:] != (256, 256):
+        raise ValueError(f"Esperado volume MinCrop [Z,256,256], obtido {dados.shape}: {caminho}")
     if not np.isfinite(dados).all():
         raise ValueError(f"Volume contém NaN/Inf: {caminho}")
     return dados, np.asarray(imagem.affine)
 
 
 def selecionar_corte(mascara: np.ndarray, estrategia: str) -> int:
-    """Retorna z central ou z da maior área tumoral (soma no plano XY)."""
+    """Retorna índice de corte no eixo 0 de um volume [Z,H,W]."""
     if mascara.ndim != 3:
         raise ValueError("Máscara deve ser tridimensional.")
     if estrategia == "central":
-        return mascara.shape[2] // 2
+        return mascara.shape[0] // 2
     if estrategia == "maior_tumor":
-        areas = np.count_nonzero(mascara > 0, axis=(0, 1))
+        areas = np.count_nonzero(mascara > 0, axis=(1, 2))
         if not areas.any():
             raise ValueError("Máscara não possui pixels tumorais positivos.")
         return int(areas.argmax())
@@ -150,7 +154,7 @@ def carregar_amostra(
     fase: str = "tres",
     estrategia: str = "maior_tumor",
 ) -> tuple[torch.Tensor, torch.Tensor, int]:
-    """Carrega 1 ou 3 fases, seleciona um corte XY e devolve tensores 2D.
+    """Carrega 1 ou 3 fases, seleciona Z no eixo 0 e devolve cortes 2D.
 
     Imagem: [C,H,W]; máscara: [1,H,W]. A máscara nunca entra como canal
     de classificação (a comparação com máscara é opcional no enunciado).
@@ -170,9 +174,9 @@ def carregar_amostra(
             raise ValueError(f"Volumes e máscara não estão alinhados espacialmente: {paciente.identificador}")
         imagens.append(dados)
     z = selecionar_corte(mascara, estrategia)
-    canais = np.stack([volume[:, :, z] for volume in imagens], axis=0)
+    canais = np.stack([volume[z, :, :] for volume in imagens], axis=0)
     dados_normalizados = normalizar_canais(canais)
-    mascara_2d = np.ascontiguousarray((mascara[:, :, z] > 0)[None, :, :], dtype=np.float32)
+    mascara_2d = np.ascontiguousarray((mascara[z, :, :] > 0)[None, :, :], dtype=np.float32)
     return torch.from_numpy(dados_normalizados), torch.from_numpy(mascara_2d), z
 
 
@@ -241,7 +245,7 @@ def main() -> int:
                 raise ValueError(f"Paciente não encontrado no CSV: {args.inspecionar_paciente}")
             imagem, mascara, z = carregar_amostra(paciente, args.fase, args.estrategia)
             print(f"Paciente: {paciente.identificador}; pCR={paciente.pcr}; z={z}")
-            print(f"Imagem: {tuple(imagem.shape)}; máscara: {tuple(mascara.shape)}")
+            print(f"Imagem [canais,altura,largura]: {tuple(imagem.shape)}; máscara: {tuple(mascara.shape)}")
             print(f"Faixa de intensidade: {imagem.min().item():.4f}–{imagem.max().item():.4f}")
     except (OSError, ImportError, ValueError, TypeError) as exc:
         print(f"ERRO: {exc}")
