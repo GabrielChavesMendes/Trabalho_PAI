@@ -1,8 +1,4 @@
-"""Interface gráfica de inspeção NIfTI para a Issue #1.
-
-Compatível com os volumes I-SPY1 MinCrop [Z,H,W]. A GUI não executa
-diagnóstico nem treinamento; é uma ferramenta de inspeção de imagem/máscara.
-"""
+"""Interface de inspeção dos volumes NIfTI do BreastDCEDL I-SPY1."""
 from __future__ import annotations
 
 import tkinter as tk
@@ -12,160 +8,176 @@ from tkinter import filedialog, messagebox, ttk
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
-import nibabel as nib
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+from modulos.modulo_dataset import (
+    FASES,
+    carregar_metadados,
+    criar_manifesto,
+    ler_volume,
+    selecionar_corte,
+)
+from modulos.modulo_balanceamento import resumo_particoes
+
 
 class InterfaceNIfTI:
+    """Abre paciente pelo CSV e sincroniza fases DCE e máscara no mesmo Z."""
+
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("PAI — Visualizador NIfTI e máscara")
-        self.root.geometry("1180x820")
-        self.imagem = None
+        root.title("PAI — Visualizador DCE-MRI e máscara")
+        root.geometry("1280x900")
+
+        self.manifesto = {}
+        self.imagens = []
         self.mascara = None
-        self.imagem_path = None
-        self.mascara_path = None
-        self.imagem_affine = None
-        self.mascara_affine = None
+        self.paciente_atual = None
+        self.z_max = 0
 
-        barra = ttk.Frame(root, padding=10)
-        barra.pack(fill=tk.X)
-        ttk.Button(barra, text="Abrir DCE (.nii/.nii.gz)", command=self.abrir_imagem).pack(side=tk.LEFT, padx=4)
-        ttk.Button(barra, text="Abrir máscara", command=self.abrir_mascara).pack(side=tk.LEFT, padx=4)
-        ttk.Button(barra, text="Abrir DCE + máscara do paciente", command=self.abrir_par).pack(side=tk.LEFT, padx=4)
-        self.status = tk.StringVar(value="Selecione um volume NIfTI e, opcionalmente, sua máscara.")
-        ttk.Label(root, textvariable=self.status, padding=8, wraplength=1100).pack(fill=tk.X)
+        controles = ttk.Frame(root, padding=8)
+        controles.pack(fill=tk.X)
 
-        self.fig, (self.ax_img, self.ax_mask) = plt.subplots(1, 2, figsize=(10, 6))
+        self.csv_path = tk.StringVar(value="dataset/BreastDCEDL_SPY1_min_crop_metadata.csv")
+        self.dataset_path = tk.StringVar(value="dataset/BreastDCEDL_ISPY1_min_crop")
+        self.fase = tk.StringVar(value="tres")
+        self.estrategia = tk.StringVar(value="maior_tumor")
+        self.paciente = tk.StringVar()
+        self.status = tk.StringVar(value="Selecione o CSV e a pasta dos volumes para começar.")
+
+        ttk.Label(controles, text="CSV:").grid(row=0, column=0, sticky="w")
+        ttk.Entry(controles, textvariable=self.csv_path, width=55).grid(row=0, column=1, columnspan=3, sticky="ew", padx=4)
+        ttk.Button(controles, text="Procurar", command=self.escolher_csv).grid(row=0, column=4, padx=3)
+        ttk.Button(controles, text="Carregar pacientes", command=self.carregar_lista).grid(row=0, column=5, padx=8)
+
+        ttk.Label(controles, text="Dataset:").grid(row=1, column=0, sticky="w")
+        ttk.Entry(controles, textvariable=self.dataset_path, width=55).grid(row=1, column=1, columnspan=3, sticky="ew", padx=4)
+        ttk.Button(controles, text="Procurar", command=self.escolher_dataset).grid(row=1, column=4, padx=3)
+
+        ttk.Label(controles, text="Paciente:").grid(row=2, column=0, sticky="w", pady=(8, 0))
+        self.combo_paciente = ttk.Combobox(controles, textvariable=self.paciente, state="readonly", width=18)
+        self.combo_paciente.grid(row=2, column=1, sticky="w", padx=4, pady=(8, 0))
+        ttk.Label(controles, text="Fase:").grid(row=2, column=2, sticky="e", pady=(8, 0))
+        ttk.Combobox(
+            controles, textvariable=self.fase, values=(*FASES, "tres"),
+            state="readonly", width=14,
+        ).grid(row=2, column=3, sticky="w", padx=4, pady=(8, 0))
+        ttk.Label(controles, text="Corte inicial:").grid(row=2, column=4, sticky="e", pady=(8, 0))
+        ttk.Combobox(
+            controles, textvariable=self.estrategia,
+            values=("central", "maior_tumor"), state="readonly", width=16,
+        ).grid(row=2, column=5, sticky="w", pady=(8, 0))
+        ttk.Button(controles, text="Abrir paciente", command=self.abrir_paciente).grid(row=2, column=6, padx=8, pady=(8, 0))
+        controles.columnconfigure(1, weight=1)
+
+        ttk.Label(root, textvariable=self.status, wraplength=1200, padding=8).pack(fill=tk.X)
+        self.fig, self.axes = plt.subplots(1, 4, figsize=(13, 6))
         self.fig.tight_layout()
         self.canvas = FigureCanvasTkAgg(self.fig, master=root)
-        self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True, padx=8, pady=4)
 
-        rodape = ttk.Frame(root, padding=10)
+        rodape = ttk.Frame(root, padding=8)
         rodape.pack(fill=tk.X)
         self.z_label = tk.StringVar(value="Corte Z: —")
         ttk.Label(rodape, textvariable=self.z_label).pack(side=tk.LEFT)
-        self.slider = tk.Scale(rodape, from_=0, to=0, orient=tk.HORIZONTAL,
-                               command=self.atualizar, state=tk.DISABLED, length=800)
+        self.slider = tk.Scale(
+            rodape, from_=0, to=0, orient=tk.HORIZONTAL, command=self.atualizar,
+            state=tk.DISABLED, length=900,
+        )
         self.slider.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=12)
         self.renderizar()
 
-    @staticmethod
-    def _carregar_volume(caminho: str):
-        img = nib.load(caminho)
-        dados = np.asarray(img.dataobj, dtype=np.float32)
-        if dados.ndim == 4 and dados.shape[-1] == 1:
-            dados = dados[..., 0]
-        if dados.ndim != 3:
-            raise ValueError(f"Esperado volume 3D (ou 4D com um único canal); recebido {dados.shape}.")
-        if not np.isfinite(dados).all():
-            raise ValueError("O volume contém NaN ou infinito.")
-        return dados, np.asarray(img.affine)
-
-    def _escolher(self, titulo):
-        return filedialog.askopenfilename(
-            title=titulo,
-            filetypes=[("Arquivos NIfTI", "*.nii *.nii.gz"), ("Todos os arquivos", "*.*")]
+    def escolher_csv(self):
+        caminho = filedialog.askopenfilename(
+            title="Selecione o CSV oficial",
+            filetypes=[("CSV", "*.csv"), ("Todos", "*.*")],
         )
+        if caminho:
+            self.csv_path.set(caminho)
 
-    def abrir_imagem(self):
-        caminho = self._escolher("Selecione o volume DCE-MRI")
-        if not caminho:
+    def escolher_dataset(self):
+        caminho = filedialog.askdirectory(title="Selecione a pasta BreastDCEDL_ISPY1_min_crop")
+        if caminho:
+            self.dataset_path.set(caminho)
+
+    def carregar_lista(self):
+        try:
+            tabela = carregar_metadados(self.csv_path.get())
+            pacientes = criar_manifesto(tabela, self.dataset_path.get())
+            self.manifesto = {paciente.identificador: paciente for paciente in pacientes}
+            ids = list(self.manifesto)
+            self.combo_paciente["values"] = ids
+            if ids:
+                self.paciente.set(ids[0])
+            distribuicao = "; ".join(
+                f"{item['particao']}: {item['total']} (pCR 0={item['pCR_0']}, pCR 1={item['pCR_1']})"
+                for item in resumo_particoes(tabela)
+            )
+            self.status.set(f"{len(ids)} pacientes carregados. {distribuicao}")
+        except Exception as exc:
+            messagebox.showerror("Erro ao carregar CSV", str(exc))
+
+    def abrir_paciente(self):
+        paciente = self.manifesto.get(self.paciente.get())
+        if paciente is None:
+            messagebox.showwarning("Paciente", "Carregue o CSV e selecione um paciente.")
             return
         try:
-            dados, affine = self._carregar_volume(caminho)
-            self.imagem, self.imagem_affine, self.imagem_path = dados, affine, caminho
-            self._sincronizar_slider()
-            self._validar_par()
-            self.status.set(f"DCE: {Path(caminho).name} | dimensões {dados.shape} | orientação affine carregada.")
-            self.renderizar()
+            mascara, affine_mascara = ler_volume(paciente.caminho_mascara)
+            indices = range(3) if self.fase.get() == "tres" else (FASES.index(self.fase.get()),)
+            imagens = []
+            for indice in indices:
+                imagem, affine = ler_volume(paciente.caminhos_dce[indice])
+                if imagem.shape != mascara.shape:
+                    raise ValueError("A DCE e a máscara possuem dimensões diferentes.")
+                if not np.allclose(affine, affine_mascara, rtol=1e-4, atol=1e-3):
+                    raise ValueError("A DCE e a máscara não possuem a mesma orientação/posição (affine).")
+                imagens.append(imagem)
+
+            z_inicial = selecionar_corte(mascara, self.estrategia.get())
+            self.imagens = imagens
+            self.mascara = mascara
+            self.paciente_atual = paciente
+            self.z_max = mascara.shape[0] - 1
+            self.slider.configure(to=self.z_max, state=tk.NORMAL)
+            self.slider.set(z_inicial)
+            self.status.set(
+                f"{paciente.identificador} | pCR={paciente.pcr} | fases={len(imagens)} | "
+                f"volume [Z,H,W]={mascara.shape} | corte inicial={z_inicial}. "
+                "Exibição na ordem de armazenamento do NIfTI; confirme orientação no MRIcro."
+            )
+            self.renderizar(z_inicial)
         except Exception as exc:
-            messagebox.showerror("Não foi possível abrir a DCE-MRI", str(exc))
-
-    def abrir_mascara(self):
-        caminho = self._escolher("Selecione a máscara do mesmo paciente")
-        if not caminho:
-            return
-        try:
-            dados, affine = self._carregar_volume(caminho)
-            self.mascara, self.mascara_affine, self.mascara_path = dados, affine, caminho
-            self._sincronizar_slider()
-            self._validar_par()
-            self.status.set(f"Máscara: {Path(caminho).name} | dimensões {dados.shape}.")
-            self.renderizar()
-        except Exception as exc:
-            messagebox.showerror("Não foi possível abrir a máscara", str(exc))
-
-    def abrir_par(self):
-        pasta = filedialog.askdirectory(title="Selecione a pasta do paciente (DCE e máscara)")
-        if not pasta:
-            return
-        arquivos = list(Path(pasta).glob("*.nii")) + list(Path(pasta).glob("*.nii.gz"))
-        dces = [p for p in arquivos if "_dce_" in p.name]
-        masks = [p for p in arquivos if "_mask" in p.name]
-        if len(dces) != 1 or len(masks) != 1:
-            messagebox.showwarning("Seleção ambígua", "A pasta deve conter exatamente uma DCE e uma máscara do mesmo paciente. Selecione os arquivos individualmente.")
-            return
-        try:
-            imagem, affine_i = self._carregar_volume(str(dces[0]))
-            mascara, affine_m = self._carregar_volume(str(masks[0]))
-            self.imagem, self.imagem_affine, self.imagem_path = imagem, affine_i, str(dces[0])
-            self.mascara, self.mascara_affine, self.mascara_path = mascara, affine_m, str(masks[0])
-            self._sincronizar_slider()
-            self._validar_par()
-            self.status.set(f"Paciente: {dces[0].name} | {mascara.shape} | arquivos carregados.")
-            self.renderizar()
-        except Exception as exc:
-            messagebox.showerror("Erro ao carregar o par", str(exc))
-
-    def _validar_par(self):
-        if self.imagem is None or self.mascara is None:
-            return
-        if self.imagem.shape != self.mascara.shape:
-            raise ValueError(f"Dimensões incompatíveis: DCE {self.imagem.shape}, máscara {self.mascara.shape}.")
-        if not np.allclose(self.imagem_affine, self.mascara_affine, rtol=1e-4, atol=1e-3):
-            raise ValueError("A orientação/posição espacial (affine) da DCE difere da máscara.")
-        if self.imagem_path and self.mascara_path:
-            # Heurística de segurança: nomes precisam compartilhar identificador.
-            id_img = Path(self.imagem_path).name.split("_spy1_")[0]
-            id_mask = Path(self.mascara_path).name.split("_spy1_")[0]
-            if id_img != id_mask:
-                raise ValueError(f"Arquivos parecem pertencer a pacientes diferentes: {id_img} e {id_mask}.")
-
-    def _sincronizar_slider(self):
-        volume = self.imagem if self.imagem is not None else self.mascara
-        if volume is None:
-            return
-        self.slider.config(to=volume.shape[0] - 1, state=tk.NORMAL)
-        self.slider.set(volume.shape[0] // 2)
+            messagebox.showerror("Erro ao abrir paciente", str(exc))
 
     def atualizar(self, valor):
         self.renderizar(int(float(valor)))
 
     def renderizar(self, z=None):
-        volume = self.imagem if self.imagem is not None else self.mascara
-        if volume is None:
-            self.ax_img.clear(); self.ax_mask.clear()
-            self.ax_img.set_title("DCE-MRI — aguardando volume")
-            self.ax_mask.set_title("Máscara — aguardando volume")
+        for eixo in self.axes:
+            eixo.clear()
+            eixo.axis("off")
+
+        if self.mascara is None:
+            self.axes[0].set_title("DCE-MRI")
+            self.axes[3].set_title("Máscara")
             self.canvas.draw_idle()
             return
-        z = int(self.slider.get()) if z is None and self.slider.winfo_exists() else (z or 0)
-        z = max(0, min(z, volume.shape[0] - 1))
-        self.ax_img.clear(); self.ax_mask.clear()
-        if self.imagem is not None:
-            self.ax_img.imshow(self.imagem[z, :, :], cmap="gray", origin="lower")
-            self.ax_img.set_title(f"DCE-MRI — plano XY | Z={z}")
-        else:
-            self.ax_img.set_title("DCE-MRI não carregada")
-        if self.mascara is not None:
-            self.ax_mask.imshow(self.mascara[z, :, :] > 0, cmap="gray", origin="lower", vmin=0, vmax=1)
-            self.ax_mask.set_title(f"Máscara — plano XY | Z={z}")
-        else:
-            self.ax_mask.set_title("Máscara não carregada")
-        self.ax_img.axis("off"); self.ax_mask.axis("off")
-        self.z_label.set(f"Corte Z: {z} / {volume.shape[0]-1}")
+
+        z = int(self.slider.get()) if z is None and self.slider.winfo_exists() else int(z or 0)
+        z = max(0, min(z, self.z_max))
+        nomes = FASES if len(self.imagens) == 3 else (self.fase.get(),)
+        for indice, (imagem, nome) in enumerate(zip(self.imagens, nomes)):
+            self.axes[indice].imshow(imagem[z, :, :], cmap="gray", origin="lower")
+            self.axes[indice].set_title(f"{nome} — XY, Z={z}")
+            self.axes[indice].axis("off")
+            if np.any(self.mascara[z] > 0):
+                self.axes[indice].contour(self.mascara[z] > 0, levels=[0.5], colors="red", linewidths=0.8)
+
+        self.axes[3].imshow(self.mascara[z, :, :] > 0, cmap="gray", vmin=0, vmax=1, origin="lower")
+        self.axes[3].set_title(f"Máscara — XY, Z={z}")
+        self.axes[3].axis("off")
+        self.z_label.set(f"Corte Z: {z} / {self.z_max}")
         self.canvas.draw_idle()
 
 

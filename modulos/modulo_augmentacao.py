@@ -1,8 +1,4 @@
-"""Aumento geométrico sincronizado para DCE-MRI e máscara (Issue #1).
-
-Volumes do MinCrop são [Z,H,W]; as operações abaixo atuam apenas no plano XY.
-A máscara usa interpolação nearest-neighbor e nunca é concatenada à entrada da rede.
-"""
+"""Aumento geométrico sincronizado para imagens DCE-MRI e máscaras."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -21,15 +17,20 @@ class Variacao:
 
     @property
     def nome(self) -> str:
-        return f"{self.angulo:+d}deg_{'espelhada' if self.espelhada else 'original'}"
+        tipo = "espelhada" if self.espelhada else "original"
+        return f"{self.angulo:+d}deg_{tipo}"
 
 
 def listar_variacoes(angulos: Iterable[int] = ANGULOS_PADRAO) -> tuple[Variacao, ...]:
-    """Retorna exatamente 2N combinações: ângulos × original/espelhada."""
-    valores = tuple(int(a) for a in angulos)
+    """Combina cada ângulo com as versões original e espelhada."""
+    valores = tuple(int(angulo) for angulo in angulos)
     if not valores or len(set(valores)) != len(valores):
         raise ValueError("Informe ângulos não vazios e sem repetição.")
-    return tuple(Variacao(a, espelho) for a in valores for espelho in (False, True))
+    return tuple(
+        Variacao(angulo, espelhada)
+        for angulo in valores
+        for espelhada in (False, True)
+    )
 
 
 def transformar_par(
@@ -38,31 +39,34 @@ def transformar_par(
     angulo: int,
     espelhada: bool,
 ) -> tuple[np.ndarray, np.ndarray | None]:
-    """Transforma [C,H,W] e [1,H,W] com a mesma geometria e sem deformar rótulos."""
+    """Aplica a mesma rotação/espelhamento a todos os canais e à máscara."""
     imagem = np.asarray(imagem, dtype=np.float32)
     if imagem.ndim != 3 or not np.isfinite(imagem).all():
-        raise ValueError("Imagem deve ser [C,H,W] e conter apenas valores finitos.")
-    mask = None if mascara is None else np.asarray(mascara)
-    if mask is not None and (mask.ndim != 3 or mask.shape[-2:] != imagem.shape[-2:]):
-        raise ValueError("Máscara deve ser [1,H,W] e ter o mesmo plano XY da imagem.")
-    if mask is not None and mask.shape[0] != 1:
-        raise ValueError("A máscara deve possuir exatamente um canal.")
+        raise ValueError("Imagem deve ser [C,H,W] e conter valores finitos.")
 
-    img_out = ndimage.rotate(
-        imagem, int(angulo), axes=(-2, -1), reshape=False,
+    mask = None if mascara is None else np.asarray(mascara)
+    if mask is not None and (mask.ndim != 3 or mask.shape != (1, *imagem.shape[-2:])):
+        raise ValueError("Máscara deve ter formato [1,H,W] e o mesmo plano XY da imagem.")
+
+    imagem = ndimage.rotate(
+        imagem, angulo, axes=(-2, -1), reshape=False,
         order=1, mode="nearest", prefilter=False,
     ).astype(np.float32, copy=False)
-    mask_out = None
+
     if mask is not None:
-        mask_out = ndimage.rotate(
-            mask, int(angulo), axes=(-2, -1), reshape=False,
+        mask = ndimage.rotate(
+            mask, angulo, axes=(-2, -1), reshape=False,
             order=0, mode="nearest", prefilter=False,
         ).astype(np.float32, copy=False)
+
     if espelhada:
-        img_out = np.flip(img_out, axis=-1).copy()
-        if mask_out is not None:
-            mask_out = np.flip(mask_out, axis=-1).copy()
-    return np.ascontiguousarray(img_out), None if mask_out is None else np.ascontiguousarray(mask_out)
+        imagem = np.flip(imagem, axis=-1)
+        if mask is not None:
+            mask = np.flip(mask, axis=-1)
+
+    imagem = np.ascontiguousarray(imagem)
+    mascara_saida = None if mask is None else np.ascontiguousarray(mask)
+    return imagem, mascara_saida
 
 
 def gerar_variacoes(
@@ -70,17 +74,8 @@ def gerar_variacoes(
     mascara: np.ndarray | None = None,
     angulos: Iterable[int] = ANGULOS_PADRAO,
 ) -> list[tuple[Variacao, np.ndarray, np.ndarray | None]]:
-    """Gera 10 exemplos por padrão, incluindo original e espelhado sem rotação."""
+    """Gera as dez combinações previstas no trabalho."""
     return [
-        (v, *transformar_par(imagem, mascara, v.angulo, v.espelhada))
-        for v in listar_variacoes(angulos)
+        (variacao, *transformar_par(imagem, mascara, variacao.angulo, variacao.espelhada))
+        for variacao in listar_variacoes(angulos)
     ]
-
-
-def validar_particao_aumentada(particao: str) -> None:
-    """Impede explicitamente aumentar validação/teste para avaliação."""
-    if particao != "treino":
-        raise ValueError(
-            "Aumento de dados só é permitido no treino. "
-            "Validação e teste devem permanecer sem duplicatas/transformações."
-        )
