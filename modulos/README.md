@@ -9,3 +9,5 @@ Aqui serão construídos os componentes separadamente para testes e aprendizado:
 - `modulo_gradcam.py` — explicabilidade e visualização; letra E.
 
 **`modulo_dataset.py` implementa** validação do CSV, seleção de partições por paciente, caminhos temporais, leitura de volumes NIfTI, seleção de dois cortes e saída PyTorch `[1,H,W]` ou `[3,H,W]`. Testes em `tests/test_modulo_dataset.py`. As demais etapas serão integradas gradualmente. Na entrega, os módulos precisam ser consolidados em **um único arquivo Python** funcional.
+
+Documentação técnica da preparação de imagens: [`documentacao/documentacao_dataset.md`](documentacao/documentacao_dataset.md), incluindo orientação `[Z,256,256]`, escolha do corte e normalização. A comparação experimental das estratégias fica na Issue #4.
