@@ -85,3 +85,10 @@ def test_peso_calculado_apenas_com_treino():
     misto = treino + [SimpleNamespace(pcr=1, particao_codigo=1)]
     with pytest.raises(ValueError, match="somente"):
         calcular_pos_weight_treino(misto)
+
+
+def test_dataset_vazio_e_rejeitado():
+    dataset = DatasetBaseFalso(0)
+    dataset.pacientes = []
+    with pytest.raises(ValueError, match="precisa conter pacientes"):
+        DatasetDCEAumentado(dataset, "treino")
