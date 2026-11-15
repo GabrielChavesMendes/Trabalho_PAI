@@ -63,3 +63,7 @@ Consultar `trab.pdf`: Python único, código com identificação dos integrantes
 ## Interface Tkinter
 
 No Python padrão do Windows, verificar a instalação com `python -m tkinter`; não instalar por `pip install tkinter`, pois ele não é uma dependência publicada dessa forma no PyPI. Caso esteja ausente, corrigir a instalação do Python/Tcl-Tk.
+
+## Orientação real dos volumes e documentação
+
+Os volumes reais do I-SPY1 MinCrop são `[Z,256,256]`; exemplo observado: `[30,256,256]`. Portanto, o índice de corte varia de 0 a 29, e o corte XY é `volume[z,:,:]`, com 256×256 pixels. A correção do eixo foi feita na `feature/felipe-issue-2` após os primeiros testes práticos. Consulte [`modulos/documentacao/documentacao_dataset.md`](../modulos/documentacao/documentacao_dataset.md) para decisões, normalização, máscara, 1/3 canais e pendências para o relatório.
