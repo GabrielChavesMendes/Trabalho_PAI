@@ -45,14 +45,16 @@ Executar na raiz do repositório:
 ```bash
 python modulos/modulo_dataset.py
 python modulos/modulo_dataset.py --verificar-arquivos
+python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase tres --estrategia maior_tumor
+python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase pre --estrategia central
 python -m pytest -q
 ```
 
-O primeiro valida 172 pacientes, rótulos, índices de fases e conta os códigos de partição. O segundo confirma a existência das três imagens DCE e da máscara de cada paciente (depende dos 1,3 GB baixados). O terceiro roda testes automatizados de metadados e de caminhos. A leitura e visualização dos voxels será implementada na etapa seguinte.
+O primeiro valida os 172 pacientes e partições; o segundo verifica a presença dos 3 volumes DCE e da máscara por paciente; os dois seguintes abrem NIfTI reais e informam formato `[C,H,W]`, corte Z, classes e intensidade; o último executa 8 testes automatizados. Visualização gráfica é feita na Issue #1, não neste módulo.
 
 ## Pendências de validação
-- Verificar nos READMEs oficiais o significado exato de `test=0/1/2` antes de considerar treino/validação/teste definitivos.
-- Conferir índices de fases que não são necessariamente 0/1/2.
+- Partição oficial **confirmada no artigo BreastDCEDL**: `test=0` (treino), `test=1` (teste), `test=2` (validação). Artigo: https://pmc.ncbi.nlm.nih.gov/articles/PMC12917191/ .
+- Executar a inspeção real das fases temporais, verificar alinhamento (affines), orientação do plano XY e comparação no MRIcro antes de aprovar a leitura real; os índices não são necessariamente 0/1/2.
 - Confirmar formato do envio de checkpoint e divergência de nome/estrutura do ZIP junto ao professor.
 
 ## Arquivos obrigatórios
@@ -61,3 +63,7 @@ Consultar `trab.pdf`: Python único, código com identificação dos integrantes
 ## Interface Tkinter
 
 No Python padrão do Windows, verificar a instalação com `python -m tkinter`; não instalar por `pip install tkinter`, pois ele não é uma dependência publicada dessa forma no PyPI. Caso esteja ausente, corrigir a instalação do Python/Tcl-Tk.
+
+## Orientação real dos volumes e documentação
+
+Os volumes reais do I-SPY1 MinCrop são `[Z,256,256]`; exemplo observado: `[30,256,256]`. Portanto, o índice de corte varia de 0 a 29, e o corte XY é `volume[z,:,:]`, com 256×256 pixels. A correção do eixo foi feita na `feature/felipe-issue-2` após os primeiros testes práticos. Consulte [`modulos/documentacao/documentacao_dataset.md`](../modulos/documentacao/documentacao_dataset.md) para decisões, normalização, máscara, 1/3 canais e pendências para o relatório.

@@ -55,15 +55,23 @@ O PDF do enunciado já está versionado em **[`docs/enunciado.pdf`](docs/enuncia
 
 ## Primeira implementação disponível — Issue #2
 
-A análise inicial do CSV e dos caminhos das imagens está em `modulos/modulo_dataset.py`. Na raiz do projeto:
+O módulo `modulos/modulo_dataset.py` valida CSV/caminhos, abre os volumes NIfTI reais, seleciona cortes 2D (central ou maior área tumoral) e prepara tensores PyTorch de 1/3 canais. Na raiz do projeto:
 
 ```bash
 python modulos/modulo_dataset.py
 python modulos/modulo_dataset.py --verificar-arquivos
+python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase tres --estrategia maior_tumor
+python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase pre --estrategia central
 python -m pytest -q
 ```
 
-O segundo comando verifica **fisicamente** todas as fases DCE e máscaras: só executá-lo depois de extrair o dataset na estrutura indicada. O terceiro executa os testes do código de preparação. **Ainda não foi implementado treinamento ou leitura do conteúdo dos volumes**.
+O segundo comando verifica os caminhos de todas as fases DCE e máscaras; os dois comandos seguintes **carregam imagens reais** e verificam cortes/canais e normalização. Os 9 testes automatizados incluem exemplos sintéticos e teste de regressão do eixo Z, sem precisar dos volumes completos. **Treinamento e augmentação ainda pertencem às Issues #4 e #1.**
+
+Partições oficiais da coluna `test`: `0=treino` (104 pacientes), `1=teste` (35) e `2=validação` (33), conforme o artigo do BreastDCEDL. Cada paciente permanece numa única partição.
+
+**Correção importante de orientação (15/11):** os volumes reais estão no formato `[Z,256,256]`, por exemplo `[30,256,256]`. O corte deve ser extraído como `volume[z,:,:]`, não `volume[:,:,z]`. O código e os testes foram corrigidos após os primeiros testes reais; **reexecutar os comandos antes do merge**. A máscara é uma segmentação única do paciente (sempre um canal), mesmo com 3 fases DCE. Validar a visualização no MRIcro com o dataset real antes do treinamento.
+
+Metodologia e decisões para o relatório: [`modulos/documentacao/documentacao_dataset.md`](modulos/documentacao/documentacao_dataset.md).
 
 ## Pastas
 - `docs/`: guia de conceitos/execução e o PDF original `docs/enunciado.pdf`.

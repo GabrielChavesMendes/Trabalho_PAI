@@ -2,7 +2,7 @@
 
 **Disciplina:** Processamento e Análise de Imagens  
 **Projeto:** Classificação da resposta patológica completa (pCR) em imagens DCE-MRI do BreastDCEDL I-SPY1 MinCrop  
-**Base documental:** `modulo_redes_exemplo.py` e `testar_integracao_redes.py` fornecidos neste projeto; enunciado da disciplina (seção **d**, pp. 3–4; requisitos do relatório na p. 6).  
+**Base documental:** `modulos/modulo_redes.py`, `modulos/modulo_dataset.py` e `tests/test_modulo_dataset.py` deste repositório; enunciado da disciplina (seção **d**, pp. 3–4; requisitos do relatório na p. 6).  
 **Estado:** descrição fiel das arquiteturas implementadas + **propostas**, claramente identificadas, para treinamento. Não representa um treinamento experimental concluído.
 
 > **Autoria:** material de apoio para estudo e adaptação pelos integrantes do grupo. O enunciado exige autoria dos alunos, justificativas próprias e declaração do uso de ferramentas de IA; não usar este texto como descrição de resultados não realizados.
@@ -13,7 +13,7 @@ Os modelos classificam cortes bidimensionais de DCE-MRI de mama, estimando a pro
 
 O `forward` retorna **um logit** real por amostra, `shape=[N,1]`. O logit **não é uma probabilidade**; na inferência, `prever_probabilidades()` aplica `torch.sigmoid(logit)` para obter valores em `[0,1]`. Para treinar com `BCEWithLogitsLoss`, **não** aplicar a sigmoid antes da loss.
 
-O teste de integração atual seleciona, para cada paciente, o corte `z` com a maior área positiva da máscara, normaliza cada corte pelos percentis 1 e 99 e o limita a `[0,1]`. Essa é uma decisão **do teste de integração**, não uma rotina contida no `modulo_redes_exemplo.py`, e não foi validada como a melhor normalização para os backbones do ImageNet. A comparação entre pelo menos duas estratégias de agregação de cortes ainda precisa ser desenvolvida.
+O módulo `modulos/modulo_dataset.py` implementa **duas opções de seleção de cortes**: central e maior área tumoral. A normalização de cada amostra usa os percentis 1 e 99 em conjunto entre os canais, limitando os valores a `[0,1]`. A máscara é fornecida separadamente como `[1,256,256]`, mesmo quando as três fases DCE produzem `[3,256,256]`. Essa é uma escolha de pré-processamento, ainda pendente de validação quantitativa e verificação nos volumes NIfTI completos. A comparação de desempenho das duas estratégias será realizada na Issue #4.
 
 ## 2. CNN autoral (`CNNSimples`)
 
@@ -34,7 +34,7 @@ A arquitetura tem **quatro convoluções e duas camadas totalmente conectadas: s
 | 7 | `Linear(32,1)` | `[N,1]` | Produz um logit para classificação binária |
 | Inferência | `sigmoid(logit)` (fora do `forward`) | `[N,1]` | Converte logit em probabilidade |
 
-**Contagem exata de parâmetros (verificada por PyTorch):** CNN com 1 canal: **101.313 parâmetros**, todos treináveis. CNN com 3 canais: **101.601 parâmetros**, todos treináveis. A diferença de 288 decorre somente da primeira convolução. O teste de integração verificou os formatos das saídas; isso não mede desempenho clínico ou preditivo.
+**Contagem exata de parâmetros (verificada por PyTorch):** CNN com 1 canal: **101.313 parâmetros**, todos treináveis. CNN com 3 canais: **101.601 parâmetros**, todos treináveis. A diferença de 288 decorre somente da primeira convolução. Os testes de forma e de gradientes devem ser repetidos na integração;  isso não mede desempenho clínico ou preditivo.
 
 ### Justificativas iniciais (hipóteses a validar)
 
@@ -85,7 +85,7 @@ O código usa `torchvision.models.mobilenet_v2(weights=MobileNet_V2_Weights.DEFA
 
 ## 6. Otimizador e função de perda — **não definidos no módulo atual**
 
-**Situação no código:** `modulo_redes_exemplo.py` só cria arquiteturas e converte logits em probabilidades na inferência. Ele **não implementa** otimizador, treinamento, escolha de taxa de aprendizado, *scheduler*, `pos_weight` ou loss. Essas decisões pertencem ao futuro `modulo_treinamento.py`. Não descrevê-las como já testadas.
+**Situação no código:** `modulos/modulo_redes.py` só cria arquiteturas e converte logits em probabilidades na inferência. Ele **não implementa** otimizador, treinamento, escolha de taxa de aprendizado, *scheduler*, `pos_weight` ou loss. Essas decisões pertencem ao futuro `modulo_treinamento.py`. Não descrevê-las como já testadas.
 
 **Proposta simples de ponto de partida para experimentos (não validada):**
 
@@ -133,8 +133,8 @@ otimizador = torch.optim.Adam(
 | ResNet50/MobileNetV2: backbone | Congelado em `requires_grad` | Implementado |
 | 1 vs. 3 canais | Soma dos filtros RGB iniciais quando C=1 | Implementado |
 | Inicialização pré-treinada | `Weights.DEFAULT` para modelos transferidos | Configurável; não demonstrada no teste sem pesos |
-| Corte por paciente | Maior área da máscara | Implementado no script de integração, não na rede |
-| Intensidade | Normalização por percentis 1–99 em [0,1] | Implementada no script de integração, não validada experimentalmente |
+| Corte por paciente | Central ou maior área da máscara | Implementado em `modulos/modulo_dataset.py`, não na rede |
+| Intensidade | Normalização conjunta dos canais por percentis 1–99 em [0,1] | Implementada em `modulos/modulo_dataset.py`; ainda não validada experimentalmente |
 
 ## 8. Experimentos e limitações que o relatório deve registrar
 
@@ -153,7 +153,7 @@ otimizador = torch.optim.Adam(
 
 ## 10. Referências de implementação e documentação
 
-- Código-fonte do projeto: `modulo_redes_exemplo.py` (arquiteturas), `testar_integracao_redes.py` (preparação e teste) e `modulo_dataset.py` (metadados e manifesto).
+- Código-fonte do projeto: `modulos/modulo_redes.py` (arquiteturas), `tests/test_modulo_dataset.py` (testes automatizados do dataset, incluindo dados sintéticos) e `modulos/modulo_dataset.py` (metadados, volumes e cortes).
 - PyTorch: `torch.nn.Conv2d`, `ReLU`, `MaxPool2d`, `AdaptiveAvgPool2d`, `Dropout`, `Linear`, `BCEWithLogitsLoss`, `Adam`: <https://pytorch.org/docs/stable/nn.html> e <https://pytorch.org/docs/stable/optim.html>.
 - Torchvision Models: `resnet50` e `mobilenet_v2`: <https://pytorch.org/vision/stable/models.html>.
 - Enunciado da disciplina, seções *Especificações do programa* e *Documentação* (2026).
