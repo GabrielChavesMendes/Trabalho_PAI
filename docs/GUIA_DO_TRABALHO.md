@@ -45,14 +45,16 @@ Executar na raiz do repositório:
 ```bash
 python modulos/modulo_dataset.py
 python modulos/modulo_dataset.py --verificar-arquivos
+python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase tres --estrategia maior_tumor
+python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase pre --estrategia central
 python -m pytest -q
 ```
 
-O primeiro valida 172 pacientes, rótulos, índices de fases e conta os códigos de partição. O segundo confirma a existência das três imagens DCE e da máscara de cada paciente (depende dos 1,3 GB baixados). O terceiro roda testes automatizados de metadados e de caminhos. A leitura e visualização dos voxels será implementada na etapa seguinte.
+O primeiro valida os 172 pacientes e partições; o segundo verifica a presença dos 3 volumes DCE e da máscara por paciente; os dois seguintes abrem NIfTI reais e informam formato `[C,H,W]`, corte Z, classes e intensidade; o último executa 8 testes automatizados. Visualização gráfica é feita na Issue #1, não neste módulo.
 
 ## Pendências de validação
-- Verificar nos READMEs oficiais o significado exato de `test=0/1/2` antes de considerar treino/validação/teste definitivos.
-- Conferir índices de fases que não são necessariamente 0/1/2.
+- Partição oficial **confirmada no artigo BreastDCEDL**: `test=0` (treino), `test=1` (teste), `test=2` (validação). Artigo: https://pmc.ncbi.nlm.nih.gov/articles/PMC12917191/ .
+- Executar a inspeção real das fases temporais, verificar alinhamento (affines), orientação do plano XY e comparação no MRIcro antes de aprovar a leitura real; os índices não são necessariamente 0/1/2.
 - Confirmar formato do envio de checkpoint e divergência de nome/estrutura do ZIP junto ao professor.
 
 ## Arquivos obrigatórios
