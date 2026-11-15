@@ -46,21 +46,28 @@ class InterfaceNIfTI:
         self.status = tk.StringVar(value="Selecione o CSV e a pasta dos volumes para começar.")
 
         ttk.Label(controles, text="CSV:").grid(row=0, column=0, sticky="w")
-        ttk.Entry(controles, textvariable=self.csv_path, width=58).grid(row=0, column=1, sticky="ew", padx=4)
-        ttk.Button(controles, text="Procurar", command=self.escolher_csv).grid(row=0, column=2, padx=3)
+        ttk.Entry(controles, textvariable=self.csv_path, width=55).grid(row=0, column=1, columnspan=3, sticky="ew", padx=4)
+        ttk.Button(controles, text="Procurar", command=self.escolher_csv).grid(row=0, column=4, padx=3)
+        ttk.Button(controles, text="Carregar pacientes", command=self.carregar_lista).grid(row=0, column=5, padx=8)
+
         ttk.Label(controles, text="Dataset:").grid(row=1, column=0, sticky="w")
-        ttk.Entry(controles, textvariable=self.dataset_path, width=58).grid(row=1, column=1, sticky="ew", padx=4)
-        ttk.Button(controles, text="Procurar", command=self.escolher_dataset).grid(row=1, column=2, padx=3)
-        ttk.Button(controles, text="Carregar pacientes", command=self.carregar_lista).grid(row=0, column=3, rowspan=2, padx=8)
+        ttk.Entry(controles, textvariable=self.dataset_path, width=55).grid(row=1, column=1, columnspan=3, sticky="ew", padx=4)
+        ttk.Button(controles, text="Procurar", command=self.escolher_dataset).grid(row=1, column=4, padx=3)
 
         ttk.Label(controles, text="Paciente:").grid(row=2, column=0, sticky="w", pady=(8, 0))
-        self.combo_paciente = ttk.Combobox(controles, textvariable=self.paciente, state="readonly", width=24)
+        self.combo_paciente = ttk.Combobox(controles, textvariable=self.paciente, state="readonly", width=18)
         self.combo_paciente.grid(row=2, column=1, sticky="w", padx=4, pady=(8, 0))
-        ttk.Label(controles, text="Fase:").grid(row=2, column=1, sticky="w", padx=(210, 0), pady=(8, 0))
-        ttk.Combobox(controles, textvariable=self.fase, values=(*FASES, "tres"), state="readonly", width=14).grid(row=2, column=1, sticky="w", padx=(250, 0), pady=(8, 0))
-        ttk.Label(controles, text="Corte:").grid(row=2, column=2, sticky="w", pady=(8, 0))
-        ttk.Combobox(controles, textvariable=self.estrategia, values=("central", "maior_tumor"), state="readonly", width=16).grid(row=2, column=2, sticky="e", pady=(8, 0))
-        ttk.Button(controles, text="Abrir paciente", command=self.abrir_paciente).grid(row=2, column=3, padx=8, pady=(8, 0))
+        ttk.Label(controles, text="Fase:").grid(row=2, column=2, sticky="e", pady=(8, 0))
+        ttk.Combobox(
+            controles, textvariable=self.fase, values=(*FASES, "tres"),
+            state="readonly", width=14,
+        ).grid(row=2, column=3, sticky="w", padx=4, pady=(8, 0))
+        ttk.Label(controles, text="Corte inicial:").grid(row=2, column=4, sticky="e", pady=(8, 0))
+        ttk.Combobox(
+            controles, textvariable=self.estrategia,
+            values=("central", "maior_tumor"), state="readonly", width=16,
+        ).grid(row=2, column=5, sticky="w", pady=(8, 0))
+        ttk.Button(controles, text="Abrir paciente", command=self.abrir_paciente).grid(row=2, column=6, padx=8, pady=(8, 0))
         controles.columnconfigure(1, weight=1)
 
         ttk.Label(root, textvariable=self.status, wraplength=1200, padding=8).pack(fill=tk.X)
