@@ -28,9 +28,12 @@ class DatasetDCEAumentado(Dataset):
         pacientes = getattr(dataset_base, "pacientes", None)
         if pacientes is None:
             raise TypeError("Use um DatasetDCE com a lista de pacientes disponível para validar a partição.")
+        if not pacientes:
+            raise ValueError("O DatasetDCE precisa conter pacientes da partição selecionada.")
+
         codigos = {paciente.particao_codigo for paciente in pacientes}
         codigo_esperado = self.PARTICOES_PERMITIDAS[particao]
-        if codigos and codigos != {codigo_esperado}:
+        if codigos != {codigo_esperado}:
             raise ValueError(f"O dataset informado não pertence exclusivamente à partição {particao}.")
 
         self.dataset_base = dataset_base
