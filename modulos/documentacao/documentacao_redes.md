@@ -13,7 +13,7 @@ Os modelos classificam cortes bidimensionais de DCE-MRI de mama, estimando a pro
 
 O `forward` retorna **um logit** real por amostra, `shape=[N,1]`. O logit **não é uma probabilidade**; na inferência, `prever_probabilidades()` aplica `torch.sigmoid(logit)` para obter valores em `[0,1]`. Para treinar com `BCEWithLogitsLoss`, **não** aplicar a sigmoid antes da loss.
 
-O módulo `modulos/modulo_dataset.py` implementa **duas opções de seleção de cortes**: central e maior área tumoral. A normalização de cada amostra usa os percentis 1 e 99 em conjunto entre os canais, limitando os valores a `[0,1]`. Essa é uma escolha de pré-processamento, ainda pendente de validação quantitativa e verificação nos volumes NIfTI completos. A comparação de desempenho das duas estratégias será realizada na Issue #4.
+O módulo `modulos/modulo_dataset.py` implementa **duas opções de seleção de cortes**: central e maior área tumoral. A normalização de cada amostra usa os percentis 1 e 99 em conjunto entre os canais, limitando os valores a `[0,1]`. A máscara é fornecida separadamente como `[1,256,256]`, mesmo quando as três fases DCE produzem `[3,256,256]`. Essa é uma escolha de pré-processamento, ainda pendente de validação quantitativa e verificação nos volumes NIfTI completos. A comparação de desempenho das duas estratégias será realizada na Issue #4.
 
 ## 2. CNN autoral (`CNNSimples`)
 
