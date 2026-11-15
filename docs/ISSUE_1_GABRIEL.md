@@ -19,7 +19,7 @@ A branch foi atualizada a partir de `develop` após o merge do PR #14. A impleme
 - Todas as fases/canais recebem a mesma transformação espacial.
 - Imagem usa interpolação linear; máscara usa nearest-neighbor, preservando rótulos binários.
 - O adaptador PyTorch aumenta treino e validação, conforme o guia do trabalho, mas rejeita explicitamente teste.
-- A partição é conferida nos objetos `Paciente` do `DatasetDCE`, além do argumento informado, para reduzir risco de vazamento.
+- A partição é conferida nos objetos `Paciente` do `DatasetDCE`; datasets vazios, mistos ou de teste são rejeitados.
 - A geração é sob demanda; as variantes não são armazenadas em memória ou no Git.
 
 ### Balanceamento
