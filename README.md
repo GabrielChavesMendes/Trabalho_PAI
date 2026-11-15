@@ -55,15 +55,21 @@ O PDF do enunciado já está versionado em **[`docs/enunciado.pdf`](docs/enuncia
 
 ## Primeira implementação disponível — Issue #2
 
-A análise inicial do CSV e dos caminhos das imagens está em `modulos/modulo_dataset.py`. Na raiz do projeto:
+O módulo `modulos/modulo_dataset.py` valida CSV/caminhos, abre os volumes NIfTI reais, seleciona cortes 2D (central ou maior área tumoral) e prepara tensores PyTorch de 1/3 canais. Na raiz do projeto:
 
 ```bash
 python modulos/modulo_dataset.py
 python modulos/modulo_dataset.py --verificar-arquivos
+python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase tres --estrategia maior_tumor
+python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase pre --estrategia central
 python -m pytest -q
 ```
 
-O segundo comando verifica **fisicamente** todas as fases DCE e máscaras: só executá-lo depois de extrair o dataset na estrutura indicada. O terceiro executa os testes do código de preparação. **Ainda não foi implementado treinamento ou leitura do conteúdo dos volumes**.
+O segundo comando verifica os caminhos de todas as fases DCE e máscaras; os dois comandos seguintes **carregam imagens reais** e verificam cortes/canais e normalização. Os 8 testes automatizados incluem exemplos sintéticos, sem precisar dos volumes completos. **Treinamento e augmentação ainda pertencem às Issues #4 e #1.**
+
+Partições oficiais da coluna `test`: `0=treino` (104 pacientes), `1=teste` (35) e `2=validação` (33), conforme o artigo do BreastDCEDL. Cada paciente permanece numa única partição.
+
+A leitura NIfTI foi implementada usando `nibabel`; validar orientação visual no MRIcro e a correspondência exata entre máscaras/volumes **com o dataset real no computador do grupo** antes do treinamento.
 
 ## Pastas
 - `docs/`: guia de conceitos/execução e o PDF original `docs/enunciado.pdf`.
