@@ -65,11 +65,13 @@ python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase pre --
 python -m pytest -q
 ```
 
-O segundo comando verifica os caminhos de todas as fases DCE e máscaras; os dois comandos seguintes **carregam imagens reais** e verificam cortes/canais e normalização. Os 8 testes automatizados incluem exemplos sintéticos, sem precisar dos volumes completos. **Treinamento e augmentação ainda pertencem às Issues #4 e #1.**
+O segundo comando verifica os caminhos de todas as fases DCE e máscaras; os dois comandos seguintes **carregam imagens reais** e verificam cortes/canais e normalização. Os 9 testes automatizados incluem exemplos sintéticos e teste de regressão do eixo Z, sem precisar dos volumes completos. **Treinamento e augmentação ainda pertencem às Issues #4 e #1.**
 
 Partições oficiais da coluna `test`: `0=treino` (104 pacientes), `1=teste` (35) e `2=validação` (33), conforme o artigo do BreastDCEDL. Cada paciente permanece numa única partição.
 
-A leitura NIfTI foi implementada usando `nibabel`; validar orientação visual no MRIcro e a correspondência exata entre máscaras/volumes **com o dataset real no computador do grupo** antes do treinamento.
+**Correção importante de orientação (15/11):** os volumes reais estão no formato `[Z,256,256]`, por exemplo `[30,256,256]`. O corte deve ser extraído como `volume[z,:,:]`, não `volume[:,:,z]`. O código e os testes foram corrigidos após os primeiros testes reais; **reexecutar os comandos antes do merge**. A máscara é uma segmentação única do paciente (sempre um canal), mesmo com 3 fases DCE. Validar a visualização no MRIcro com o dataset real antes do treinamento.
+
+Metodologia e decisões para o relatório: [`modulos/documentacao/documentacao_dataset.md`](modulos/documentacao/documentacao_dataset.md).
 
 ## Pastas
 - `docs/`: guia de conceitos/execução e o PDF original `docs/enunciado.pdf`.
