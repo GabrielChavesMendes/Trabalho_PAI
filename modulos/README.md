@@ -8,4 +8,4 @@ Aqui serão construídos os componentes separadamente para testes e aprendizado:
 - `modulo_treinamento.py` — treinamento, validação, métricas e checkpoints; letra D.
 - `modulo_gradcam.py` — explicabilidade e visualização; letra E.
 
-**O módulo `modulo_dataset.py` já possui a primeira implementação de validação do CSV e construção de manifesto de arquivos.** Os demais módulos ainda precisam ser implementados: Na entrega, o código precisa estar integrado em **um único arquivo Python** funcional.
+**`modulo_dataset.py` implementa** validação do CSV, seleção de partições por paciente, caminhos temporais, leitura de volumes NIfTI, seleção de dois cortes e saída PyTorch `[1,H,W]` ou `[3,H,W]`. Testes em `tests/test_modulo_dataset.py`. As demais etapas serão integradas gradualmente. Na entrega, os módulos precisam ser consolidados em **um único arquivo Python** funcional.
