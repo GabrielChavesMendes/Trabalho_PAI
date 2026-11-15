@@ -71,9 +71,9 @@ def test_rejeita_pid_duplicado(tmp_path):
 
 
 def test_estrategias_de_corte():
-    mascara = np.zeros((8, 8, 5), dtype=np.float32)
-    mascara[:2, :2, 1] = 1
-    mascara[:5, :5, 4] = 1
+    mascara = np.zeros((5, 256, 256), dtype=np.float32)
+    mascara[1, :2, :2] = 1
+    mascara[4, :5, :5] = 1
     assert selecionar_corte(mascara, "central") == 2
     assert selecionar_corte(mascara, "maior_tumor") == 4
     with pytest.raises(ValueError, match="não possui"):
@@ -95,10 +95,10 @@ def test_normalizacao_compartilhada():
 def _criar_paciente_sintetico(tmp_path, monkeypatch, affine_incorreta=False):
     tabela = carregar_metadados(CSV).iloc[:1]
     p = criar_manifesto(tabela, tmp_path)[0]
-    mask = np.zeros((8, 8, 5), dtype=np.float32)
-    mask[0:2, 0:2, 1] = 1
-    mask[1:6, 1:6, 4] = 1
-    dados = [np.arange(8 * 8 * 5, dtype=np.float32).reshape(8, 8, 5) + i * 100 for i in range(3)]
+    mask = np.zeros((5, 256, 256), dtype=np.float32)
+    mask[1, :2, :2] = 1
+    mask[4, 1:6, 1:6] = 1
+    dados = [np.arange(5 * 256 * 256, dtype=np.float32).reshape(5, 256, 256) + i * 100 for i in range(3)]
     arquivos = {}
     for caminho, dado in zip(p.caminhos_dce, dados):
         caminho.parent.mkdir(parents=True, exist_ok=True)
@@ -121,21 +121,39 @@ def _criar_paciente_sintetico(tmp_path, monkeypatch, affine_incorreta=False):
 def test_uma_fase_e_tres_fases_com_mascara_sintetica(tmp_path, monkeypatch):
     paciente = _criar_paciente_sintetico(tmp_path, monkeypatch)
     imagem, mask, z = carregar_amostra(paciente, "tres", "maior_tumor")
-    assert tuple(imagem.shape) == (3, 8, 8)
-    assert tuple(mask.shape) == (1, 8, 8)
+    assert tuple(imagem.shape) == (3, 256, 256)
+    assert tuple(mask.shape) == (1, 256, 256)
     assert z == 4 and int(mask.sum()) == 25
     assert imagem.dtype == torch.float32
     imagem_um, _, z_central = carregar_amostra(paciente, "post_early", "central")
-    assert tuple(imagem_um.shape) == (1, 8, 8)
+    assert tuple(imagem_um.shape) == (1, 256, 256)
     assert z_central == 2
     dataset = DatasetDCE([paciente], fase="tres", estrategia="maior_tumor")
     item = dataset[0]
     assert item["paciente"] == paciente.identificador
-    assert tuple(item["imagem"].shape) == (3, 8, 8)
+    assert tuple(item["imagem"].shape) == (3, 256, 256)
     assert item["rotulo"].item() == paciente.pcr
 
 
 def test_geometria_incompativel_rejeitada(tmp_path, monkeypatch):
     paciente = _criar_paciente_sintetico(tmp_path, monkeypatch, affine_incorreta=True)
     with pytest.raises(ValueError, match="não estão alinhados"):
+        carregar_amostra(paciente, "tres", "central")
+
+
+def test_min_crop_rejeita_eixo_trocado(tmp_path, monkeypatch):
+    """Regression: [Z,H,W] is valid; [H,W,Z] must fail explicitly."""
+    paciente = _criar_paciente_sintetico(tmp_path, monkeypatch)
+    import nibabel as nib
+    original = nib.load
+
+    def trocar_eixos(caminho):
+        imagem = original(caminho)
+        return SimpleNamespace(
+            dataobj=np.moveaxis(imagem.dataobj, 0, 2),
+            affine=imagem.affine,
+        )
+
+    monkeypatch.setattr(nib, "load", trocar_eixos)
+    with pytest.raises(ValueError, match="Esperado volume MinCrop"):
         carregar_amostra(paciente, "tres", "central")
