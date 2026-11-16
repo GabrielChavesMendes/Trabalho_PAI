@@ -1,0 +1,26 @@
+{
+  "criterio_selecao": "maior F1 de validacao; desempate por sensibilidade, menor loss e nome",
+  "experimento": "resnet50__tres__maior-tumor__seed-42",
+  "checkpoint_local": "checkpoints/resnet50__tres__maior-tumor__seed-42.pt",
+  "limiar_validacao": 0.44999999999999996,
+  "metricas_validacao": {
+    "loss": 1.1538699872565992,
+    "sensibilidade": 1.0,
+    "especificidade": 0.045454545454545456,
+    "precisao": 0.34375,
+    "acuracia": 0.36363636363636365,
+    "f1": 0.5116279069767442,
+    "tn": 1,
+    "fp": 21,
+    "fn": 0,
+    "tp": 11
+  },
+  "configuracao": {
+    "arquitetura": "resnet50",
+    "fases": "tres",
+    "corte": "maior-tumor",
+    "seed": "42",
+    "melhor_epoca": 2
+  },
+  "observacao": "O checkpoint e local e ignorado pelo Git; o teste nao participa desta selecao."
+}
