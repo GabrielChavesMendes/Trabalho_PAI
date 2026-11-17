@@ -64,7 +64,7 @@ def main() -> int:
     parser.add_argument("--fase", choices=("pre", "post_early", "post_late", "tres"), default="tres")
     parser.add_argument("--corte", choices=("central", "maior_tumor"), default="maior_tumor")
     parser.add_argument("--epocas", type=int, default=30)
-    parser.add_argument("--batch", type=int, default=16)
+    parser.add_argument("--batch", type=int, default=4)
     parser.add_argument("--paciencia", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
