@@ -8,7 +8,7 @@ jobs:
   sintaxe:
     name: Validacao estatica Python
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -18,3 +18,11 @@ jobs:
         run: |
           python -m py_compile entrega_final_G10/trabalho_pai.py
           python -m py_compile tests/test_issue6_monolito_gradcam.py
+      - name: Instalar dependencias de teste sintetico
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest numpy scipy
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Testar Grad-CAM, separacao e augmentacao
+        run: |
+          python -m pytest -q tests/test_issue6_monolito_gradcam.py
