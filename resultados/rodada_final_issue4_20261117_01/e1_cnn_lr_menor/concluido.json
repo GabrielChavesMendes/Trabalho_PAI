@@ -1,0 +1,108 @@
+{
+  "id": "e1_cnn_lr_menor",
+  "nome": "e1_cnn_lr_menor__cnn__post-early__maior-tumor__seed-42",
+  "checkpoint": "checkpoints\\rodada_final_issue4_20261117_01\\e1_cnn_lr_menor__cnn__post-early__maior-tumor__seed-42.pt",
+  "checkpoint_sha256": "56c38a648d2c64d52f6eb82285d5b785f6d22f999a506d055e6a7a75e1162754",
+  "validacao": "resultados\\rodada_final_issue4_20261117_01\\e1_cnn_lr_menor\\e1_cnn_lr_menor__cnn__post-early__maior-tumor__seed-42__validation.json",
+  "historico": "resultados\\rodada_final_issue4_20261117_01\\e1_cnn_lr_menor\\e1_cnn_lr_menor__cnn__post-early__maior-tumor__seed-42__history.csv",
+  "configuracao": {
+    "arquitetura": "cnn",
+    "canais_entrada": 1,
+    "configuracao_temporal": "post_early",
+    "estrategia_corte": "maior_tumor",
+    "epocas": 30,
+    "tamanho_lote": 4,
+    "taxa_aprendizado": 0.0003,
+    "decaimento_pesos": 0.0001,
+    "pos_weight": 3.0,
+    "paciencia": 5,
+    "limiar": 0.5,
+    "seed": 42,
+    "taxa_aprendizado_backbone": null,
+    "criterio_checkpoint": "auc_roc"
+  },
+  "preprocessamento": {
+    "fases": [
+      "post_early"
+    ],
+    "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+    "normalizacao_adicional": "nenhuma",
+    "parametros_normalizacao_adicional": {},
+    "corte": "maior_tumor",
+    "augmentation": {
+      "particoes": [
+        "treino",
+        "validacao"
+      ],
+      "angulos_graus": [
+        -20,
+        -10,
+        0,
+        10,
+        20
+      ],
+      "espelhamento": [
+        false,
+        true
+      ],
+      "variacoes_por_paciente": 10,
+      "teste_aumentado": false
+    },
+    "particoes": {
+      "treino": 0,
+      "validacao": 2,
+      "teste": 1
+    },
+    "pacientes": {
+      "treino": 104,
+      "validacao": 33,
+      "teste": 35
+    },
+    "rodada_final_issue4": {
+      "id": "e1_cnn_lr_menor",
+      "arquitetura": "cnn",
+      "pre_treinado": false,
+      "fine_tuning": false,
+      "dropout_cnn": 0.3,
+      "ativacao_cnn": "ReLU"
+    },
+    "plano_antes_treinamento_sha256": "bb632f0dfbd4b2059b64fdd6ae3ed9fedcce29a5d0e7beeb4c65ec91cdf625f1"
+  },
+  "epoca_escolhida": 3,
+  "epocas_executadas": 8,
+  "tempo_treinamento_segundos": 91.47042619995773,
+  "metricas": {
+    "sensibilidade": 0.7272727272727273,
+    "especificidade": 0.6818181818181818,
+    "precisao": 0.5333333333333333,
+    "acuracia": 0.696969696969697,
+    "f1": 0.6153846153846153,
+    "acuracia_balanceada": 0.7045454545454546,
+    "auc_roc": 0.6694214876033058,
+    "tn": 15,
+    "fp": 7,
+    "fn": 3,
+    "tp": 8,
+    "numero_pacientes": 33,
+    "limiar": 0.4913703888654709,
+    "loss": 1.1611997467098814
+  },
+  "metricas_treino": {
+    "sensibilidade": 0.46153846153846156,
+    "especificidade": 0.6538461538461539,
+    "precisao": 0.3076923076923077,
+    "acuracia": 0.6057692307692307,
+    "f1": 0.3692307692307692,
+    "acuracia_balanceada": 0.5576923076923077,
+    "auc_roc": 0.5374753451676528,
+    "tn": 51,
+    "fp": 27,
+    "fn": 14,
+    "tp": 12,
+    "numero_pacientes": 104,
+    "limiar": 0.4913703888654709
+  },
+  "plano_sha256": "bb632f0dfbd4b2059b64fdd6ae3ed9fedcce29a5d0e7beeb4c65ec91cdf625f1",
+  "normalizacao_recarga": "nenhuma",
+  "teste_avaliado": false
+}
