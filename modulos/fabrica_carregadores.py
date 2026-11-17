@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import torch
+import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 
 from modulos.modulo_balanceamento import calcular_pos_weight_treino
@@ -81,6 +82,50 @@ class DatasetComMascara(Dataset):
         return amostra
 
 
+class DatasetRecorteROI(Dataset):
+    """Amplia a regiao tumoral mantendo contexto e o tamanho original da entrada."""
+
+    def __init__(self, dataset_base: Dataset, fator_contexto: float = 2.0):
+        if fator_contexto < 1:
+            raise ValueError("fator_contexto deve ser pelo menos 1")
+        self.dataset_base = dataset_base
+        self.pacientes = dataset_base.pacientes
+        self.fator_contexto = fator_contexto
+
+    def __len__(self) -> int:
+        return len(self.dataset_base)
+
+    def __getitem__(self, indice: int) -> dict[str, Any]:
+        amostra = dict(self.dataset_base[indice])
+        imagem = amostra["imagem"]
+        mascara = amostra["mascara"]
+        posicoes = torch.nonzero(mascara[0] > 0, as_tuple=False)
+        if posicoes.numel() == 0:
+            raise ValueError("recorte ROI requer mascara nao vazia no corte selecionado")
+        altura, largura = imagem.shape[-2:]
+        y0, x0 = posicoes.min(dim=0).values.tolist()
+        y1, x1 = (posicoes.max(dim=0).values + 1).tolist()
+        centro_y = (y0 + y1) / 2
+        centro_x = (x0 + x1) / 2
+        lado = min(max(int(round(max(y1 - y0, x1 - x0) * self.fator_contexto)), 64), altura, largura)
+        inicio_y = min(max(int(round(centro_y - lado / 2)), 0), altura - lado)
+        inicio_x = min(max(int(round(centro_x - lado / 2)), 0), largura - lado)
+        fim_y, fim_x = inicio_y + lado, inicio_x + lado
+        imagem_roi = imagem[:, inicio_y:fim_y, inicio_x:fim_x].unsqueeze(0)
+        mascara_roi = mascara[:, inicio_y:fim_y, inicio_x:fim_x].unsqueeze(0)
+        amostra["imagem"] = F.interpolate(
+            imagem_roi, size=(altura, largura), mode="bilinear", align_corners=False
+        ).squeeze(0)
+        amostra["mascara"] = F.interpolate(
+            mascara_roi, size=(altura, largura), mode="nearest"
+        ).squeeze(0)
+        amostra["recorte_roi"] = {
+            "inicio_y": inicio_y, "inicio_x": inicio_x, "lado": lado,
+            "fator_contexto": self.fator_contexto,
+        }
+        return amostra
+
+
 def _estatisticas_treino(dataset: Dataset) -> tuple[torch.Tensor, torch.Tensor]:
     soma = soma_quadrados = None
     quantidade_pixels = 0
@@ -138,6 +183,7 @@ def criar_carregadores(
     seed: int,
     normalizacao_entrada: str = "percentil",
     usar_mascara: bool = False,
+    recorte_roi: bool = False,
 ) -> dict[str, Any]:
     """Cria treino/validacao aumentados e teste reservado sem augmentation."""
 
@@ -183,6 +229,12 @@ def criar_carregadores(
         DatasetDCE(pacientes_validacao, fase=fase, estrategia=corte)
     )
     teste_base: Dataset = DatasetDCE(pacientes_teste, fase=fase, estrategia=corte)
+    if recorte_roi:
+        if corte != "maior_tumor":
+            raise ValueError("recorte ROI requer estrategia maior_tumor")
+        treino_base = DatasetRecorteROI(treino_base)
+        validacao_base = DatasetRecorteROI(validacao_base)
+        teste_base = DatasetRecorteROI(teste_base)
     if usar_mascara:
         treino_base = DatasetComMascara(treino_base)
         validacao_base = DatasetComMascara(validacao_base)
@@ -221,6 +273,7 @@ def criar_carregadores(
             "normalizacao": estatisticas_normalizacao,
             "corte": corte,
             "mascara_como_filtro": usar_mascara,
+            "recorte_roi": recorte_roi,
             "augmentation": {
                 "particoes": ["treino", "validacao"],
                 "angulos_graus": [-20, -10, 0, 10, 20],

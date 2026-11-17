@@ -125,6 +125,7 @@ def main() -> int:
     )
     parser.add_argument("--tag", default="")
     parser.add_argument("--usar-mascara", action="store_true")
+    parser.add_argument("--recorte-roi", action="store_true")
     parser.add_argument("--paciencia", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", choices=("cpu", "cuda"))
@@ -144,6 +145,7 @@ def main() -> int:
         seed=args.seed,
         normalizacao_entrada=args.normalizacao_entrada,
         usar_mascara=args.usar_mascara,
+        recorte_roi=args.recorte_roi,
     )
     obrigatorios = {"treino", "validacao", "metadados"}
     ausentes = sorted(obrigatorios - set(carregadores))
