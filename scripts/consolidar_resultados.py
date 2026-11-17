@@ -5,7 +5,11 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from pathlib import Path
+
+RAIZ = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(RAIZ))
 
 
 def _ler_historico(caminho: Path) -> tuple[float, int, int]:
@@ -22,6 +26,7 @@ def _ler_historico(caminho: Path) -> tuple[float, int, int]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Consolidar as 12 validacoes da Issue #4")
     parser.add_argument("--resultados", type=Path, default=Path("resultados"))
+    parser.add_argument("--criterio", choices=("f1", "acuracia_balanceada", "auc_roc"), default="f1")
     parser.add_argument("--saida", type=Path, default=Path("resultados/comparacao_validacao.csv"))
     args = parser.parse_args()
 
@@ -37,6 +42,14 @@ def main() -> int:
         metricas = conteudo["metricas"]
         historico = args.resultados / f"{nome}__history.csv"
         tempo, epocas, melhor_epoca = _ler_historico(historico)
+        # Compatibilidade com resultados antigos que nao registraram AUC/balanced.
+        predicoes = conteudo.get("predicoes_por_paciente", [])
+        if "auc_roc" not in metricas or "acuracia_balanceada" not in metricas:
+            from modulos.modulo_treinamento import RegistroPredicao, calcular_metricas
+            registros = [RegistroPredicao(p["paciente"], p["rotulo"], p["probabilidade"]) for p in predicoes]
+            if registros:
+                extras = calcular_metricas(registros, float(metricas["limiar"]))
+                metricas = {**extras, **metricas}
         linha = {
             "experimento": nome,
             "arquitetura": arquitetura,
@@ -46,9 +59,10 @@ def main() -> int:
             "epocas_executadas": epocas,
             "melhor_epoca": melhor_epoca,
             "tempo_treinamento_segundos": tempo,
-            **{chave: metricas[chave] for chave in (
+            **{chave: metricas.get(chave) for chave in (
                 "loss", "limiar", "sensibilidade", "especificidade", "precisao",
-                "acuracia", "f1", "tn", "fp", "fn", "tp", "numero_pacientes",
+                "acuracia", "f1", "acuracia_balanceada", "auc_roc",
+                "tn", "fp", "fn", "tp", "numero_pacientes",
             )},
         }
         linhas.append(linha)
@@ -57,7 +71,8 @@ def main() -> int:
         raise SystemExit("Nenhum arquivo *__validation.json encontrado")
     linhas.sort(
         key=lambda item: (
-            -float(item["f1"]),
+            -float(item[args.criterio]) if item[args.criterio] is not None else float("inf"),
+            -float(item["acuracia_balanceada"] or 0),
             -float(item["sensibilidade"]),
             float(item["loss"]),
             str(item["experimento"]),
@@ -73,7 +88,7 @@ def main() -> int:
     vencedor = linhas[0]
     manifesto = {
         "criterio_selecao": (
-            "maior F1 de validacao; desempate por sensibilidade, menor loss e nome"
+            f"maior {args.criterio} de validacao; desempate por acuracia balanceada, sensibilidade e loss"
         ),
         "experimento": vencedor["experimento"],
         "checkpoint_local": f"checkpoints/{vencedor['experimento']}.pt",
@@ -82,7 +97,7 @@ def main() -> int:
             chave: vencedor[chave]
             for chave in (
                 "loss", "sensibilidade", "especificidade", "precisao",
-                "acuracia", "f1", "tn", "fp", "fn", "tp",
+                "acuracia", "f1", "acuracia_balanceada", "auc_roc", "tn", "fp", "fn", "tp",
             )
         },
         "configuracao": {
