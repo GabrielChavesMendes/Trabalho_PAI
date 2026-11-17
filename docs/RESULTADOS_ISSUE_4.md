@@ -145,4 +145,5 @@ de teste seria vazamento e produziria uma estimativa sem validade experimental.
 Para uma entrega posterior dos pesos, o arquivo acima substitui o vencedor
 anterior por ter a maior AUC de validacao. Ele continua fora do Git em
 `checkpoints/busca_imagenet_issue4/` e requer mascara para o corte de maior
-tumor.
+tumor. Uma copia foi publicada como asset da release
+[`issue-4-modelo-selecionado-v2`](https://github.com/GabrielChavesMendes/Trabalho_PAI/releases/tag/issue-4-modelo-selecionado-v2).
