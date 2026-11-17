@@ -35,7 +35,7 @@ O identificador interno do arquivo de checkpoint indica arquitetura, fase, corte
 - **ResNet50:** rede iniciada com pesos pré-treinados ImageNet, com cabeça de classificação binária e ajustes de fine-tuning conforme os experimentos. A linha paralela também testou normalização ImageNet após a normalização por percentis. O melhor modelo de uma fase/maior tumor utiliza essa opção e seed 84.
 - **MobileNetV2:** rede pré-treinada ImageNet; a linha principal investigou fine-tuning parcial para aperfeiçoar a validação. Os modelos definitivos mantêm a entrada temporal prevista no enunciado.
 
-As linhas experimentais usam o CSV oficial de 172 pacientes com 104 treino, 33 validação e 35 teste. A avaliação de métricas ocorre por paciente, agregando as probabilidades das variações de validação. As diferenças de normalização, função de perda e limiares devem ser preservadas na reprodução dos checkpoints; **loss entre protocolos distintos não deve ser interpretada como comparação direta**. A documentação completa das 27 execuções anteriores permanece em [GRADE_DEFINITIVA_ISSUE_4_20261117.md](GRADE_DEFINITIVA_ISSUE_4_20261117.md).
+As linhas experimentais usam o CSV oficial de 172 pacientes com 104 treino, 33 validação e 35 teste. A avaliação de métricas ocorre por paciente, agregando as probabilidades das variações de validação. As diferenças de normalização, função de perda e limiares devem ser preservadas na reprodução dos checkpoints; **loss entre protocolos distintos não deve ser interpretada como comparação direta**. A documentação completa das 27 execuções anteriores permanece em [GRADE_DEFINITIVA_ISSUE_4_20261117.md](historico/GRADE_DEFINITIVA_ISSUE_4_20261117.md).
 
 ## Integração dos quatro checkpoints externos
 

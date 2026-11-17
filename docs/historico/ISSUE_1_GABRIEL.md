@@ -67,7 +67,7 @@ validacao = DatasetDCEAumentado(base_validacao, particao="validacao")
 
 - Os volumes MinCrop são `[Z,256,256]`; o plano XY é `volume[z,:,:]`.
 - A GUI mostra a ordem de armazenamento do array NIfTI. A orientação visual foi comparada com o MRIcro no ambiente local.
-- O aumento de validação segue o roteiro disponibilizado em `docs/GUIA_DO_TRABALHO.md`. Para relatar métricas comparáveis, manter explícito se a avaliação usa a validação aumentada ou a amostra original; não usar o conjunto de teste para seleção.
+- O aumento de validação segue o roteiro disponibilizado em `docs/GUIA_DO_PROJETO.md`. Para relatar métricas comparáveis, manter explícito se a avaliação usa a validação aumentada ou a amostra original; não usar o conjunto de teste para seleção.
 - O PDF original `docs/enunciado.pdf` permanece como referência normativa.
 - O módulo desta Issue disponibiliza o cálculo de `pos_weight`, mas não implementa treinamento nem conecta o peso à função de perda. Essa integração pertence ao módulo responsável pelo treinamento, quando disponível.
 

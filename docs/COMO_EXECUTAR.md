@@ -130,7 +130,7 @@ registrada foi 0,3113216161727905, limiar 0,25, classe pCR=1.
 **A demonstração gráfica definitiva e o Grad-CAM serão concluídos na Issue #5.**
 Este terminal demonstra a inferência; não substitui essa interface.
 Não incluir dataset ou pesos no Git ou no ZIP principal. Consultar a
-[síntese integrada](SINTESE_INTEGRADA_ISSUE_4.md) para resultados e limitações.
+[síntese integrada](RESULTADOS_FINAIS.md) para resultados e limitações.
 
 Código/documentação desta integração tiveram auxílio de Codex/OpenAI; os
 integrantes devem revisar ambos e registrar esse auxílio na declaração de IAG.
