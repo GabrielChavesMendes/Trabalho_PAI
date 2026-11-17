@@ -27,13 +27,16 @@ python entrega_final_G10/trabalho_pai.py
 ~~~
 
 1. Selecione o checkpoint .pt compativel e clique **Validar e carregar**.
-2. Selecione o CSV e a pasta que contem diretamente dce/ e mask/.
+2. Selecione o CSV e um arquivo NIfTI dentro de dce/; a pasta do dataset
+   sera identificada automaticamente, com mask/ como pasta irma.
 3. Carregue pacientes e escolha um paciente na lista.
 4. Use o controle **Corte Z** e **Fase exibida** para navegar pelo volume,
    verificando a imagem e a mascara sobreposta.
 5. Clique **Classificar e gerar Grad-CAM**. O aplicativo classifica no corte
    exigido pelo protocolo do checkpoint e move automaticamente o controle Z.
-6. Ao navegar para outro corte, o Grad-CAM anterior deixa de ser exibido para
+6. Use **Salvar figura para o artigo** no corte classificado para exportar PNG,
+   PDF ou SVG em alta resolucao.
+7. Ao navegar para outro corte, o Grad-CAM anterior deixa de ser exibido para
    nao confundir cortes distintos. A classe explicada pode ser a classe
    prevista ou o logit da classe positiva (pcr1).
 
