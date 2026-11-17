@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import pytest
 
-from scripts.relatorio_final_issue4 import ranking, auditar_predicoes
+from scripts.relatorio_experimentos import ranking, auditar_predicoes
 
 
 def test_ranking_teste_prioriza_ba_depois_f1_sem_mudar_a_selecao():

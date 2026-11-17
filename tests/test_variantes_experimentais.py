@@ -3,7 +3,7 @@ import torch
 from torch import nn
 
 from modulos.modulo_redes import CNNSimples
-from modulos.rodada_final_issue4 import (
+from modulos.variantes_experimentais import (
     CNNLeaky, criar_carregador, criar_modelo_registrado, carregar_modelo_registrado,
     normalizar_adicional, DatasetNormalizado,
 )
