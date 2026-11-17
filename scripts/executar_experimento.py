@@ -102,6 +102,7 @@ def main() -> int:
     parser.add_argument("--finetune-resnet", action="store_true", help="Descongelar layer4 da ResNet50")
     parser.add_argument("--lr-backbone", type=float, default=1e-5, help="Learning rate para layer4")
     parser.add_argument("--criterio-limiar", choices=("f1", "acuracia_balanceada"), default="acuracia_balanceada")
+    parser.add_argument("--criterio-checkpoint", choices=("loss", "auc_roc", "acuracia_balanceada"), default="loss")
     parser.add_argument("--paciencia", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", choices=("cpu", "cuda"))
@@ -155,6 +156,7 @@ def main() -> int:
         paciencia=args.paciencia,
         seed=args.seed,
         taxa_aprendizado_backbone=args.lr_backbone if args.finetune_resnet else None,
+        criterio_checkpoint=args.criterio_checkpoint,
     )
     nome = _nome_experimento(configuracao)
     checkpoint = args.checkpoints / f"{nome}.pt"
