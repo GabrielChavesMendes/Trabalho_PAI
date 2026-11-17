@@ -102,6 +102,55 @@ def criar_modelo(nome, canais_entrada=3, pre_treinado=True):
     raise ValueError("Modelo desconhecido. Use cnn, resnet50 ou mobilenetv2.")
 
 
+def configurar_fine_tuning(modelo, arquitetura, modo="congelado"):
+    """Configura parametros treinaveis sem alterar os pesos carregados.
+
+    Na ResNet50, ``layer4`` libera o ultimo bloco residual e a cabeca. As
+    BatchNorm permanecem congeladas, pois 104 pacientes nao sustentam uma
+    reestimacao estavel das estatisticas do ImageNet.
+    """
+
+    arquitetura = arquitetura.lower()
+    if arquitetura == "cnn":
+        if modo not in ("completo", "congelado"):
+            raise ValueError("A CNN aceita fine_tuning=completo")
+        for parametro in modelo.parameters():
+            parametro.requires_grad = True
+        modo_efetivo = "completo"
+    elif arquitetura == "resnet50":
+        if modo not in ("congelado", "layer4", "layer4_ultimo_bloco"):
+            raise ValueError(
+                "A ResNet50 aceita fine_tuning=congelado, layer4 ou layer4_ultimo_bloco"
+            )
+        for parametro in modelo.parameters():
+            parametro.requires_grad = False
+        for parametro in modelo.fc.parameters():
+            parametro.requires_grad = True
+        if modo in ("layer4", "layer4_ultimo_bloco"):
+            bloco = modelo.layer4 if modo == "layer4" else modelo.layer4[-1]
+            for parametro in bloco.parameters():
+                parametro.requires_grad = True
+            for modulo in modelo.modules():
+                if isinstance(modulo, nn.modules.batchnorm._BatchNorm):
+                    for parametro in modulo.parameters(recurse=False):
+                        parametro.requires_grad = False
+        modo_efetivo = modo
+    elif arquitetura == "mobilenetv2":
+        if modo != "congelado":
+            raise ValueError("A MobileNetV2 usa fine_tuning=congelado neste protocolo")
+        for parametro in modelo.features.parameters():
+            parametro.requires_grad = False
+        for parametro in modelo.classifier.parameters():
+            parametro.requires_grad = True
+        modo_efetivo = modo
+    else:
+        raise ValueError("Arquitetura desconhecida")
+
+    treinaveis = sum(p.numel() for p in modelo.parameters() if p.requires_grad)
+    totais = sum(p.numel() for p in modelo.parameters())
+    return {"modo": modo_efetivo, "parametros_treinaveis": treinaveis, "parametros_totais": totais}
+
+
 @torch.no_grad()
 def prever_probabilidades(modelo, imagens):
     """Recebe tensor [N, C, H, W] e devolve probabilidades [N, 1]."""

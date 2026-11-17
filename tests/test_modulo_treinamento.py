@@ -6,15 +6,17 @@ import pytest
 import torch
 from torch.utils.data import DataLoader, Dataset
 
-from modulos.modulo_redes import CNNSimples
+from modulos.modulo_redes import CNNSimples, configurar_fine_tuning, criar_modelo
 from modulos import fabrica_carregadores
 from modulos.modulo_treinamento import (
     ConfiguracaoTreinamento,
     RegistroPredicao,
     agregar_por_paciente,
+    calcular_auc_roc,
     calcular_pos_weight_treino,
     calcular_metricas,
     carregar_checkpoint,
+    configurar_reprodutibilidade,
     registrar_validacao_checkpoint,
     selecionar_limiar_validacao,
     treinar_experimento,
@@ -106,6 +108,41 @@ def test_limiar_e_selecionado_apenas_das_predicoes_fornecidas():
     limiar, metricas = selecionar_limiar_validacao(registros, [0.25, 0.5, 0.75])
     assert limiar == 0.5
     assert metricas["f1"] == pytest.approx(1.0)
+
+
+def test_auc_e_acuracia_balanceada_nao_premiam_classe_unica():
+    registros = [
+        RegistroPredicao("P1", 1, 0.8),
+        RegistroPredicao("P2", 1, 0.4),
+        RegistroPredicao("N1", 0, 0.6),
+        RegistroPredicao("N2", 0, 0.1),
+    ]
+    assert calcular_auc_roc(registros) == pytest.approx(0.75)
+    limiar, metricas = selecionar_limiar_validacao(
+        registros, [0.05, 0.35, 0.7], criterio="acuracia_balanceada"
+    )
+    assert limiar == pytest.approx(0.35)
+    assert metricas["acuracia_balanceada"] == pytest.approx(0.75)
+    assert metricas["auc_roc"] == pytest.approx(0.75)
+
+
+def test_fine_tuning_resnet_libera_layer4_e_preserva_batchnorm():
+    modelo = criar_modelo("resnet50", 3, pre_treinado=False)
+    resumo = configurar_fine_tuning(modelo, "resnet50", "layer4")
+    assert resumo["parametros_treinaveis"] > modelo.fc.weight.numel()
+    assert modelo.layer4[-1].conv3.weight.requires_grad
+    assert modelo.fc.weight.requires_grad
+    assert not modelo.layer4[-1].bn3.weight.requires_grad
+    assert not modelo.layer3[-1].conv3.weight.requires_grad
+
+
+def test_seed_antes_do_modelo_reproduz_inicializacao_da_cabeca():
+    configurar_reprodutibilidade(42)
+    primeiro = criar_modelo("resnet50", 3, pre_treinado=False)
+    configurar_reprodutibilidade(42)
+    segundo = criar_modelo("resnet50", 3, pre_treinado=False)
+    assert torch.equal(primeiro.fc.weight, segundo.fc.weight)
+    assert torch.equal(primeiro.fc.bias, segundo.fc.bias)
 
 
 def test_treino_salva_checkpoint_recarregavel(tmp_path: Path):

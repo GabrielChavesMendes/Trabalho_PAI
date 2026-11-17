@@ -34,10 +34,16 @@ class ConfiguracaoTreinamento:
     epocas: int = 30
     tamanho_lote: int = 8
     taxa_aprendizado: float = 1e-3
+    taxa_aprendizado_backbone: float | None = None
     decaimento_pesos: float = 1e-4
     pos_weight: float = 3.0
     paciencia: int = 5
     limiar: float = 0.5
+    criterio_limiar: str = "acuracia_balanceada"
+    criterio_checkpoint: str = "loss"
+    fine_tuning: str = "congelado"
+    normalizacao_entrada: str = "percentil"
+    tag: str = ""
     seed: int = 42
 
     def __post_init__(self) -> None:
@@ -47,10 +53,16 @@ class ConfiguracaoTreinamento:
             raise ValueError("epocas e tamanho_lote devem ser positivos")
         if self.taxa_aprendizado <= 0 or self.decaimento_pesos < 0:
             raise ValueError("taxas de otimizacao invalidas")
+        if self.taxa_aprendizado_backbone is not None and self.taxa_aprendizado_backbone <= 0:
+            raise ValueError("taxa_aprendizado_backbone deve ser positiva")
         if self.pos_weight <= 0 or self.paciencia < 1:
             raise ValueError("pos_weight e paciencia devem ser positivos")
         if not 0 < self.limiar < 1:
             raise ValueError("limiar deve estar entre 0 e 1")
+        if self.criterio_limiar not in ("f1", "acuracia_balanceada"):
+            raise ValueError("criterio_limiar deve ser f1 ou acuracia_balanceada")
+        if self.criterio_checkpoint not in ("loss", "auc_roc", "acuracia_balanceada"):
+            raise ValueError("criterio_checkpoint invalido")
 
 
 @dataclass
@@ -164,6 +176,37 @@ def _batchnorm_congelado_em_eval(modelo: nn.Module) -> None:
                 modulo.eval()
 
 
+def _criar_otimizador(
+    modelo: nn.Module, configuracao: ConfiguracaoTreinamento
+) -> torch.optim.Optimizer:
+    """Usa uma taxa menor no backbone quando ha fine-tuning parcial."""
+
+    treinaveis = [(nome, p) for nome, p in modelo.named_parameters() if p.requires_grad]
+    if not treinaveis:
+        raise ValueError("modelo nao possui parametros treinaveis")
+    if configuracao.taxa_aprendizado_backbone is None:
+        grupos: Any = [p for _, p in treinaveis]
+    else:
+        prefixo_cabeca = {
+            "resnet50": "fc.",
+            "mobilenetv2": "classifier.",
+            "cnn": "classificador.",
+        }[configuracao.arquitetura]
+        cabeca = [p for nome, p in treinaveis if nome.startswith(prefixo_cabeca)]
+        backbone = [p for nome, p in treinaveis if not nome.startswith(prefixo_cabeca)]
+        if not cabeca or not backbone:
+            raise ValueError("taxas separadas requerem cabeca e backbone treinaveis")
+        grupos = [
+            {"params": backbone, "lr": configuracao.taxa_aprendizado_backbone},
+            {"params": cabeca, "lr": configuracao.taxa_aprendizado},
+        ]
+    return torch.optim.Adam(
+        grupos,
+        lr=configuracao.taxa_aprendizado,
+        weight_decay=configuracao.decaimento_pesos,
+    )
+
+
 def _executar_epoca(
     modelo: nn.Module,
     carregador: Iterable[Any],
@@ -270,12 +313,16 @@ def calcular_metricas(
     precisao = divisao(tp, tp + fp)
     acuracia = divisao(tp + tn, tp + tn + fp + fn)
     f1 = divisao(2 * precisao * sensibilidade, precisao + sensibilidade)
+    acuracia_balanceada = (sensibilidade + especificidade) / 2
+    auc_roc = calcular_auc_roc(pacientes)
     return {
         "sensibilidade": sensibilidade,
         "especificidade": especificidade,
         "precisao": precisao,
         "acuracia": acuracia,
         "f1": f1,
+        "auc_roc": auc_roc,
+        "acuracia_balanceada": acuracia_balanceada,
         "tn": tn,
         "fp": fp,
         "fn": fn,
@@ -285,22 +332,51 @@ def calcular_metricas(
     }
 
 
+def calcular_auc_roc(registros: Iterable[RegistroPredicao]) -> float:
+    """Calcula AUC-ROC por ranks, incluindo empates, sem dependencia externa."""
+
+    pacientes = agregar_por_paciente(registros)
+    positivos = sum(item.rotulo == 1 for item in pacientes)
+    negativos = sum(item.rotulo == 0 for item in pacientes)
+    if positivos == 0 or negativos == 0:
+        raise ValueError("AUC-ROC requer as duas classes")
+    ordenados = sorted(enumerate(pacientes), key=lambda par: par[1].probabilidade)
+    ranks = [0.0] * len(pacientes)
+    inicio = 0
+    while inicio < len(ordenados):
+        fim = inicio + 1
+        valor = ordenados[inicio][1].probabilidade
+        while fim < len(ordenados) and ordenados[fim][1].probabilidade == valor:
+            fim += 1
+        rank_medio = ((inicio + 1) + fim) / 2
+        for posicao in range(inicio, fim):
+            ranks[ordenados[posicao][0]] = rank_medio
+        inicio = fim
+    soma_positivos = sum(
+        rank for rank, item in zip(ranks, pacientes, strict=True) if item.rotulo == 1
+    )
+    return (soma_positivos - positivos * (positivos + 1) / 2) / (positivos * negativos)
+
+
 def selecionar_limiar_validacao(
     registros: Iterable[RegistroPredicao],
     candidatos: Iterable[float] | None = None,
+    criterio: str = "acuracia_balanceada",
 ) -> tuple[float, dict[str, float | int]]:
-    """Seleciona por F1; empates favorecem o limiar mais proximo de 0,5."""
+    """Seleciona limiar sem favorecer uma classificacao de classe unica."""
 
     pacientes = agregar_por_paciente(registros)
     lista = list(candidatos) if candidatos is not None else np.linspace(0.05, 0.95, 19).tolist()
     if not lista or any(not 0 < valor < 1 for valor in lista):
         raise ValueError("candidatos de limiar devem estar entre 0 e 1")
+    if criterio not in ("f1", "acuracia_balanceada"):
+        raise ValueError("criterio deve ser f1 ou acuracia_balanceada")
     avaliacoes = [(valor, calcular_metricas(pacientes, valor)) for valor in lista]
     return max(
         avaliacoes,
         key=lambda item: (
+            float(item[1][criterio]),
             float(item[1]["f1"]),
-            float(item[1]["sensibilidade"]),
             -abs(item[0] - 0.5),
         ),
     )
@@ -339,7 +415,8 @@ def salvar_checkpoint(
     otimizador: torch.optim.Optimizer,
     configuracao: ConfiguracaoTreinamento,
     epoca: int,
-    melhor_loss_validacao: float,
+    loss_validacao: float,
+    melhor_valor_criterio: float,
     historico: Sequence[ResultadoEpoca],
     metadados_preprocessamento: Mapping[str, Any],
     dispositivo: torch.device,
@@ -353,7 +430,9 @@ def salvar_checkpoint(
         "optimizer_state_dict": otimizador.state_dict(),
         "configuracao": asdict(configuracao),
         "epoca": epoca,
-        "melhor_loss_validacao": melhor_loss_validacao,
+        "melhor_loss_validacao": loss_validacao,
+        "criterio_checkpoint": configuracao.criterio_checkpoint,
+        "melhor_valor_criterio": melhor_valor_criterio,
         "historico": [asdict(item) for item in historico],
         "preprocessamento": dict(metadados_preprocessamento),
         "ambiente": _metadados_ambiente(dispositivo),
@@ -438,20 +517,13 @@ def treinar_experimento(
     )
     modelo.to(device)
 
-    parametros = [p for p in modelo.parameters() if p.requires_grad]
-    if not parametros:
-        raise ValueError("modelo nao possui parametros treinaveis")
-    otimizador = torch.optim.Adam(
-        parametros,
-        lr=configuracao.taxa_aprendizado,
-        weight_decay=configuracao.decaimento_pesos,
-    )
+    otimizador = _criar_otimizador(modelo, configuracao)
     criterio = nn.BCEWithLogitsLoss(
         pos_weight=torch.tensor([configuracao.pos_weight], device=device)
     )
 
     historico: list[ResultadoEpoca] = []
-    melhor_loss = float("inf")
+    melhor_valor = float("inf") if configuracao.criterio_checkpoint == "loss" else float("-inf")
     epocas_sem_melhora = 0
     for epoca in range(1, configuracao.epocas + 1):
         inicio = time.perf_counter()
@@ -478,11 +550,19 @@ def treinar_experimento(
         print(
             f"Epoca {epoca:03d}/{configuracao.epocas:03d} | "
             f"loss treino={loss_treino:.6f} | loss val={loss_validacao:.6f} | "
-            f"F1 val={float(metricas['f1']):.4f} | {resultado.tempo_segundos:.1f}s"
+            f"AUC val={float(metricas['auc_roc']):.4f} | "
+            f"BAcc val={float(metricas['acuracia_balanceada']):.4f} | "
+            f"{resultado.tempo_segundos:.1f}s"
         )
 
-        if loss_validacao < melhor_loss:
-            melhor_loss = loss_validacao
+        valor_atual = (
+            loss_validacao
+            if configuracao.criterio_checkpoint == "loss"
+            else float(metricas[configuracao.criterio_checkpoint])
+        )
+        melhorou = valor_atual < melhor_valor if configuracao.criterio_checkpoint == "loss" else valor_atual > melhor_valor
+        if melhorou:
+            melhor_valor = valor_atual
             epocas_sem_melhora = 0
             salvar_checkpoint(
                 caminho_checkpoint,
@@ -490,7 +570,8 @@ def treinar_experimento(
                 otimizador,
                 configuracao,
                 epoca,
-                melhor_loss,
+                loss_validacao,
+                melhor_valor,
                 historico,
                 metadados_preprocessamento,
                 device,
@@ -518,6 +599,8 @@ def salvar_historico_csv(
         "precisao",
         "acuracia",
         "f1",
+        "auc_roc",
+        "acuracia_balanceada",
     ]
     with destino.open("w", newline="", encoding="utf-8") as arquivo:
         escritor = csv.DictWriter(arquivo, fieldnames=campos, lineterminator="\n")

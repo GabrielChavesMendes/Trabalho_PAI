@@ -1,0 +1,28 @@
+{
+  "criterio_selecao": "maior AUC-ROC de validacao; desempate por acuracia balanceada, F1, loss e nome",
+  "experimento": "resnet50__tres__maior-tumor__seed-42__layer4-regularizada",
+  "checkpoint_local": "checkpoints/ajustes_issue4_extensoes/resnet50__tres__maior-tumor__seed-42__layer4-regularizada.pt",
+  "limiar_validacao": 0.25,
+  "metricas_validacao": {
+    "loss": 0.6630472226576372,
+    "sensibilidade": 0.36363636363636365,
+    "especificidade": 0.7272727272727273,
+    "precisao": 0.4,
+    "acuracia": 0.6060606060606061,
+    "f1": 0.380952380952381,
+    "auc_roc": 0.5661157024793388,
+    "acuracia_balanceada": 0.5454545454545454,
+    "tn": 16,
+    "fp": 6,
+    "fn": 7,
+    "tp": 4
+  },
+  "configuracao": {
+    "arquitetura": "resnet50",
+    "fases": "tres",
+    "corte": "maior-tumor",
+    "seed": "42",
+    "melhor_epoca": 5
+  },
+  "observacao": "O checkpoint e local e ignorado pelo Git; o teste nao participa desta selecao."
+}

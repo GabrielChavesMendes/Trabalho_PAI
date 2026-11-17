@@ -49,6 +49,8 @@ def main() -> int:
         estrategia_corte=configuracao["estrategia_corte"],
         tamanho_lote=int(configuracao["tamanho_lote"]),
         seed=int(configuracao["seed"]),
+        normalizacao_entrada=configuracao.get("normalizacao_entrada", "percentil"),
+        usar_mascara=bool(bruto.get("preprocessamento", {}).get("mascara_como_filtro", False)),
     )
     criterio = torch.nn.BCEWithLogitsLoss(
         pos_weight=torch.tensor([float(configuracao["pos_weight"])], device=dispositivo)

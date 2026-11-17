@@ -24,13 +24,14 @@ import torch
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 
-from modulos.modulo_redes import criar_modelo  # noqa: E402
+from modulos.modulo_redes import configurar_fine_tuning, criar_modelo  # noqa: E402
 from modulos.modulo_treinamento import (  # noqa: E402
     ConfiguracaoTreinamento,
     avaliar_modelo,
     calcular_metricas,
     calcular_pos_weight_treino,
     carregar_checkpoint,
+    configurar_reprodutibilidade,
     escolher_dispositivo,
     salvar_grafico_convergencia,
     salvar_historico_csv,
@@ -59,7 +60,8 @@ def _carregar_fabrica(referencia: str) -> Callable[..., Mapping[str, Any]]:
 def _nome_experimento(configuracao: ConfiguracaoTreinamento) -> str:
     temporal = configuracao.configuracao_temporal.replace("_", "-")
     corte = configuracao.estrategia_corte.replace("_", "-")
-    return f"{configuracao.arquitetura}__{temporal}__{corte}__seed-{configuracao.seed}"
+    nome = f"{configuracao.arquitetura}__{temporal}__{corte}__seed-{configuracao.seed}"
+    return f"{nome}__{configuracao.tag}" if configuracao.tag else nome
 
 
 def _avaliar_e_exportar(
@@ -70,12 +72,15 @@ def _avaliar_e_exportar(
     limiar: float,
     prefixo: Path,
     selecionar_limiar: bool,
+    criterio_limiar: str = "acuracia_balanceada",
 ) -> tuple[float, dict[str, float | int]]:
     loss, _, predicoes = avaliar_modelo(
         modelo, carregador, criterio, dispositivo, limiar
     )
     if selecionar_limiar:
-        limiar, metricas = selecionar_limiar_validacao(predicoes)
+        limiar, metricas = selecionar_limiar_validacao(
+            predicoes, criterio=criterio_limiar
+        )
     else:
         metricas = calcular_metricas(predicoes, limiar)
     metricas = {**metricas, "loss": loss}
@@ -96,7 +101,30 @@ def main() -> int:
     parser.add_argument("--epocas", type=int, default=30)
     parser.add_argument("--batch", type=int, default=8)
     parser.add_argument("--lr", type=float)
+    parser.add_argument("--lr-backbone", type=float)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
+    parser.add_argument("--pos-weight", type=float)
+    parser.add_argument(
+        "--fine-tuning",
+        choices=("congelado", "layer4", "layer4_ultimo_bloco", "completo"),
+    )
+    parser.add_argument(
+        "--normalizacao-entrada",
+        choices=("percentil", "zscore_treino"),
+        default="percentil",
+    )
+    parser.add_argument(
+        "--criterio-limiar",
+        choices=("f1", "acuracia_balanceada"),
+        default="acuracia_balanceada",
+    )
+    parser.add_argument(
+        "--criterio-checkpoint",
+        choices=("loss", "auc_roc", "acuracia_balanceada"),
+        default="loss",
+    )
+    parser.add_argument("--tag", default="")
+    parser.add_argument("--usar-mascara", action="store_true")
     parser.add_argument("--paciencia", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", choices=("cpu", "cuda"))
@@ -105,12 +133,17 @@ def main() -> int:
     parser.add_argument("--avaliar-teste", action="store_true")
     args = parser.parse_args()
 
+    # A seed precisa anteceder a criacao da cabeca aleatoria do modelo.
+    configurar_reprodutibilidade(args.seed)
+
     fabrica = _carregar_fabrica(args.loader_factory)
     carregadores = fabrica(
         configuracao_temporal=args.fases,
         estrategia_corte=args.corte,
         tamanho_lote=args.batch,
         seed=args.seed,
+        normalizacao_entrada=args.normalizacao_entrada,
+        usar_mascara=args.usar_mascara,
     )
     obrigatorios = {"treino", "validacao", "metadados"}
     ausentes = sorted(obrigatorios - set(carregadores))
@@ -118,16 +151,19 @@ def main() -> int:
         raise ValueError("loader factory nao devolveu: " + ", ".join(ausentes))
 
     if "pos_weight" in carregadores:
-        pos_weight = float(carregadores["pos_weight"])
+        pos_weight_calculado = float(carregadores["pos_weight"])
         negativos = int(carregadores["negativos_treino"])
         positivos = int(carregadores["positivos_treino"])
     else:
-        pos_weight, negativos, positivos = calcular_pos_weight_treino(
+        pos_weight_calculado, negativos, positivos = calcular_pos_weight_treino(
             carregadores["treino"]
         )
+    pos_weight = args.pos_weight if args.pos_weight is not None else pos_weight_calculado
+    if pos_weight <= 0:
+        raise ValueError("--pos-weight deve ser positivo")
     print(
         f"Treino por paciente: negativos={negativos}, positivos={positivos}, "
-        f"pos_weight={pos_weight:.6g}"
+        f"pos_weight calculado={pos_weight_calculado:.6g}, usado={pos_weight:.6g}"
     )
     taxa = args.lr if args.lr is not None else (1e-3 if args.arquitetura == "cnn" else 1e-4)
     configuracao = ConfiguracaoTreinamento(
@@ -138,9 +174,15 @@ def main() -> int:
         epocas=args.epocas,
         tamanho_lote=args.batch,
         taxa_aprendizado=taxa,
+        taxa_aprendizado_backbone=args.lr_backbone,
         decaimento_pesos=args.weight_decay,
         pos_weight=pos_weight,
         paciencia=args.paciencia,
+        criterio_limiar=args.criterio_limiar,
+        criterio_checkpoint=args.criterio_checkpoint,
+        fine_tuning=args.fine_tuning or ("completo" if args.arquitetura == "cnn" else "congelado"),
+        normalizacao_entrada=args.normalizacao_entrada,
+        tag=args.tag,
         seed=args.seed,
     )
     nome = _nome_experimento(configuracao)
@@ -150,6 +192,15 @@ def main() -> int:
         args.arquitetura,
         args.canais,
         pre_treinado=args.arquitetura != "cnn",
+    )
+    resumo_parametros = configurar_fine_tuning(
+        modelo, args.arquitetura, configuracao.fine_tuning
+    )
+    carregadores["metadados"]["modelo"] = resumo_parametros
+    print(
+        f"Fine-tuning={resumo_parametros['modo']}; parametros treinaveis="
+        f"{resumo_parametros['parametros_treinaveis']}/"
+        f"{resumo_parametros['parametros_totais']}"
     )
     historico = treinar_experimento(
         modelo,
@@ -175,6 +226,7 @@ def main() -> int:
         configuracao.limiar,
         args.saida / f"{nome}__validation",
         selecionar_limiar=True,
+        criterio_limiar=configuracao.criterio_limiar,
     )
     registrar_validacao_checkpoint(checkpoint, limiar, metricas_validacao)
     print(
@@ -193,6 +245,7 @@ def main() -> int:
             limiar,
             args.saida / f"{nome}__test",
             selecionar_limiar=False,
+            criterio_limiar=configuracao.criterio_limiar,
         )
         print("Teste reservado avaliado com o limiar fixado pela validacao.")
     return 0

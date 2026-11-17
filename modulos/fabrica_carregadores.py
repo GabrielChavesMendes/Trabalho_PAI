@@ -34,7 +34,8 @@ class DatasetCacheMemoria(Dataset):
 
     def __init__(self, dataset_base: Dataset):
         self.dataset_base = dataset_base
-        self.pacientes = dataset_base.pacientes
+        if hasattr(dataset_base, "pacientes"):
+            self.pacientes = dataset_base.pacientes
         self._cache: dict[int, dict[str, Any]] = {}
 
     def __len__(self) -> int:
@@ -44,6 +45,58 @@ class DatasetCacheMemoria(Dataset):
         if indice not in self._cache:
             self._cache[indice] = self.dataset_base[indice]
         return self._cache[indice]
+
+
+class DatasetPadronizado(Dataset):
+    """Aplica estatisticas calculadas exclusivamente nos pacientes de treino."""
+
+    def __init__(self, dataset_base: Dataset, medias: torch.Tensor, desvios: torch.Tensor):
+        self.dataset_base = dataset_base
+        self.pacientes = dataset_base.pacientes
+        self.medias = medias.reshape(-1, 1, 1)
+        self.desvios = desvios.reshape(-1, 1, 1)
+
+    def __len__(self) -> int:
+        return len(self.dataset_base)
+
+    def __getitem__(self, indice: int) -> dict[str, Any]:
+        amostra = dict(self.dataset_base[indice])
+        amostra["imagem"] = (amostra["imagem"] - self.medias) / self.desvios
+        return amostra
+
+
+class DatasetComMascara(Dataset):
+    """Zera o fundo usando a segmentacao, opcao explicitamente prevista no enunciado."""
+
+    def __init__(self, dataset_base: Dataset):
+        self.dataset_base = dataset_base
+        self.pacientes = dataset_base.pacientes
+
+    def __len__(self) -> int:
+        return len(self.dataset_base)
+
+    def __getitem__(self, indice: int) -> dict[str, Any]:
+        amostra = dict(self.dataset_base[indice])
+        amostra["imagem"] = amostra["imagem"] * amostra["mascara"]
+        return amostra
+
+
+def _estatisticas_treino(dataset: Dataset) -> tuple[torch.Tensor, torch.Tensor]:
+    soma = soma_quadrados = None
+    quantidade_pixels = 0
+    for indice in range(len(dataset)):
+        imagem = dataset[indice]["imagem"].double()
+        atual = imagem.sum(dim=(1, 2))
+        atual_quadrados = imagem.square().sum(dim=(1, 2))
+        soma = atual if soma is None else soma + atual
+        soma_quadrados = atual_quadrados if soma_quadrados is None else soma_quadrados + atual_quadrados
+        quantidade_pixels += imagem.shape[1] * imagem.shape[2]
+    if soma is None or quantidade_pixels == 0:
+        raise ValueError("treino vazio para calcular normalizacao")
+    medias = soma / quantidade_pixels
+    variancias = soma_quadrados / quantidade_pixels - medias.square()
+    desvios = variancias.clamp_min(1e-12).sqrt()
+    return medias.float(), desvios.float()
 
 
 def _resolver_fase(configuracao_temporal: str) -> str:
@@ -83,6 +136,8 @@ def criar_carregadores(
     estrategia_corte: str,
     tamanho_lote: int,
     seed: int,
+    normalizacao_entrada: str = "percentil",
+    usar_mascara: bool = False,
 ) -> dict[str, Any]:
     """Cria treino/validacao aumentados e teste reservado sem augmentation."""
 
@@ -98,6 +153,8 @@ def criar_carregadores(
     num_workers = int(os.environ.get("PAI_NUM_WORKERS", "0"))
     if tamanho_lote < 1 or num_workers < 0:
         raise ValueError("tamanho_lote deve ser positivo e PAI_NUM_WORKERS nao negativo")
+    if normalizacao_entrada not in ("percentil", "zscore_treino"):
+        raise ValueError("normalizacao_entrada deve ser percentil ou zscore_treino")
 
     tabela = carregar_metadados(caminho_csv)
     manifesto = criar_manifesto(tabela, pasta_dataset)
@@ -125,7 +182,22 @@ def criar_carregadores(
     validacao_base = DatasetCacheMemoria(
         DatasetDCE(pacientes_validacao, fase=fase, estrategia=corte)
     )
-    teste = DatasetDCE(pacientes_teste, fase=fase, estrategia=corte)
+    teste_base: Dataset = DatasetDCE(pacientes_teste, fase=fase, estrategia=corte)
+    if usar_mascara:
+        treino_base = DatasetComMascara(treino_base)
+        validacao_base = DatasetComMascara(validacao_base)
+        teste_base = DatasetComMascara(teste_base)
+    estatisticas_normalizacao: dict[str, Any] = {"tipo": "percentil_1_99_conjunto"}
+    if normalizacao_entrada == "zscore_treino":
+        medias, desvios = _estatisticas_treino(treino_base)
+        treino_base = DatasetPadronizado(treino_base, medias, desvios)
+        validacao_base = DatasetPadronizado(validacao_base, medias, desvios)
+        teste_base = DatasetPadronizado(teste_base, medias, desvios)
+        estatisticas_normalizacao = {
+            "tipo": "percentil_1_99_conjunto_seguido_zscore_treino_por_canal",
+            "medias_treino": medias.tolist(),
+            "desvios_treino": desvios.tolist(),
+        }
     treino = DatasetDCEAumentado(treino_base, "treino")
     validacao = DatasetDCEAumentado(validacao_base, "validacao")
 
@@ -137,7 +209,7 @@ def criar_carregadores(
     return {
         "treino": DataLoader(treino, shuffle=True, generator=gerador, **opcoes),
         "validacao": DataLoader(validacao, shuffle=False, **opcoes),
-        "teste": DataLoader(teste, shuffle=False, **opcoes),
+        "teste": DataLoader(teste_base, shuffle=False, **opcoes),
         "pos_weight": float(peso.item()),
         "negativos_treino": negativos,
         "positivos_treino": positivos,
@@ -146,8 +218,9 @@ def criar_carregadores(
             "dataset_dir": str(pasta_dataset.resolve()),
             "csv": str(caminho_csv.resolve()),
             "fases": list(FASES) if fase == "tres" else [fase],
-            "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+            "normalizacao": estatisticas_normalizacao,
             "corte": corte,
+            "mascara_como_filtro": usar_mascara,
             "augmentation": {
                 "particoes": ["treino", "validacao"],
                 "angulos_graus": [-20, -10, 0, 10, 20],
@@ -158,6 +231,6 @@ def criar_carregadores(
             "particoes": {"treino": 0, "validacao": 2, "teste": 1},
             "pacientes": {"treino": 104, "validacao": 33, "teste": 35},
             "num_workers": num_workers,
-            "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+            "cache_preprocessamento": "cortes em memoria por processo; variantes sob demanda",
         },
     }

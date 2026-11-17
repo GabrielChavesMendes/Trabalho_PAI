@@ -1,0 +1,265 @@
+{
+  "metricas": {
+    "sensibilidade": 0.3333333333333333,
+    "especificidade": 0.7391304347826086,
+    "precisao": 0.4,
+    "acuracia": 0.6,
+    "f1": 0.3636363636363636,
+    "auc_roc": 0.532608695652174,
+    "acuracia_balanceada": 0.536231884057971,
+    "tn": 17,
+    "fp": 6,
+    "fn": 8,
+    "tp": 4,
+    "numero_pacientes": 35,
+    "limiar": 0.39999999999999997,
+    "loss": 0.8794330954551697
+  },
+  "predicoes_por_paciente": [
+    {
+      "paciente": "ISPY1_1004",
+      "rotulo": 0,
+      "probabilidade": 0.3893924653530121,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1013",
+      "rotulo": 0,
+      "probabilidade": 0.4001995325088501,
+      "previsto": 1,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1017",
+      "rotulo": 0,
+      "probabilidade": 0.4034029543399811,
+      "previsto": 1,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1021",
+      "rotulo": 1,
+      "probabilidade": 0.40286770462989807,
+      "previsto": 1,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1030",
+      "rotulo": 1,
+      "probabilidade": 0.39842090010643005,
+      "previsto": 0,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1058",
+      "rotulo": 1,
+      "probabilidade": 0.38669538497924805,
+      "previsto": 0,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1090",
+      "rotulo": 1,
+      "probabilidade": 0.3982032835483551,
+      "previsto": 0,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1094",
+      "rotulo": 0,
+      "probabilidade": 0.3997499942779541,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1096",
+      "rotulo": 0,
+      "probabilidade": 0.3927517235279083,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1102",
+      "rotulo": 0,
+      "probabilidade": 0.3946426212787628,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1117",
+      "rotulo": 0,
+      "probabilidade": 0.4031674265861511,
+      "previsto": 1,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1125",
+      "rotulo": 1,
+      "probabilidade": 0.40108415484428406,
+      "previsto": 1,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1127",
+      "rotulo": 0,
+      "probabilidade": 0.39881736040115356,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1137",
+      "rotulo": 0,
+      "probabilidade": 0.3995411694049835,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1142",
+      "rotulo": 0,
+      "probabilidade": 0.395448237657547,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1145",
+      "rotulo": 1,
+      "probabilidade": 0.3962482213973999,
+      "previsto": 0,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1149",
+      "rotulo": 0,
+      "probabilidade": 0.3923148512840271,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1151",
+      "rotulo": 0,
+      "probabilidade": 0.39545294642448425,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1163",
+      "rotulo": 1,
+      "probabilidade": 0.39528965950012207,
+      "previsto": 0,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1165",
+      "rotulo": 0,
+      "probabilidade": 0.39489710330963135,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1166",
+      "rotulo": 0,
+      "probabilidade": 0.39994001388549805,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1174",
+      "rotulo": 0,
+      "probabilidade": 0.399984210729599,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1175",
+      "rotulo": 0,
+      "probabilidade": 0.399118036031723,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1180",
+      "rotulo": 0,
+      "probabilidade": 0.40088021755218506,
+      "previsto": 1,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1182",
+      "rotulo": 1,
+      "probabilidade": 0.39939558506011963,
+      "previsto": 0,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1185",
+      "rotulo": 0,
+      "probabilidade": 0.4041558802127838,
+      "previsto": 1,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1192",
+      "rotulo": 1,
+      "probabilidade": 0.3950836956501007,
+      "previsto": 0,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1201",
+      "rotulo": 0,
+      "probabilidade": 0.38004380464553833,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1202",
+      "rotulo": 1,
+      "probabilidade": 0.39169827103614807,
+      "previsto": 0,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1203",
+      "rotulo": 0,
+      "probabilidade": 0.3982464671134949,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1207",
+      "rotulo": 1,
+      "probabilidade": 0.40281423926353455,
+      "previsto": 1,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1209",
+      "rotulo": 0,
+      "probabilidade": 0.39327871799468994,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1224",
+      "rotulo": 0,
+      "probabilidade": 0.3834397494792938,
+      "previsto": 0,
+      "correto": true
+    },
+    {
+      "paciente": "ISPY1_1226",
+      "rotulo": 0,
+      "probabilidade": 0.4015128016471863,
+      "previsto": 1,
+      "correto": false
+    },
+    {
+      "paciente": "ISPY1_1229",
+      "rotulo": 1,
+      "probabilidade": 0.4054862856864929,
+      "previsto": 1,
+      "correto": true
+    }
+  ]
+}

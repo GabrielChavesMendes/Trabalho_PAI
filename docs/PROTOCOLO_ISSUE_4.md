@@ -1,140 +1,113 @@
 # Protocolo de treinamento e avaliacao — Issue #4
 
-Este documento define a fronteira entre as Issues #2 e #4. O treinamento nao le
-CSV ou NIfTI e nao escolhe fases, cortes, normalizacao ou augmentation. Ele recebe
-`DataLoader` preparados pela Issue #2.
+Este documento descreve o protocolo final executado em 17/11/2026. Os volumes
+NIfTI permanecem fora do repositorio e sao localizados por `PAI_DATASET_DIR`.
 
-## Contrato de integracao
+## Dados e ausencia de vazamento
 
-Cada lote precisa fornecer:
+Foram usadas exclusivamente as particoes oficiais do CSV: 104 pacientes no
+treino (`test=0`), 33 na validacao (`test=2`) e 35 no teste (`test=1`). A
+auditoria confirmou IDs disjuntos, rotulos alinhados e as proporcoes 78/26 no
+treino, 22/11 na validacao e 23/12 no teste.
 
-```python
-imagens, rotulos, pacientes
-```
+Cada amostra fornece `imagens`, `rotulos` e `pacientes`. As probabilidades das
+dez variantes de augmentation sao agregadas pela media antes de qualquer
+metrica por paciente. O teste nao recebe augmentation.
 
-- `imagens`: tensor `float32` com formato `[N,1,H,W]` ou `[N,3,H,W]`;
-- `rotulos`: tensor binario convertivel para `[N,1]`;
-- `pacientes`: sequencia com um ID para cada imagem.
+## Diagnostico do baseline
 
-Um mapping com as chaves `imagens`, `rotulos` e `pacientes` tambem e aceito. Os IDs
-sao obrigatorios porque as dez variacoes de augmentation e eventuais multiplos cortes
-precisam ser agregados antes das metricas por paciente.
+O comportamento de prever quase todos como pCR=1 nao era causado por troca de
+rotulos, vazamento, pesos ImageNet ausentes, falta de gradientes ou erro na
+`BCEWithLogitsLoss`. Foram verificados carregamento dos pesos, gradientes da
+cabeca, congelamento do backbone, BatchNorm, particoes e alinhamento das
+predicoes.
 
-O carregador deve fornecer metadados serializaveis descrevendo, no minimo, as colunas
-de fase usadas, a normalizacao, a estrategia de corte, as transformacoes e os codigos
-de particao. Esses metadados sao gravados no checkpoint, mas nao interpretados pelo
-modulo de treinamento.
+As causas metodologicas encontradas foram:
 
-O modulo rejeita o inicio do treino se `fases`, `normalizacao`, `corte`,
-`augmentation` ou `particoes` estiverem ausentes. A funcao
-`calcular_pos_weight_treino` confere a proporcao por paciente; para a particao oficial,
-o resultado esperado e `78/26 = 3.0`.
+- `pos_weight=3` desloca para aproximadamente 0,5 a probabilidade constante
+  otima nesta prevalencia; a escolha do limiar por F1 favorecia a classe
+  positiva e podia premiar a predicao quase constante;
+- o vencedor era escolhido por F1, embora a separacao medida por AUC fosse
+  fraca;
+- checkpoint por menor loss e posterior ranking por outra metrica podiam
+  selecionar epocas diferentes;
+- a seed era aplicada depois de criar a cabeca aleatoria do modelo;
+- a ResNet apresentava sobreajuste precoce: a loss de treino continuava caindo
+  enquanto a loss de validacao subia.
 
-## Protocolo inicial
+A seed passou a ser aplicada antes da criacao do modelo. AUC-ROC e acuracia
+balanceada foram adicionadas, o checkpoint passou a seguir a AUC e o limiar e
+selecionado por acuracia balanceada apenas na validacao.
 
-- Particoes informadas pelo projeto: treino `test=0`, validacao `test=2`, teste
-  `test=1`.
-- `BCEWithLogitsLoss(pos_weight=3.0)`, calculado apenas a partir de 78 negativos e
-  26 positivos do treino.
-- Adam; taxa inicial `1e-3` para a CNN e `1e-4` para as cabecas transferidas;
-  `weight_decay=1e-4`.
-- Batch inicial 8, sujeito a medicao na GPU.
-- Ate 30 epocas, parada antecipada com paciencia 5.
-- Melhor checkpoint selecionado pela menor loss de validacao.
-- Limiar inicial 0,5; a funcao `selecionar_limiar_validacao` pode otimizar F1
-  somente com predicoes da validacao.
-- Seeds de Python, NumPy, PyTorch e CUDA registradas.
-- Backbone congelado inicialmente na ResNet50 e MobileNetV2; BatchNorm congelada
-  permanece em modo de avaliacao.
+## Experimentos controlados
 
-Esses valores sao pontos de partida e so devem ser descritos como resultados depois
-de experimentos reais.
+Os ajustes usaram a ResNet50 com tres fases e corte de maior tumor, seed 42.
+Foram comparados `pos_weight` 1, 1,73 e 3; backbone congelado versus `layer4`
+treinavel; taxas separadas para cabeca/backbone; normalizacao por percentis
+versus z-score calculado somente no treino; ultimo bloco, regularizacao e uso
+opcional da mascara como filtro. Os resultados estao em
+`resultados/ajustes_issue4*`.
 
-## Ordem dos experimentos
+As rodadas em `ajustes_issue4_piloto_sem_seed` sao preservadas para auditoria,
+mas excluidas das conclusoes porque precedem a correcao da seed. As rodadas em
+`ajustes_issue4_checkpoint_loss` tambem sao historicas e nao participam da
+selecao final, pois usaram checkpoint por loss.
 
-| Prioridade | Arquitetura | Configuracao temporal | Corte |
-|---:|---|---|---|
-| 1 | CNN | `post_early` | central |
-| 2 | CNN | tres fases | central |
-| 3 | MobileNetV2 | `post_early` | central |
-| 4 | ResNet50 | `post_early` | central |
-| 5 | MobileNetV2 | tres fases | central |
-| 6 | ResNet50 | tres fases | central |
-| 7–12 | mesmas tres redes | uma/tres fases | maior area tumoral |
+## Protocolo final congelado
 
-A fase isolada proposta e `post_early`. Se o grupo escolher outra fase, deve manter a
-mesma escolha nas tres redes e registrar a decisao.
+- seed 42; ate 30 epocas; early stopping com paciencia 3 pela AUC de validacao;
+- Adam e `weight_decay=1e-4`;
+- CNN: treinamento completo, LR `1e-3`, `pos_weight=sqrt(3)`, batch 64;
+- MobileNetV2: pesos ImageNet, backbone congelado, LR `1e-4`,
+  `pos_weight=sqrt(3)`, batch 64;
+- ResNet50: pesos ImageNet, `layer4` e cabeca treinaveis, BatchNorm congelada,
+  LR `1e-5` no backbone e `1e-4` na cabeca, `pos_weight=1`, batch 32;
+- normalizacao conjunta por amostra nos percentis 1/99;
+- uma fase (`post_early`) ou tres (`pre`, `post_early`, `post_late`);
+- corte central ou corte da fatia de maior area tumoral;
+- limiar por maior acuracia balanceada na validacao;
+- ranking final por AUC de validacao, com desempate por acuracia balanceada,
+  F1, loss e nome.
 
-## Artefatos por configuracao
+O corte de maior tumor requer mascara na inferencia. O melhor modelo com corte
+central e mantido como alternativa para cenarios sem mascara.
 
-Usar nomes como:
-
-```text
-cnn__post-early__central__seed-42.pt
-cnn__post-early__central__seed-42_history.csv
-cnn__post-early__central__seed-42_validation.json
-```
-
-O checkpoint guarda pesos, estado do otimizador, configuracao, historico, melhor
-epoca, ambiente e metadados de preprocessamento. O CSV registra loss e tempo por
-epoca. O JSON registra as cinco metricas, matriz de confusao e probabilidades por
-paciente. As funcoes de exportacao tambem geram o grafico de convergencia e a matriz
-de confusao em PNG.
-
-## Regras de avaliacao
-
-1. Ajustar hiperparametros e limiar somente na validacao.
-2. Avaliar o teste reservado apenas depois de selecionar a configuracao.
-3. Agregar probabilidades repetidas do mesmo paciente pela media antes das metricas.
-4. Registrar sensibilidade, especificidade, precisao, acuracia, F1, `TN/FP/FN/TP`,
-   loss e tempo.
-5. Nao apresentar smoke tests ou tensores artificiais como resultados.
-6. Confirmar a recarga do melhor checkpoint em um processo novo.
-
-## Validacao sem dataset
-
-O comando abaixo testa formatos, forward/backward, CUDA e recarga com dados artificiais:
-
-```bash
-python scripts/validar_issue4.py --device cuda --baixar-pesos
-```
-
-Ele nao treina uma configuracao real e nao gera metricas para o relatorio.
-
-Quando a Issue #2 expuser uma fabrica com o contrato descrito no inicio de
-`scripts/executar_experimento.py`, o primeiro treino real podera ser iniciado por:
-
-```bash
-PAI_DATASET_DIR=/mnt/d/PAI/dataset/BreastDCEDL_ISPY1_min_crop \
-python scripts/executar_experimento.py \
-  --loader-factory modulos.fabrica_carregadores:criar_carregadores \
-  --arquitetura cnn --canais 1 --fases post_early --corte central
-```
-
-O teste reservado nao e avaliado nesse comando. A opcao `--avaliar-teste` deve ser
-usada apenas na configuracao final escolhida pela validacao.
-
-Depois das 12 validacoes, consolidar a comparacao e identificar o checkpoint sem
-consultar o teste:
-
-```bash
-python scripts/consolidar_resultados.py
-```
-
-A grade completa pode ser executada de modo retomavel (configuracoes que ja tenham
-JSON de validacao sao ignoradas) com:
+## Execucao reproduzivel
 
 ```bash
 PAI_DATASET_DIR=/mnt/d/PAI/dataset/BreastDCEDL_ISPY1_min_crop \
 TORCH_HOME=/mnt/d/PAI/torch \
-python scripts/executar_grade_issue4.py --device cuda --batch 64
+python scripts/executar_grade_issue4.py \
+  --epocas 30 --batch 64 --batch-resnet 32 --paciencia 3 \
+  --pos-weight 1.7320508075688772 --pos-weight-resnet 1 \
+  --lr-cnn 1e-3 --lr-transferencia 1e-4 --lr-backbone 1e-5 \
+  --fine-tuning-resnet layer4 --criterio-limiar acuracia_balanceada \
+  --criterio-checkpoint auc_roc --tag final-v2 \
+  --saida resultados/finais_issue4 --checkpoints checkpoints/finais_issue4
 ```
 
-Somente entao, recarregar o checkpoint vencedor em outro processo e avaliar uma
-unica vez o teste reservado:
+Depois de congelar a grade, os 12 checkpoints sao avaliados no teste sem novo
+treino e sem recalibrar os limiares:
 
 ```bash
 PAI_DATASET_DIR=/mnt/d/PAI/dataset/BreastDCEDL_ISPY1_min_crop \
-python scripts/avaliar_teste_final.py \
-  --checkpoint checkpoints/ARQUITETURA__FASES__CORTE__seed-42.pt --device cuda
+python scripts/avaliar_grade_teste_issue4.py \
+  --checkpoints checkpoints/finais_issue4 --tag final-v2 \
+  --device cuda --saida resultados/finais_issue4
 ```
+
+Uma configuracao isolada continua disponivel por
+`scripts/executar_experimento.py`, e um checkpoint isolado por
+`scripts/avaliar_teste_final.py`.
+
+## Checkpoints
+
+Cada `.pt` registra arquitetura, pesos, configuracao temporal, canais, corte,
+normalizacao, hiperparametros, historico, epoca e metadados. Depois da validacao,
+o mesmo arquivo recebe o limiar e as metricas de selecao. Os pesos ficam em
+`checkpoints/finais_issue4/`, ignorados pelo Git, e devem ser entregues por um
+canal separado.
+
+O teste ja havia sido consultado no baseline anterior. Essa limitacao e
+preservada no historico; nenhuma metrica de teste foi usada para escolher os
+ajustes ou promover um modelo na execucao final.
