@@ -102,6 +102,7 @@ def main() -> int:
                 "--lr", "1e-4",
                 "--lr-backbone", str(args.lr_backbone),
                 "--criterio-limiar", "acuracia_balanceada",
+                "--criterio-checkpoint", "auc_roc",
                 "--device", args.device,
                 "--saida", str(resultados),
                 "--checkpoints", str(checkpoints),
