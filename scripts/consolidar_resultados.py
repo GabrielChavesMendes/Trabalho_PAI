@@ -26,6 +26,7 @@ def _ler_historico(caminho: Path) -> tuple[float, int, int]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Consolidar as 12 validacoes da Issue #4")
     parser.add_argument("--resultados", type=Path, default=Path("resultados"))
+    parser.add_argument("--checkpoints", type=Path, default=Path("checkpoints"))
     parser.add_argument("--criterio", choices=("f1", "acuracia_balanceada", "auc_roc"), default="f1")
     parser.add_argument("--saida", type=Path, default=Path("resultados/comparacao_validacao.csv"))
     args = parser.parse_args()
@@ -91,7 +92,7 @@ def main() -> int:
             f"maior {args.criterio} de validacao; desempate por acuracia balanceada, sensibilidade e loss"
         ),
         "experimento": vencedor["experimento"],
-        "checkpoint_local": f"checkpoints/{vencedor['experimento']}.pt",
+        "checkpoint_local": str(args.checkpoints / f"{vencedor['experimento']}.pt"),
         "limiar_validacao": vencedor["limiar"],
         "metricas_validacao": {
             chave: vencedor[chave]
