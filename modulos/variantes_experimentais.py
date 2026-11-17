@@ -13,7 +13,7 @@ from modulos.modulo_dataset import (
     DatasetDCE, FASES, PARTICOES, carregar_metadados, criar_manifesto,
     selecionar_particao, verificar_arquivos,
 )
-from modulos.modulo_dataset_issue1 import DatasetDCEAumentado
+from modulos.dataset_aumentado import DatasetDCEAumentado
 from modulos.modulo_redes import CNNSimples, criar_modelo
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -37,7 +37,7 @@ def criar_modelo_registrado(arquitetura, canais_entrada, pre_treinado=False):
     if arquitetura == 'cnn_leaky':
         return CNNLeaky(canais_entrada)
     if arquitetura == 'cnn_groupnorm':
-        from modulos.grade_final_issue4 import CNNGroupNorm
+        from modulos.grade_experimental import CNNGroupNorm
         return CNNGroupNorm(canais_entrada)
     return criar_modelo(arquitetura, canais_entrada, pre_treinado=pre_treinado)
 
