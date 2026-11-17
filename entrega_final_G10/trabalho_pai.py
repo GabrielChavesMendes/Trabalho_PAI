@@ -944,6 +944,24 @@ def treinar_configuracao(pacientes, arquitetura, fase, corte, args, dispositivo)
         writer = csv.DictWriter(f, fieldnames=list(historico[0]))
         writer.writeheader()
         writer.writerows(historico)
+    # Curva de convergencia obrigatoria no relatorio do enunciado.
+    import matplotlib
+    matplotlib.use("Agg")
+    from matplotlib.figure import Figure
+    figura = Figure(figsize=(7, 4), dpi=125)
+    eixo = figura.subplots(1, 1)
+    eixo.plot(
+        [e["epoca"] for e in historico],
+        [e["loss_treino"] for e in historico], label="Treino",
+    )
+    eixo.plot(
+        [e["epoca"] for e in historico],
+        [e["loss_validacao"] for e in historico], label="Validacao",
+    )
+    eixo.set(xlabel="Epoca", ylabel="BCE loss", title="Convergencia")
+    eixo.legend()
+    figura.tight_layout()
+    figura.savefig(destino.with_name(destino.stem + "__loss.png"))
     with (destino.with_suffix(".json")).open("w", encoding="utf-8") as f:
         json.dump({
             "arquitetura": arquitetura, "fase": fase, "corte": corte,
@@ -957,6 +975,7 @@ def treinar_configuracao(pacientes, arquitetura, fase, corte, args, dispositivo)
 
 def executar_treinamento_cli():
     """Execucao opcional explicita: nunca reentreina ao abrir a interface."""
+    global DATASET_PADRAO
     parser = argparse.ArgumentParser(description="Treinar modelos do trabalho PAI")
     parser.add_argument("--treinar", action="store_true", required=True)
     parser.add_argument("--grade", action="store_true", help="Executar as 12 configuracoes")
@@ -983,7 +1002,6 @@ def executar_treinamento_cli():
         "cuda" if (args.device == "cuda" or args.device == "auto"
                    and torch.cuda.is_available()) else "cpu"
     )
-    global DATASET_PADRAO
     DATASET_PADRAO = args.dataset_dir.expanduser().resolve()
     pacientes = carregar_metadados(args.csv.expanduser().resolve())
     configuracoes = (
