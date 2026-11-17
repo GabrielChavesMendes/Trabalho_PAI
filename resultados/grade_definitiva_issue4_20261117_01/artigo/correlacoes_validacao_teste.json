@@ -1,0 +1,8 @@
+{
+  "spearman": {
+    "auc_roc": 0.14239877935499468,
+    "acuracia_balanceada": -0.23545532335839164,
+    "f1": 0.30685714759609195
+  },
+  "observacao": "Descritivo; modelos e pacientes compartilhados, sem teste de superioridade"
+}

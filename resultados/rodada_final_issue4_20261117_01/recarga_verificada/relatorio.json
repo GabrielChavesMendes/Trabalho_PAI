@@ -1,0 +1,26 @@
+[
+  {
+    "id": "e1_cnn_lr_menor",
+    "normalizacao": "nenhuma",
+    "diferenca_max_prob": 0.0,
+    "classes_divergentes": 0,
+    "pacientes": 33,
+    "teste_avaliado": false
+  },
+  {
+    "id": "e2_cnn_leaky",
+    "normalizacao": "nenhuma",
+    "diferenca_max_prob": 0.0,
+    "classes_divergentes": 0,
+    "pacientes": 33,
+    "teste_avaliado": false
+  },
+  {
+    "id": "e3_resnet_imagenet",
+    "normalizacao": "imagenet_rgb",
+    "diferenca_max_prob": 0.0,
+    "classes_divergentes": 0,
+    "pacientes": 33,
+    "teste_avaliado": false
+  }
+]

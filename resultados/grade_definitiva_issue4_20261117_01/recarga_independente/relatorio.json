@@ -1,0 +1,277 @@
+{
+  "catalogo_sha256": "cde703ba33fbb4874ef5474deaab24822f7d0544c9dcdb6235c370e332c41a1e",
+  "modelos": [
+    {
+      "id": "cnn__post-early__central__seed-42",
+      "checkpoint_sha256": "4b9b7feef5cd7d2a511b750d6037c35b1ab3869d1b9c4883d0f69b5ef481e4e8",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "cnn__post-early__maior-tumor__seed-42",
+      "checkpoint_sha256": "206bc055e52464cd3144ab833eb92c3e835beb9d6d9bde2022eeafe027807d0b",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "cnn__tres__central__seed-42",
+      "checkpoint_sha256": "b91bc79c6a9a798981ce2d7dd926e5f3378f1a515ab3a426b4a63fe79b653693",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "cnn__tres__maior-tumor__seed-42",
+      "checkpoint_sha256": "b5c16ac90174fad578ef1f0e79fd36a0fb3275e01bb9328b901e686eb2b9994d",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "mobilenetv2__post-early__central__seed-42",
+      "checkpoint_sha256": "a3221c0c06029f0bdefad8f5f85c7f02681f361a749ac6b68f28a20a6b40adc3",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "mobilenetv2__post-early__maior-tumor__seed-42",
+      "checkpoint_sha256": "5197c482d6adce90ac12b7713a89f785c95dc907c39a0df0e32ad3c6d7c0c663",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "mobilenetv2__tres__central__seed-42",
+      "checkpoint_sha256": "eef4a548ef4921160da3c231e01c81916d8280526be1944d7e0846932f987b4e",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "mobilenetv2__tres__maior-tumor__seed-42",
+      "checkpoint_sha256": "897d36ffb7354f627831e9a5bac2ce32f26031b050b05f51c6248a24fe73c6e8",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "resnet50__post-early__central__seed-42",
+      "checkpoint_sha256": "5e9923f8f7db0ca1da197e9baea58ff2087f52bd033d25cfcc99f5bddd72b030",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "resnet50__post-early__maior-tumor__seed-42",
+      "checkpoint_sha256": "5e071152a56e5348d23eaa66b67d6278b310037867be6782baf83609d969979f",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "resnet50__tres__central__seed-42",
+      "checkpoint_sha256": "98443ab06fb237d3d273ea9a1f1d4679648959bd50307f0ebea16f9231c5bafe",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "resnet50__tres__maior-tumor__seed-42",
+      "checkpoint_sha256": "2f62d0c246ce58fbf1114e1d889cc77ea7046f11f6c85a13f68b4537f9f3ab43",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "e1_cnn_lr_menor",
+      "checkpoint_sha256": "56c38a648d2c64d52f6eb82285d5b785f6d22f999a506d055e6a7a75e1162754",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "e2_cnn_leaky",
+      "checkpoint_sha256": "1dbd422f5f07321d661c2830733879d26e4ccce76fed84fa057eb3ef7fde63e1",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "e3_resnet_imagenet",
+      "checkpoint_sha256": "86a4e198d3b05dd362e68f94b0e0244620b43e330b0761a840eeb0720ce020e5",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "imagenet_rgb",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_cnn_post_early_central",
+      "checkpoint_sha256": "1177413c50b0177a1b8a33f473befeaaac511b1e69b0af758d94a2b089d017f3",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_cnn_post_early_maior_tumor",
+      "checkpoint_sha256": "0a6b91d4ec66a51597cadca3658e0cb25806e989d12a5655cdb707864e6abacb",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_cnn_tres_central",
+      "checkpoint_sha256": "aa10587b0517814785bed52b239ab361a91839d05e7ed9746a9fbc2110afdec2",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_cnn_tres_maior_tumor",
+      "checkpoint_sha256": "6a57e06be28caedc7d01c8dfeb53ee1e750247fc99739387165fcad7f11e8c1a",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_resnet50_post_early_central",
+      "checkpoint_sha256": "46cc192e68ac712ad8f6fce4b96d2d7aecc1c848cd253c745f3316a6aebeece8",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_resnet50_post_early_maior_tumor",
+      "checkpoint_sha256": "3a21b1b6c59d029157892741d6f7f51cde0b5d89bd6b9a45eb1574ee9a186cbd",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_resnet50_tres_central",
+      "checkpoint_sha256": "b72c022780aef91000f2a57a89e0c63822499d0ce93c68cf5c132a12a589d507",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_resnet50_tres_maior_tumor",
+      "checkpoint_sha256": "d3779b4269dba8f58e2b230dd0ab24777d2327ca0fa6dd98973c81e317661f15",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_mobilenetv2_post_early_central",
+      "checkpoint_sha256": "b5ce3664f023f8e5934c8c2383b493abe7fd9c9913926ba9d1ec1c95a5f6a081",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_mobilenetv2_post_early_maior_tumor",
+      "checkpoint_sha256": "312d421b73fda0f65a3bd9b8424b85c26b39115c249589177842889ee98b1d57",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_mobilenetv2_tres_central",
+      "checkpoint_sha256": "f486784eee3c613727c1eda5d9791db9699290d9f65a425727aa589f02ad8372",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    },
+    {
+      "id": "c_mobilenetv2_tres_maior_tumor",
+      "checkpoint_sha256": "ddbfc2818f60763f2fd63bde3f16354a04dc7e40a57872c6f283bbc6311771f8",
+      "diferenca_max_prob": 0.0,
+      "classes_divergentes": 0,
+      "pacientes": 33,
+      "normalizacao": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "teste_avaliado": false
+    }
+  ],
+  "teste_avaliado": false,
+  "novos_treinamentos": 0
+}

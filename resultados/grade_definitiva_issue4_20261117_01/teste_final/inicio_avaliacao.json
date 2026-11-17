@@ -1,0 +1,19 @@
+{
+  "iniciado_em_utc": "2026-11-17T16:28:13.194905+00:00",
+  "manifesto_sha256": "b0efd0f922e46ec17f0bd3e2e1e31902d4bf7156e3423f41a56c07d3c530fe40",
+  "selecoes_congeladas": [
+    "c_cnn_post_early_central",
+    "cnn__post-early__maior-tumor__seed-42",
+    "cnn__tres__central__seed-42",
+    "cnn__tres__maior-tumor__seed-42",
+    "c_mobilenetv2_post_early_central",
+    "c_mobilenetv2_post_early_maior_tumor",
+    "c_mobilenetv2_tres_central",
+    "c_mobilenetv2_tres_maior_tumor",
+    "c_resnet50_post_early_central",
+    "c_resnet50_post_early_maior_tumor",
+    "c_resnet50_tres_central",
+    "resnet50__tres__maior-tumor__seed-42"
+  ],
+  "hiperparametros_ou_limiares_ajustados_no_teste": false
+}

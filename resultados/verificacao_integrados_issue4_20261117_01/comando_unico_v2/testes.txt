@@ -1,0 +1,14 @@
+
+=================================== ERRORS ====================================
+________________________ ERROR collecting test session ________________________
+C:\Python312\Lib\pathlib.py:892: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+C:\Python312\Lib\pathlib.py:840: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP'
+=========================== short test summary info ===========================
+ERROR  - PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculd...
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.12s

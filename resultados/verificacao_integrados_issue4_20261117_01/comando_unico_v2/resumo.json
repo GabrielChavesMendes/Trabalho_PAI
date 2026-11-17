@@ -1,0 +1,8 @@
+{
+  "device_validacao": "cuda",
+  "python": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\Scripts\\python.exe",
+  "treinamento_executado": false,
+  "teste_avaliado": false,
+  "status": "erro",
+  "erro": "1/3 Testes automatizados falhou (codigo 2). Consulte D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\verificacao_integrados_issue4_20261117_01\\comando_unico_v2\\testes.txt"
+}

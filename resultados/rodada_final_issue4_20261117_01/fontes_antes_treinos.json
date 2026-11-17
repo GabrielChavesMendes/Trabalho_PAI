@@ -1,0 +1,16 @@
+{
+  "modulos\\fabrica_carregadores.py": "15d083d7001cbf8af0e5e21e64d7c4dbd3d572dba7d3878336aa369bb370669a",
+  "modulos\\interface_nifti.py": "bf6f2a3d0b75a59804223263d0ea6ac8f9bcd6cee6a94b859d81b5b3fb6cd0c2",
+  "modulos\\modulo_augmentacao.py": "e37c177fa647cc6ddd83bc795251b9a02a24427e6acde2bea9728c3fdfd330ae",
+  "modulos\\modulo_balanceamento.py": "db95db3a97bddcd0e9a1abc3e87a8427757f996145d3d7fb46c5f45419eda51f",
+  "modulos\\modulo_dataset.py": "f770346aac826771a69d20b284aeb433d5bd4e005f955119fb006aefef74aab8",
+  "modulos\\modulo_dataset_issue1.py": "a0c667bfc697d02625390a6e8da1b8cccd9c0edadde16e24271b2acb13989d19",
+  "modulos\\modulo_redes.py": "0670a659a6365ec02cede918904998a19ce5527788209cf872790a239b4658dd",
+  "modulos\\modulo_treinamento.py": "25105bfb438c3db644636bef8b60b655ac9f9d57fc7c96164304600aec8b3459",
+  "modulos\\rodada_final_issue4.py": "d04db9ea669b5fbe8e481578820c91b13a4951776f99e66683cb40cff41c54ae",
+  "modulos\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "scripts\\executar_rodada_final_issue4.py": "6d9d8e93e31a8ba8b82b78392142e77c82daa358009554df638734b517068751",
+  "scripts\\diagnosticar_cnn_issue4.py": "ee4d036bc854b24e135bb7dc7438cb5b0e092c8061636da1d6dfcc1c87381fc6",
+  "scripts\\refinar_limiares_validacao_issue4.py": "93a3c195c179201e54e1476a738ca295af2ce3a04f3b034fb76af7bd6c522c24",
+  "dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv": "3fe17fb8a7c3e4119cae0d54962fc75412cc8b892754f0c37d92fe791ec3df1b"
+}

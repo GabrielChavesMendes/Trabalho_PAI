@@ -1,0 +1,1474 @@
+[
+  {
+    "id": "cnn__post-early__central__seed-42",
+    "grupo": "A",
+    "pacientes": [
+      "ISPY1_1001",
+      "ISPY1_1002",
+      "ISPY1_1003",
+      "ISPY1_1005",
+      "ISPY1_1011",
+      "ISPY1_1070",
+      "ISPY1_1075",
+      "ISPY1_1077"
+    ],
+    "otimizacoes": 0,
+    "loss_treino_probe": 1.3988463878631592,
+    "logits": [
+      -0.02483343333005905,
+      -0.024816300719976425,
+      -0.0248212069272995,
+      -0.024781901389360428,
+      -0.024826165288686752,
+      -0.024792224168777466,
+      -0.02481607347726822,
+      -0.024773411452770233
+    ],
+    "amplitude_probabilidades": 1.4990568161010742e-05,
+    "ativacoes": {
+      "caracteristicas.0": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.1070505678653717,
+        "std": 0.14498960971832275,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.035535216331481934
+      },
+      "caracteristicas.1": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.11230187118053436,
+        "std": 0.13946318626403809,
+        "fracao_zeros": 0.35947632789611816,
+        "fracao_canais_totalmente_zero": 0.25,
+        "variacao_entre_pacientes": 0.030986011028289795
+      },
+      "caracteristicas.3": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": -0.04927552491426468,
+        "std": 0.06435535848140717,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.012188850902020931
+      },
+      "caracteristicas.4": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.0023672147653996944,
+        "std": 0.011250685900449753,
+        "fracao_zeros": 0.9209845066070557,
+        "fracao_canais_totalmente_zero": 0.46875,
+        "variacao_entre_pacientes": 0.001469524228014052
+      },
+      "caracteristicas.6": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": -0.003465713933110237,
+        "std": 0.018907731398940086,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.001965521601960063
+      },
+      "caracteristicas.7": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.004858681932091713,
+        "std": 0.010784017853438854,
+        "fracao_zeros": 0.7610316276550293,
+        "fracao_canais_totalmente_zero": 0.421875,
+        "variacao_entre_pacientes": 0.0007868511602282524
+      },
+      "caracteristicas.9": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": -0.0061814733780920506,
+        "std": 0.02190307527780533,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.0005653452826663852
+      },
+      "caracteristicas.10": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.004413725808262825,
+        "std": 0.016815586015582085,
+        "fracao_zeros": 0.9077224731445312,
+        "fracao_canais_totalmente_zero": 0.671875,
+        "variacao_entre_pacientes": 0.00010168992594117299
+      },
+      "classificador.0": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.002541526220738888,
+        "std": 0.04231634363532066,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 3.9997874409891665e-05
+      },
+      "classificador.1": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.014845438301563263,
+        "std": 0.03231513500213623,
+        "fracao_zeros": 0.6875,
+        "fracao_canais_totalmente_zero": 0.6875,
+        "variacao_entre_pacientes": 1.4401504813577048e-05
+      },
+      "classificador.3": {
+        "shape": [
+          8,
+          1
+        ],
+        "media": -0.02480759099125862,
+        "std": 2.2072383217164315e-05,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 2.2072383217164315e-05
+      }
+    },
+    "gradientes_norma": {
+      "caracteristicas.0.weight": 0.0001040102361002937,
+      "caracteristicas.0.bias": 0.00021625992667395622,
+      "caracteristicas.3.weight": 0.0012045300099998713,
+      "caracteristicas.3.bias": 0.0005388332647271454,
+      "caracteristicas.6.weight": 0.0020180840510874987,
+      "caracteristicas.6.bias": 0.01214044913649559,
+      "caracteristicas.9.weight": 0.004600361455231905,
+      "caracteristicas.9.bias": 0.016337303444743156,
+      "classificador.0.weight": 0.03268774226307869,
+      "classificador.0.bias": 0.1662425845861435,
+      "classificador.3.weight": 0.10293517261743546,
+      "classificador.3.bias": 0.5124017000198364
+    }
+  },
+  {
+    "id": "cnn__post-early__maior-tumor__seed-42",
+    "grupo": "A",
+    "pacientes": [
+      "ISPY1_1001",
+      "ISPY1_1002",
+      "ISPY1_1003",
+      "ISPY1_1005",
+      "ISPY1_1011",
+      "ISPY1_1070",
+      "ISPY1_1075",
+      "ISPY1_1077"
+    ],
+    "otimizacoes": 0,
+    "loss_treino_probe": 1.3893449306488037,
+    "logits": [
+      -0.006077751517295837,
+      -0.0060822367668151855,
+      -0.006076253950595856,
+      -0.006082065403461456,
+      -0.0060805827379226685,
+      -0.00607907772064209,
+      -0.006080940365791321,
+      -0.006084971129894257
+    ],
+    "amplitude_probabilidades": 2.115964889526367e-06,
+    "ativacoes": {
+      "caracteristicas.0": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.10059066116809845,
+        "std": 0.1230684220790863,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.01978134736418724
+      },
+      "caracteristicas.1": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.10141786932945251,
+        "std": 0.12226374447345734,
+        "fracao_zeros": 0.4033600091934204,
+        "fracao_canais_totalmente_zero": 0.1875,
+        "variacao_entre_pacientes": 0.019283173605799675
+      },
+      "caracteristicas.3": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": -0.008666046895086765,
+        "std": 0.03349144756793976,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.005638856440782547
+      },
+      "caracteristicas.4": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.00623274827376008,
+        "std": 0.019584959372878075,
+        "fracao_zeros": 0.8348207473754883,
+        "fracao_canais_totalmente_zero": 0.34375,
+        "variacao_entre_pacientes": 0.001891748746857047
+      },
+      "caracteristicas.6": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": -0.005744197405874729,
+        "std": 0.011040096171200275,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.0008753687143325806
+      },
+      "caracteristicas.7": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.000616017438005656,
+        "std": 0.0025175430346280336,
+        "fracao_zeros": 0.9243130683898926,
+        "fracao_canais_totalmente_zero": 0.609375,
+        "variacao_entre_pacientes": 0.0002021553082158789
+      },
+      "caracteristicas.9": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": -0.004082813858985901,
+        "std": 0.013124233111739159,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.00016574164328631014
+      },
+      "caracteristicas.10": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.0019242084817960858,
+        "std": 0.008847678080201149,
+        "fracao_zeros": 0.9048881530761719,
+        "fracao_canais_totalmente_zero": 0.875,
+        "variacao_entre_pacientes": 5.5045893532224e-05
+      },
+      "classificador.0": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.00398603081703186,
+        "std": 0.043937914073467255,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 1.3042767932347488e-05
+      },
+      "classificador.1": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.017650650814175606,
+        "std": 0.03198792040348053,
+        "fracao_zeros": 0.6875,
+        "fracao_canais_totalmente_zero": 0.6875,
+        "variacao_entre_pacientes": 7.921485121187288e-06
+      },
+      "classificador.3": {
+        "shape": [
+          8,
+          1
+        ],
+        "media": -0.006080484949052334,
+        "std": 2.7584358122112462e-06,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 2.7584358122112462e-06
+      }
+    },
+    "gradientes_norma": {
+      "caracteristicas.0.weight": 3.564565486158244e-05,
+      "caracteristicas.0.bias": 6.400179699994624e-05,
+      "caracteristicas.3.weight": 0.00027305237017571926,
+      "caracteristicas.3.bias": 0.00014019159425515682,
+      "caracteristicas.6.weight": 0.00033341432572342455,
+      "caracteristicas.6.bias": 0.0009992534760385752,
+      "caracteristicas.9.weight": 0.0010508849518373609,
+      "caracteristicas.9.bias": 0.017166996374726295,
+      "classificador.0.weight": 0.018719837069511414,
+      "classificador.0.bias": 0.18279293179512024,
+      "classificador.3.weight": 0.10380341112613678,
+      "classificador.3.bias": 0.5030404925346375
+    }
+  },
+  {
+    "id": "cnn__tres__central__seed-42",
+    "grupo": "A",
+    "pacientes": [
+      "ISPY1_1001",
+      "ISPY1_1002",
+      "ISPY1_1003",
+      "ISPY1_1005",
+      "ISPY1_1011",
+      "ISPY1_1070",
+      "ISPY1_1075",
+      "ISPY1_1077"
+    ],
+    "otimizacoes": 0,
+    "loss_treino_probe": 1.358882188796997,
+    "logits": [
+      -0.09302930533885956,
+      -0.09292997419834137,
+      -0.093121238052845,
+      -0.09325505048036575,
+      -0.09298290312290192,
+      -0.09313622862100601,
+      -0.09270557761192322,
+      0.3388420641422272
+    ],
+    "amplitude_probabilidades": 0.1072060763835907,
+    "ativacoes": {
+      "caracteristicas.0": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": -0.1715860217809677,
+        "std": 0.48278266191482544,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.15708817541599274
+      },
+      "caracteristicas.1": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.027750082314014435,
+        "std": 0.08799996227025986,
+        "fracao_zeros": 0.8219829797744751,
+        "fracao_canais_totalmente_zero": 0.3125,
+        "variacao_entre_pacientes": 0.01408524252474308
+      },
+      "caracteristicas.3": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": -0.04593805968761444,
+        "std": 0.09827251732349396,
+        "fracao_zeros": 2.384185791015625e-07,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.023774404078722
+      },
+      "caracteristicas.4": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.00928964838385582,
+        "std": 0.0247332863509655,
+        "fracao_zeros": 0.8080410957336426,
+        "fracao_canais_totalmente_zero": 0.3125,
+        "variacao_entre_pacientes": 0.0038317437283694744
+      },
+      "caracteristicas.6": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": -0.02965899556875229,
+        "std": 0.058723971247673035,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.011177295818924904
+      },
+      "caracteristicas.7": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.003665261436253786,
+        "std": 0.035377729684114456,
+        "fracao_zeros": 0.9604473114013672,
+        "fracao_canais_totalmente_zero": 0.609375,
+        "variacao_entre_pacientes": 0.004619176033884287
+      },
+      "caracteristicas.9": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.002220184076577425,
+        "std": 0.1782240867614746,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.027232125401496887
+      },
+      "caracteristicas.10": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.014266661368310452,
+        "std": 0.17321516573429108,
+        "fracao_zeros": 0.8568782806396484,
+        "fracao_canais_totalmente_zero": 0.6328125,
+        "variacao_entre_pacientes": 0.02035163715481758
+      },
+      "classificador.0": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.009816266596317291,
+        "std": 0.10515154153108597,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.062372416257858276
+      },
+      "classificador.1": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.0290717501193285,
+        "std": 0.091744564473629,
+        "fracao_zeros": 0.69921875,
+        "fracao_canais_totalmente_zero": 0.5625,
+        "variacao_entre_pacientes": 0.039949931204319
+      },
+      "classificador.3": {
+        "shape": [
+          8,
+          1
+        ],
+        "media": -0.03903977572917938,
+        "std": 0.1526874154806137,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.1526874154806137
+      }
+    },
+    "gradientes_norma": {
+      "caracteristicas.0.weight": 0.6513534188270569,
+      "caracteristicas.0.bias": 0.3654216229915619,
+      "caracteristicas.3.weight": 0.12393668293952942,
+      "caracteristicas.3.bias": 0.14586468040943146,
+      "caracteristicas.6.weight": 0.04133586585521698,
+      "caracteristicas.6.bias": 0.05192989110946655,
+      "caracteristicas.9.weight": 0.02756832353770733,
+      "caracteristicas.9.bias": 0.026664774864912033,
+      "classificador.0.weight": 0.10727417469024658,
+      "classificador.0.bias": 0.14368906617164612,
+      "classificador.3.weight": 0.2693982720375061,
+      "classificador.3.bias": 0.5062821507453918
+    }
+  },
+  {
+    "id": "cnn__tres__maior-tumor__seed-42",
+    "grupo": "A",
+    "pacientes": [
+      "ISPY1_1001",
+      "ISPY1_1002",
+      "ISPY1_1003",
+      "ISPY1_1005",
+      "ISPY1_1011",
+      "ISPY1_1070",
+      "ISPY1_1075",
+      "ISPY1_1077"
+    ],
+    "otimizacoes": 0,
+    "loss_treino_probe": 1.3467168807983398,
+    "logits": [
+      -0.11911851167678833,
+      -0.11068274080753326,
+      -0.12279989570379257,
+      -0.14490461349487305,
+      -0.11907400190830231,
+      -0.12251415103673935,
+      -0.11040332168340683,
+      0.4667590856552124
+    ],
+    "amplitude_probabilidades": 0.15077930688858032,
+    "ativacoes": {
+      "caracteristicas.0": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": -0.18185681104660034,
+        "std": 0.4703996181488037,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.14434190094470978
+      },
+      "caracteristicas.1": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.012089154683053493,
+        "std": 0.044759832322597504,
+        "fracao_zeros": 0.8949347734451294,
+        "fracao_canais_totalmente_zero": 0.25,
+        "variacao_entre_pacientes": 0.004254057537764311
+      },
+      "caracteristicas.3": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": -0.03450416028499603,
+        "std": 0.04108389839529991,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.010200881399214268
+      },
+      "caracteristicas.4": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.00411886814981699,
+        "std": 0.0229661762714386,
+        "fracao_zeros": 0.957329511642456,
+        "fracao_canais_totalmente_zero": 0.28125,
+        "variacao_entre_pacientes": 0.0022541077341884375
+      },
+      "caracteristicas.6": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": -0.006970725022256374,
+        "std": 0.07648424059152603,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.017035165801644325
+      },
+      "caracteristicas.7": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.012485332787036896,
+        "std": 0.06856945157051086,
+        "fracao_zeros": 0.8919577598571777,
+        "fracao_canais_totalmente_zero": 0.484375,
+        "variacao_entre_pacientes": 0.012995772995054722
+      },
+      "caracteristicas.9": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.014653012156486511,
+        "std": 0.3184487223625183,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.059218816459178925
+      },
+      "caracteristicas.10": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.03587668016552925,
+        "std": 0.3001302480697632,
+        "fracao_zeros": 0.8746156692504883,
+        "fracao_canais_totalmente_zero": 0.6484375,
+        "variacao_entre_pacientes": 0.03756960481405258
+      },
+      "classificador.0": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": -0.016548680141568184,
+        "std": 0.18042737245559692,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.11210494488477707
+      },
+      "classificador.1": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.035936057567596436,
+        "std": 0.14271481335163116,
+        "fracao_zeros": 0.80078125,
+        "fracao_canais_totalmente_zero": 0.6875,
+        "variacao_entre_pacientes": 0.05443946272134781
+      },
+      "classificador.3": {
+        "shape": [
+          8,
+          1
+        ],
+        "media": -0.047842271625995636,
+        "std": 0.2082056850194931,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.2082056850194931
+      }
+    },
+    "gradientes_norma": {
+      "caracteristicas.0.weight": 0.8064520955085754,
+      "caracteristicas.0.bias": 0.5842519402503967,
+      "caracteristicas.3.weight": 0.1467885971069336,
+      "caracteristicas.3.bias": 0.2748250365257263,
+      "caracteristicas.6.weight": 0.056875988841056824,
+      "caracteristicas.6.bias": 0.12105607241392136,
+      "caracteristicas.9.weight": 0.04980037361383438,
+      "caracteristicas.9.bias": 0.04045753926038742,
+      "classificador.0.weight": 0.20181989669799805,
+      "classificador.0.bias": 0.13209836184978485,
+      "classificador.3.weight": 0.3854255974292755,
+      "classificador.3.bias": 0.5055064558982849
+    }
+  },
+  {
+    "id": "c_cnn_post_early_central",
+    "grupo": "C",
+    "pacientes": [
+      "ISPY1_1001",
+      "ISPY1_1002",
+      "ISPY1_1003",
+      "ISPY1_1005",
+      "ISPY1_1011",
+      "ISPY1_1070",
+      "ISPY1_1075",
+      "ISPY1_1077"
+    ],
+    "otimizacoes": 0,
+    "loss_treino_probe": 1.3924856185913086,
+    "logits": [
+      -0.028333283960819244,
+      -0.022987976670265198,
+      -0.04044591635465622,
+      -0.009895391762256622,
+      -0.025362417101860046,
+      -0.023939162492752075,
+      -0.015614427626132965,
+      -0.0013705044984817505
+    ],
+    "amplitude_probabilidades": 0.009767502546310425,
+    "ativacoes": {
+      "caracteristicas.0": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.014877443201839924,
+        "std": 0.28625357151031494,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.07105238735675812
+      },
+      "caracteristicas.2": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.3744264841079712,
+        "std": 0.5741926431655884,
+        "fracao_zeros": 0.47635483741760254,
+        "fracao_canais_totalmente_zero": 0.1875,
+        "variacao_entre_pacientes": 0.14801263809204102
+      },
+      "caracteristicas.4": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.24447214603424072,
+        "std": 0.4822953939437866,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.22055810689926147
+      },
+      "caracteristicas.6": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.3190233111381531,
+        "std": 0.7034403085708618,
+        "fracao_zeros": 0.6137804985046387,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.3107245862483978
+      },
+      "caracteristicas.8": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.47405022382736206,
+        "std": 1.3526915311813354,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.5624376535415649
+      },
+      "caracteristicas.10": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.21171656250953674,
+        "std": 0.9040175676345825,
+        "fracao_zeros": 0.8323965072631836,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.327420175075531
+      },
+      "caracteristicas.12": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": -0.2680862545967102,
+        "std": 4.40606164932251,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 1.6224560737609863
+      },
+      "caracteristicas.14": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.1394558548927307,
+        "std": 0.5612963438034058,
+        "fracao_zeros": 0.3454570770263672,
+        "fracao_canais_totalmente_zero": 0.0625,
+        "variacao_entre_pacientes": 0.15178647637367249
+      },
+      "classificador.0": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": -0.10612215846776962,
+        "std": 0.1432206779718399,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.018685491755604744
+      },
+      "classificador.1": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.021819904446601868,
+        "std": 0.09692960977554321,
+        "fracao_zeros": 0.9375,
+        "fracao_canais_totalmente_zero": 0.9375,
+        "variacao_entre_pacientes": 0.003265004139393568
+      },
+      "classificador.3": {
+        "shape": [
+          8,
+          1
+        ],
+        "media": -0.020993635058403015,
+        "std": 0.011959309689700603,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.011959309689700603
+      }
+    },
+    "gradientes_norma": {
+      "caracteristicas.0.weight": 0.013892878778278828,
+      "caracteristicas.0.bias": 0.022623546421527863,
+      "caracteristicas.1.weight": 0.002394360490143299,
+      "caracteristicas.1.bias": 0.004978475626558065,
+      "caracteristicas.4.weight": 0.0199445653706789,
+      "caracteristicas.4.bias": 0.0023207601625472307,
+      "caracteristicas.5.weight": 0.0012215878814458847,
+      "caracteristicas.5.bias": 0.0023352480493485928,
+      "caracteristicas.8.weight": 0.010619448497891426,
+      "caracteristicas.8.bias": 0.0008088520262390375,
+      "caracteristicas.9.weight": 0.0009038468124344945,
+      "caracteristicas.9.bias": 0.0019183908589184284,
+      "caracteristicas.12.weight": 0.04412368685007095,
+      "caracteristicas.12.bias": 0.005979364737868309,
+      "caracteristicas.13.weight": 0.013416244648396969,
+      "caracteristicas.13.bias": 0.029592905193567276,
+      "classificador.0.weight": 0.22527161240577698,
+      "classificador.0.bias": 0.07361945509910583,
+      "classificador.3.weight": 0.3143855631351471,
+      "classificador.3.bias": 0.5093908309936523
+    }
+  },
+  {
+    "id": "c_cnn_post_early_maior_tumor",
+    "grupo": "C",
+    "pacientes": [
+      "ISPY1_1001",
+      "ISPY1_1002",
+      "ISPY1_1003",
+      "ISPY1_1005",
+      "ISPY1_1011",
+      "ISPY1_1070",
+      "ISPY1_1075",
+      "ISPY1_1077"
+    ],
+    "otimizacoes": 0,
+    "loss_treino_probe": 1.4242398738861084,
+    "logits": [
+      -0.07165782898664474,
+      -0.07197528332471848,
+      -0.07071422785520554,
+      -0.07191152125597,
+      -0.07213927805423737,
+      -0.07232379913330078,
+      -0.07205839455127716,
+      -0.07428237795829773
+    ],
+    "amplitude_probabilidades": 0.0008908510208129883,
+    "ativacoes": {
+      "caracteristicas.0": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.04255268722772598,
+        "std": 0.2125384509563446,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.04938821494579315
+      },
+      "caracteristicas.2": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.26927345991134644,
+        "std": 0.4418444335460663,
+        "fracao_zeros": 0.382735013961792,
+        "fracao_canais_totalmente_zero": 0.25,
+        "variacao_entre_pacientes": 0.101643405854702
+      },
+      "caracteristicas.4": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.24123622477054596,
+        "std": 0.5848843455314636,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.2312043458223343
+      },
+      "caracteristicas.6": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.0802077054977417,
+        "std": 0.29700222611427307,
+        "fracao_zeros": 0.8255777359008789,
+        "fracao_canais_totalmente_zero": 0.0625,
+        "variacao_entre_pacientes": 0.11111892014741898
+      },
+      "caracteristicas.8": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.23251816630363464,
+        "std": 0.7656705379486084,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.2946573495864868
+      },
+      "caracteristicas.10": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.035891175270080566,
+        "std": 0.22598977386951447,
+        "fracao_zeros": 0.906951904296875,
+        "fracao_canais_totalmente_zero": 0.03125,
+        "variacao_entre_pacientes": 0.05640050768852234
+      },
+      "caracteristicas.12": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.00020719191525131464,
+        "std": 0.9234852194786072,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.3130337595939636
+      },
+      "caracteristicas.14": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.03445468842983246,
+        "std": 0.2796212434768677,
+        "fracao_zeros": 0.7883491516113281,
+        "fracao_canais_totalmente_zero": 0.4375,
+        "variacao_entre_pacientes": 0.039782408624887466
+      },
+      "classificador.0": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": -0.028361739590764046,
+        "std": 0.10235987603664398,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.005943829659372568
+      },
+      "classificador.1": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.019715934991836548,
+        "std": 0.07709790766239166,
+        "fracao_zeros": 0.9375,
+        "fracao_canais_totalmente_zero": 0.9375,
+        "variacao_entre_pacientes": 0.0023752539418637753
+      },
+      "classificador.3": {
+        "shape": [
+          8,
+          1
+        ],
+        "media": -0.07213284075260162,
+        "std": 0.0009981731418520212,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.0009981731418520212
+      }
+    },
+    "gradientes_norma": {
+      "caracteristicas.0.weight": 0.0044268355704844,
+      "caracteristicas.0.bias": 0.0008346759132109582,
+      "caracteristicas.1.weight": 0.0007247925968840718,
+      "caracteristicas.1.bias": 0.0007030931301414967,
+      "caracteristicas.4.weight": 0.005234615411609411,
+      "caracteristicas.4.bias": 0.00042623491026461124,
+      "caracteristicas.5.weight": 0.0015579694882035255,
+      "caracteristicas.5.bias": 0.0007314433460123837,
+      "caracteristicas.8.weight": 0.00488488981500268,
+      "caracteristicas.8.bias": 0.0003323042474221438,
+      "caracteristicas.9.weight": 0.0010397258447483182,
+      "caracteristicas.9.bias": 0.0008045945432968438,
+      "caracteristicas.12.weight": 0.00996597670018673,
+      "caracteristicas.12.bias": 0.005138206761330366,
+      "caracteristicas.13.weight": 0.006813330110162497,
+      "caracteristicas.13.bias": 0.0087947528809309,
+      "classificador.0.weight": 0.09839128702878952,
+      "classificador.0.bias": 0.06779438257217407,
+      "classificador.3.weight": 0.26796674728393555,
+      "classificador.3.bias": 0.5361925959587097
+    }
+  },
+  {
+    "id": "c_cnn_tres_central",
+    "grupo": "C",
+    "pacientes": [
+      "ISPY1_1001",
+      "ISPY1_1002",
+      "ISPY1_1003",
+      "ISPY1_1005",
+      "ISPY1_1011",
+      "ISPY1_1070",
+      "ISPY1_1075",
+      "ISPY1_1077"
+    ],
+    "otimizacoes": 0,
+    "loss_treino_probe": 1.050650715827942,
+    "logits": [
+      -0.8493137359619141,
+      -0.8488573431968689,
+      -0.8438750505447388,
+      -0.8332746624946594,
+      0.9869594573974609,
+      -0.7223730087280273,
+      -0.25025179982185364,
+      2.7212796211242676
+    ],
+    "amplitude_probabilidades": 0.6386938393115997,
+    "ativacoes": {
+      "caracteristicas.0": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": -0.08888383954763412,
+        "std": 0.29592710733413696,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.11924772709608078
+      },
+      "caracteristicas.2": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.16689665615558624,
+        "std": 0.3702388107776642,
+        "fracao_zeros": 0.4404900074005127,
+        "fracao_canais_totalmente_zero": 0.0625,
+        "variacao_entre_pacientes": 0.15000669658184052
+      },
+      "caracteristicas.4": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.3911856412887573,
+        "std": 1.6207306385040283,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.7669300436973572
+      },
+      "caracteristicas.6": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.07370154559612274,
+        "std": 0.2967565655708313,
+        "fracao_zeros": 0.8380832672119141,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.11646959185600281
+      },
+      "caracteristicas.8": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.40733271837234497,
+        "std": 1.8627746105194092,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.887352705001831
+      },
+      "caracteristicas.10": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.04464435577392578,
+        "std": 0.24192507565021515,
+        "fracao_zeros": 0.9277009963989258,
+        "fracao_canais_totalmente_zero": 0.046875,
+        "variacao_entre_pacientes": 0.09245564043521881
+      },
+      "caracteristicas.12": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": -0.7641218900680542,
+        "std": 2.6672115325927734,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 1.4875941276550293
+      },
+      "caracteristicas.14": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.09096765518188477,
+        "std": 0.23832081258296967,
+        "fracao_zeros": 0.5052280426025391,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.08597783744335175
+      },
+      "classificador.0": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.01837805286049843,
+        "std": 0.4058951735496521,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.18576496839523315
+      },
+      "classificador.1": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.10711228847503662,
+        "std": 0.36108922958374023,
+        "fracao_zeros": 0.88671875,
+        "fracao_canais_totalmente_zero": 0.78125,
+        "variacao_entre_pacientes": 0.14137539267539978
+      },
+      "classificador.3": {
+        "shape": [
+          8,
+          1
+        ],
+        "media": -0.0799633264541626,
+        "std": 1.296209454536438,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 1.296209454536438
+      }
+    },
+    "gradientes_norma": {
+      "caracteristicas.0.weight": 3.6442222595214844,
+      "caracteristicas.0.bias": 2.397094249725342,
+      "caracteristicas.1.weight": 0.26662677526474,
+      "caracteristicas.1.bias": 1.0961610078811646,
+      "caracteristicas.4.weight": 1.0695921182632446,
+      "caracteristicas.4.bias": 0.21066302061080933,
+      "caracteristicas.5.weight": 0.34288927912712097,
+      "caracteristicas.5.bias": 0.3862682282924652,
+      "caracteristicas.8.weight": 0.31468886137008667,
+      "caracteristicas.8.bias": 0.04801829531788826,
+      "caracteristicas.9.weight": 0.40272003412246704,
+      "caracteristicas.9.bias": 0.26682889461517334,
+      "caracteristicas.12.weight": 0.07599648833274841,
+      "caracteristicas.12.bias": 0.22975900769233704,
+      "caracteristicas.13.weight": 0.4709607660770416,
+      "caracteristicas.13.bias": 1.2249187231063843,
+      "classificador.0.weight": 0.5243245363235474,
+      "classificador.0.bias": 0.27755114436149597,
+      "classificador.3.weight": 0.4988754689693451,
+      "classificador.3.bias": 0.4378635883331299
+    }
+  },
+  {
+    "id": "c_cnn_tres_maior_tumor",
+    "grupo": "C",
+    "pacientes": [
+      "ISPY1_1001",
+      "ISPY1_1002",
+      "ISPY1_1003",
+      "ISPY1_1005",
+      "ISPY1_1011",
+      "ISPY1_1070",
+      "ISPY1_1075",
+      "ISPY1_1077"
+    ],
+    "otimizacoes": 0,
+    "loss_treino_probe": 1.3973840475082397,
+    "logits": [
+      -0.02193892002105713,
+      -0.02193892002105713,
+      -0.02193892002105713,
+      -0.02193892002105713,
+      -0.02193892002105713,
+      -0.02193892002105713,
+      -0.02193892002105713,
+      -0.02193892002105713
+    ],
+    "amplitude_probabilidades": 0.0,
+    "ativacoes": {
+      "caracteristicas.0": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.06950317323207855,
+        "std": 0.1838740110397339,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.06494089961051941
+      },
+      "caracteristicas.2": {
+        "shape": [
+          8,
+          16,
+          256,
+          256
+        ],
+        "media": 0.2731148600578308,
+        "std": 0.5429868698120117,
+        "fracao_zeros": 0.5127215385437012,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.1748623251914978
+      },
+      "caracteristicas.4": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.11681891977787018,
+        "std": 0.8092753291130066,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.25345468521118164
+      },
+      "caracteristicas.6": {
+        "shape": [
+          8,
+          32,
+          128,
+          128
+        ],
+        "media": 0.13655774295330048,
+        "std": 0.3798413872718811,
+        "fracao_zeros": 0.6769623756408691,
+        "fracao_canais_totalmente_zero": 0.3125,
+        "variacao_entre_pacientes": 0.08755415678024292
+      },
+      "caracteristicas.8": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.16158729791641235,
+        "std": 0.4857162833213806,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.14818382263183594
+      },
+      "caracteristicas.10": {
+        "shape": [
+          8,
+          64,
+          64,
+          64
+        ],
+        "media": 0.11806516349315643,
+        "std": 0.37444815039634705,
+        "fracao_zeros": 0.7259988784790039,
+        "fracao_canais_totalmente_zero": 0.421875,
+        "variacao_entre_pacientes": 0.08995918184518814
+      },
+      "caracteristicas.12": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.19496673345565796,
+        "std": 1.3007493019104004,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.399625301361084
+      },
+      "caracteristicas.14": {
+        "shape": [
+          8,
+          128,
+          32,
+          32
+        ],
+        "media": 0.18928498029708862,
+        "std": 0.6362924575805664,
+        "fracao_zeros": 0.7609882354736328,
+        "fracao_canais_totalmente_zero": 0.5625,
+        "variacao_entre_pacientes": 0.14493517577648163
+      },
+      "classificador.0": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": -0.18731087446212769,
+        "std": 0.1951190084218979,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.01942184567451477
+      },
+      "classificador.1": {
+        "shape": [
+          8,
+          32
+        ],
+        "media": 0.0,
+        "std": 0.0,
+        "fracao_zeros": 1.0,
+        "fracao_canais_totalmente_zero": 1.0,
+        "variacao_entre_pacientes": 0.0
+      },
+      "classificador.3": {
+        "shape": [
+          8,
+          1
+        ],
+        "media": -0.02193892002105713,
+        "std": 0.0,
+        "fracao_zeros": 0.0,
+        "fracao_canais_totalmente_zero": 0.0,
+        "variacao_entre_pacientes": 0.0
+      }
+    },
+    "gradientes_norma": {
+      "caracteristicas.0.weight": 0.0,
+      "caracteristicas.0.bias": 0.0,
+      "caracteristicas.1.weight": 0.0,
+      "caracteristicas.1.bias": 0.0,
+      "caracteristicas.4.weight": 0.0,
+      "caracteristicas.4.bias": 0.0,
+      "caracteristicas.5.weight": 0.0,
+      "caracteristicas.5.bias": 0.0,
+      "caracteristicas.8.weight": 0.0,
+      "caracteristicas.8.bias": 0.0,
+      "caracteristicas.9.weight": 0.0,
+      "caracteristicas.9.bias": 0.0,
+      "caracteristicas.12.weight": 0.0,
+      "caracteristicas.12.bias": 0.0,
+      "caracteristicas.13.weight": 0.0,
+      "caracteristicas.13.bias": 0.0,
+      "classificador.0.weight": 0.0,
+      "classificador.0.bias": 0.0,
+      "classificador.3.weight": 0.0,
+      "classificador.3.bias": 0.5109691023826599
+    }
+  }
+]

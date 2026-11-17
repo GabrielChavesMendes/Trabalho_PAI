@@ -1,0 +1,966 @@
+{
+  "estado": "aguardando_revisao_do_usuario",
+  "teste_usado_para_selecao": false,
+  "revisao_obrigatoria_antes_do_teste": true,
+  "csv_sha256": "3fe17fb8a7c3e4119cae0d54962fc75412cc8b892754f0c37d92fe791ec3df1b",
+  "modelos": [
+    {
+      "id": "cnn__post-early__central__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__post-early__central__seed-42.pt",
+      "checkpoint_sha256": "4b9b7feef5cd7d2a511b750d6037c35b1ab3869d1b9c4883d0f69b5ef481e4e8",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__post-early__central__seed-42__validation.json",
+      "validacao_sha256": "dce659d32d4577be06de93912d28d6eb5bab26cc92ec068926c42f464115d0e0",
+      "configuracao": {
+        "arquitetura": "cnn",
+        "canais_entrada": 1,
+        "configuracao_temporal": "post_early",
+        "estrategia_corte": "central",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": null,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "post_early"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "central",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": false,
+          "lr_backbone": null,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 2,
+      "limiar": 0.4938041865825653,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\cnn__post-early__central__seed-42.pt",
+      "checkpoint_original_sha256": "cf27c485c18bf3f9c527aa03d33defd138724ddeaf81d0008e6081fa9ce4d224"
+    },
+    {
+      "id": "cnn__post-early__maior-tumor__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__post-early__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "206bc055e52464cd3144ab833eb92c3e835beb9d6d9bde2022eeafe027807d0b",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__post-early__maior-tumor__seed-42__validation.json",
+      "validacao_sha256": "d815816b30c17c8bb1f7f7f8a6dc10c458ed92058b03cb20b9506e32a54766d1",
+      "configuracao": {
+        "arquitetura": "cnn",
+        "canais_entrada": 1,
+        "configuracao_temporal": "post_early",
+        "estrategia_corte": "maior_tumor",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": null,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "post_early"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "maior_tumor",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": false,
+          "lr_backbone": null,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 6,
+      "limiar": 0.49848052859306335,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\cnn__post-early__maior-tumor__seed-42.pt",
+      "checkpoint_original_sha256": "665fd8333a28ed2ea6ea7ac645426d9b0f3756e618bde70ab891b3d0216a61c1"
+    },
+    {
+      "id": "cnn__tres__central__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__tres__central__seed-42.pt",
+      "checkpoint_sha256": "b91bc79c6a9a798981ce2d7dd926e5f3378f1a515ab3a426b4a63fe79b653693",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__tres__central__seed-42__validation.json",
+      "validacao_sha256": "e0ca96a6a16827c0e9bb98bc0fe8b08db3ce3b1fe42b6040723cce41a0cad9dc",
+      "configuracao": {
+        "arquitetura": "cnn",
+        "canais_entrada": 3,
+        "configuracao_temporal": "tres",
+        "estrategia_corte": "central",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": null,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "pre",
+          "post_early",
+          "post_late"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "central",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": false,
+          "lr_backbone": null,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 5,
+      "limiar": 0.47722066491842274,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\cnn__tres__central__seed-42.pt",
+      "checkpoint_original_sha256": "8579be480ef3eec51feead19a55b229776323b10d7d36a531289290cd34460f6"
+    },
+    {
+      "id": "cnn__tres__maior-tumor__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__tres__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "b5c16ac90174fad578ef1f0e79fd36a0fb3275e01bb9328b901e686eb2b9994d",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__tres__maior-tumor__seed-42__validation.json",
+      "validacao_sha256": "677e4a7b05349551730daafc154d3852e6b8847ef72aedb3590284b5ed067880",
+      "configuracao": {
+        "arquitetura": "cnn",
+        "canais_entrada": 3,
+        "configuracao_temporal": "tres",
+        "estrategia_corte": "maior_tumor",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": null,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "pre",
+          "post_early",
+          "post_late"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "maior_tumor",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": false,
+          "lr_backbone": null,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 5,
+      "limiar": 0.4819288983941078,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\cnn__tres__maior-tumor__seed-42.pt",
+      "checkpoint_original_sha256": "cf35dea0ecf1cb4492860e1a94956a8c1f63fd0f47c3e1de8a27365366ec9a94"
+    },
+    {
+      "id": "mobilenetv2__post-early__central__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__post-early__central__seed-42.pt",
+      "checkpoint_sha256": "a3221c0c06029f0bdefad8f5f85c7f02681f361a749ac6b68f28a20a6b40adc3",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__post-early__central__seed-42__validation.json",
+      "validacao_sha256": "e806e976c93afd3ef5695e7b2af99753eb5ebca689d1d1751bd490a939fa89d5",
+      "configuracao": {
+        "arquitetura": "mobilenetv2",
+        "canais_entrada": 1,
+        "configuracao_temporal": "post_early",
+        "estrategia_corte": "central",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.0001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": null,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "post_early"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "central",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": false,
+          "lr_backbone": null,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 12,
+      "limiar": 0.566841208934784,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\mobilenetv2__post-early__central__seed-42.pt",
+      "checkpoint_original_sha256": "35ad0625a425b8b9f20ba4090e82f430803ed1e652adf07e6a5a0debb4e5afec"
+    },
+    {
+      "id": "mobilenetv2__post-early__maior-tumor__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__post-early__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "5197c482d6adce90ac12b7713a89f785c95dc907c39a0df0e32ad3c6d7c0c663",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__post-early__maior-tumor__seed-42__validation.json",
+      "validacao_sha256": "db6fe66d4687f4df0576b4674f4afbdb4a919947e2801941142ec2daea89efae",
+      "configuracao": {
+        "arquitetura": "mobilenetv2",
+        "canais_entrada": 1,
+        "configuracao_temporal": "post_early",
+        "estrategia_corte": "maior_tumor",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.0001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": null,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "post_early"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "maior_tumor",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": false,
+          "lr_backbone": null,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 4,
+      "limiar": 0.42850990891456603,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\mobilenetv2__post-early__maior-tumor__seed-42.pt",
+      "checkpoint_original_sha256": "20a43477b1f8f06eb8d545c44072e0a9f1c479df5e7ba10bad93ee4b6f57ea7d"
+    },
+    {
+      "id": "mobilenetv2__tres__central__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__tres__central__seed-42.pt",
+      "checkpoint_sha256": "eef4a548ef4921160da3c231e01c81916d8280526be1944d7e0846932f987b4e",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__tres__central__seed-42__validation.json",
+      "validacao_sha256": "9a29155d49402899d93a6562440e99d6fa901a9a3f04ceb69108cb092659fc61",
+      "configuracao": {
+        "arquitetura": "mobilenetv2",
+        "canais_entrada": 3,
+        "configuracao_temporal": "tres",
+        "estrategia_corte": "central",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.0001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": null,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "pre",
+          "post_early",
+          "post_late"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "central",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": false,
+          "lr_backbone": null,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 15,
+      "limiar": 0.5431677505373955,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\mobilenetv2__tres__central__seed-42.pt",
+      "checkpoint_original_sha256": "f1885ad0132f9482a319f7d7243d996254c27b0cbe94472ec3f0bdfde05199e0"
+    },
+    {
+      "id": "mobilenetv2__tres__maior-tumor__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__tres__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "897d36ffb7354f627831e9a5bac2ce32f26031b050b05f51c6248a24fe73c6e8",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__tres__maior-tumor__seed-42__validation.json",
+      "validacao_sha256": "7bf2f03e770a78cc4502c32148b3d488e7ef2e5a98509c9d231b680ab0e7a1dd",
+      "configuracao": {
+        "arquitetura": "mobilenetv2",
+        "canais_entrada": 3,
+        "configuracao_temporal": "tres",
+        "estrategia_corte": "maior_tumor",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.0001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": null,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "pre",
+          "post_early",
+          "post_late"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "maior_tumor",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": false,
+          "lr_backbone": null,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 13,
+      "limiar": 0.4458016857504845,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\mobilenetv2__tres__maior-tumor__seed-42.pt",
+      "checkpoint_original_sha256": "bbc7c30e00fb1d9622e4c2340a7daf75551c4385bde312b947e091a959db78ec"
+    },
+    {
+      "id": "resnet50__post-early__central__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__post-early__central__seed-42.pt",
+      "checkpoint_sha256": "5e9923f8f7db0ca1da197e9baea58ff2087f52bd033d25cfcc99f5bddd72b030",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__post-early__central__seed-42__validation.json",
+      "validacao_sha256": "bc8ae3f7e2fd008d654ff8c2fff94fd3edfa5f49d79a0d87c41e95c6feaf6191",
+      "configuracao": {
+        "arquitetura": "resnet50",
+        "canais_entrada": 1,
+        "configuracao_temporal": "post_early",
+        "estrategia_corte": "central",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.0001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": 1e-05,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "post_early"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "central",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": true,
+          "lr_backbone": 1e-05,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 6,
+      "limiar": 0.010471966626937501,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\resnet50__post-early__central__seed-42.pt",
+      "checkpoint_original_sha256": "8817a26d67479420787a128e3427f1df4d6e3c3b8d49c47b9399ea65669912c7"
+    },
+    {
+      "id": "resnet50__post-early__maior-tumor__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__post-early__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "5e071152a56e5348d23eaa66b67d6278b310037867be6782baf83609d969979f",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__post-early__maior-tumor__seed-42__validation.json",
+      "validacao_sha256": "b5bb7654a5a0b42f2b67ccd671f52179741abdd4586be100cc53ef0f4f3faea9",
+      "configuracao": {
+        "arquitetura": "resnet50",
+        "canais_entrada": 1,
+        "configuracao_temporal": "post_early",
+        "estrategia_corte": "maior_tumor",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.0001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": 1e-05,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "post_early"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "maior_tumor",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": true,
+          "lr_backbone": 1e-05,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 5,
+      "limiar": 0.756848182529211,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\resnet50__post-early__maior-tumor__seed-42.pt",
+      "checkpoint_original_sha256": "fdf7d4b846ee361a6d19c338484b81ccb6c369614491163045cab4f8b55db43c"
+    },
+    {
+      "id": "resnet50__tres__central__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__tres__central__seed-42.pt",
+      "checkpoint_sha256": "98443ab06fb237d3d273ea9a1f1d4679648959bd50307f0ebea16f9231c5bafe",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__tres__central__seed-42__validation.json",
+      "validacao_sha256": "1324b2034913f641e4d84a42fa84e295029e8ecd7abeeb8ccf8548e012e36223",
+      "configuracao": {
+        "arquitetura": "resnet50",
+        "canais_entrada": 3,
+        "configuracao_temporal": "tres",
+        "estrategia_corte": "central",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.0001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": 1e-05,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "pre",
+          "post_early",
+          "post_late"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "central",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": true,
+          "lr_backbone": 1e-05,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 6,
+      "limiar": 0.7724838942289352,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\resnet50__tres__central__seed-42.pt",
+      "checkpoint_original_sha256": "8299e135c2e63ee7b94bdd74836dff7b574c6395b958ebfd2699a8a3aa0b52db"
+    },
+    {
+      "id": "resnet50__tres__maior-tumor__seed-42",
+      "grupo": "originais",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__tres__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "2f62d0c246ce58fbf1114e1d889cc77ea7046f11f6c85a13f68b4537f9f3ab43",
+      "validacao": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__tres__maior-tumor__seed-42__validation.json",
+      "validacao_sha256": "9d09db19749aff669fc99890d8dc2b5471b931c6ba811c323f40f3b37d69280f",
+      "configuracao": {
+        "arquitetura": "resnet50",
+        "canais_entrada": 3,
+        "configuracao_temporal": "tres",
+        "estrategia_corte": "maior_tumor",
+        "epocas": 30,
+        "tamanho_lote": 4,
+        "taxa_aprendizado": 0.0001,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 3.0,
+        "paciencia": 5,
+        "limiar": 0.5,
+        "seed": 42,
+        "taxa_aprendizado_backbone": 1e-05,
+        "criterio_checkpoint": "auc_roc"
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_ISPY1_min_crop",
+        "csv": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\dataset\\BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "pre",
+          "post_early",
+          "post_late"
+        ],
+        "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+        "corte": "maior_tumor",
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+        "ajuste_hyperparametros": {
+          "pos_weight_observado": 3.0,
+          "pos_weight_utilizado": 3.0,
+          "fine_tuning_resnet_layer4": true,
+          "lr_backbone": 1e-05,
+          "criterio_limiar": "acuracia_balanceada"
+        }
+      },
+      "epoca": 4,
+      "limiar": 0.3762133240699768,
+      "normalizacao_adicional": "nenhuma",
+      "recarga_estrita_cpu": true,
+      "checkpoint_original": "D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\checkpoints\\execucao_issue4_20261117_01\\grade\\resnet50__tres__maior-tumor__seed-42.pt",
+      "checkpoint_original_sha256": "9bca38aa6e4b442d07b600dbd7520c03f15b5801674f9f99a56266ca4317b47a"
+    }
+  ],
+  "modelo_escolhido_pela_validacao": "cnn__post-early__maior-tumor__seed-42",
+  "novos_recomendados": [],
+  "protocolo_teste": {
+    "pacientes": 35,
+    "codigo_particao": 1,
+    "aumento": false,
+    "limiar": "fixado previamente na validacao",
+    "selecionar_vencedor_no_teste": false
+  },
+  "observacao": "12 pesos originais com os limiares já refinados; versões brutas também preservadas. Novos entram somente se aprovados pelos critérios prévios de validação."
+}

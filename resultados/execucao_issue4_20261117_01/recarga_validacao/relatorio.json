@@ -1,0 +1,30 @@
+{
+  "experimento": "cnn__post-early__maior-tumor__seed-42",
+  "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__post-early__maior-tumor__seed-42.pt",
+  "checkpoint_sha256": "206bc055e52464cd3144ab833eb92c3e835beb9d6d9bde2022eeafe027807d0b",
+  "device": "cuda",
+  "limiar": 0.49848052859306335,
+  "pacientes": 33,
+  "maior_diferenca_absoluta_probabilidade": 0.0,
+  "classificacoes_divergentes": 0,
+  "menor_distancia_original_ao_limiar": 2.384185793236071e-08,
+  "treinamento_executado": false,
+  "teste_avaliado": false,
+  "metricas": {
+    "sensibilidade": 0.5454545454545454,
+    "especificidade": 0.9090909090909091,
+    "precisao": 0.75,
+    "acuracia": 0.7878787878787878,
+    "f1": 0.631578947368421,
+    "acuracia_balanceada": 0.7272727272727273,
+    "auc_roc": 0.6818181818181818,
+    "tn": 20,
+    "fp": 2,
+    "fn": 5,
+    "tp": 6,
+    "numero_pacientes": 33,
+    "limiar": 0.49848052859306335,
+    "loss": 1.1562655037099665
+  },
+  "limite": "Verifica repetibilidade na mesma GPU/versoes/batch; não garante estabilidade entre ambientes ou generalizacao."
+}

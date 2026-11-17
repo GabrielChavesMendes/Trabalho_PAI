@@ -1,0 +1,19 @@
+# Preservar bytes dos artefatos experimentais e seus hashes no Windows.
+resultados/execucao_issue4_20261117_01/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+resultados/rodada_final_issue4_20261117_01/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+resultados/grade_definitiva_issue4_20261117_01/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+resultados/verificacao_integrados_issue4_20261117_01/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+resultados/verificacao_integrados_issue4_20261117_01/**/*.txt -whitespace
+# EOL explícito nas fontes cujos bytes foram registrados antes dos experimentos.
+modulos/modulo_treinamento.py text eol=crlf
+modulos/modulo_redes.py text eol=crlf
+modulos/modulo_dataset.py text eol=crlf
+modulos/modulo_dataset_issue1.py text eol=crlf
+modulos/rodada_final_issue4.py text eol=lf
+modulos/grade_final_issue4.py text eol=lf
+scripts/executar_rodada_final_issue4.py text eol=lf
+scripts/executar_ultima_grade_issue4.py text eol=lf
+scripts/refinar_limiares_validacao_issue4.py text eol=lf
+scripts/avaliar_manifesto_issue4.py text eol=lf
+scripts/consolidar_coorte_issue4.py text eol=lf
+scripts/verificar_coorte_issue4.py text eol=lf

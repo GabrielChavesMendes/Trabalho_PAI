@@ -39,6 +39,8 @@ class ConfiguracaoTreinamento:
     paciencia: int = 5
     limiar: float = 0.5
     seed: int = 42
+    taxa_aprendizado_backbone: float | None = None
+    criterio_checkpoint: str = "loss"
 
     def __post_init__(self) -> None:
         if self.canais_entrada not in (1, 3):
@@ -51,6 +53,10 @@ class ConfiguracaoTreinamento:
             raise ValueError("pos_weight e paciencia devem ser positivos")
         if not 0 < self.limiar < 1:
             raise ValueError("limiar deve estar entre 0 e 1")
+        if self.taxa_aprendizado_backbone is not None and self.taxa_aprendizado_backbone <= 0:
+            raise ValueError("taxa_aprendizado_backbone deve ser positiva")
+        if self.criterio_checkpoint not in ("loss", "auc_roc", "acuracia_balanceada"):
+            raise ValueError("criterio_checkpoint invalido")
 
 
 @dataclass
@@ -270,12 +276,24 @@ def calcular_metricas(
     precisao = divisao(tp, tp + fp)
     acuracia = divisao(tp + tn, tp + tn + fp + fn)
     f1 = divisao(2 * precisao * sensibilidade, precisao + sensibilidade)
+    acuracia_balanceada = (sensibilidade + especificidade) / 2
+    # AUC compara a ordenacao das probabilidades: independe do limiar.
+    # No conjunto oficial ha ambas as classes; caso contrario, a AUC e indefinida.
+    positivos = [p.probabilidade for p in pacientes if p.rotulo == 1]
+    negativos = [p.probabilidade for p in pacientes if p.rotulo == 0]
+    auc_roc = (
+        sum((a > b) + 0.5 * (a == b) for a in positivos for b in negativos)
+        / (len(positivos) * len(negativos))
+        if positivos and negativos else None
+    )
     return {
         "sensibilidade": sensibilidade,
         "especificidade": especificidade,
         "precisao": precisao,
         "acuracia": acuracia,
         "f1": f1,
+        "acuracia_balanceada": acuracia_balanceada,
+        "auc_roc": auc_roc,
         "tn": tn,
         "fp": fp,
         "fn": fn,
@@ -288,9 +306,11 @@ def calcular_metricas(
 def selecionar_limiar_validacao(
     registros: Iterable[RegistroPredicao],
     candidatos: Iterable[float] | None = None,
+    criterio: str = "f1",
 ) -> tuple[float, dict[str, float | int]]:
-    """Seleciona por F1; empates favorecem o limiar mais proximo de 0,5."""
-
+    """Escolhe limiar usando APENAS validacao; F1 ou acuracia balanceada."""
+    if criterio not in ("f1", "acuracia_balanceada"):
+        raise ValueError("criterio deve ser f1 ou acuracia_balanceada")
     pacientes = agregar_por_paciente(registros)
     lista = list(candidatos) if candidatos is not None else np.linspace(0.05, 0.95, 19).tolist()
     if not lista or any(not 0 < valor < 1 for valor in lista):
@@ -299,12 +319,12 @@ def selecionar_limiar_validacao(
     return max(
         avaliacoes,
         key=lambda item: (
-            float(item[1]["f1"]),
+            float(item[1][criterio]),
+            float(item[1]["especificidade"]),
             float(item[1]["sensibilidade"]),
             -abs(item[0] - 0.5),
         ),
     )
-
 
 def avaliar_modelo(
     modelo: nn.Module,
@@ -396,6 +416,28 @@ def registrar_validacao_checkpoint(
     os.replace(temporario, destino)
 
 
+def grupos_parametros_otimizador(modelo, configuracao):
+    """Mantém o protocolo ResNet; permite o último bloco da MobileNetV2."""
+    parametros = [p for p in modelo.parameters() if p.requires_grad]
+    if not parametros:
+        raise ValueError("modelo nao possui parametros treinaveis")
+    if configuracao.taxa_aprendizado_backbone is None:
+        return parametros
+    if hasattr(modelo, 'layer4'):
+        bloco = modelo.layer4
+    elif configuracao.arquitetura == 'mobilenetv2' and hasattr(modelo, 'features'):
+        bloco = modelo.features[17:]
+    else:
+        raise ValueError('fine-tuning diferencial requer ResNet50 ou MobileNetV2 registrada')
+    backbone = [p for p in bloco.parameters() if p.requires_grad]
+    ids = {id(p) for p in backbone}
+    cabeca = [p for p in parametros if id(p) not in ids]
+    if not backbone or not cabeca:
+        raise ValueError('fine-tuning precisa de backbone e classificador treinaveis')
+    return [{'params': backbone, 'lr': configuracao.taxa_aprendizado_backbone},
+            {'params': cabeca, 'lr': configuracao.taxa_aprendizado}]
+
+
 def treinar_experimento(
     modelo: nn.Module,
     carregador_treino: Iterable[Any],
@@ -438,11 +480,9 @@ def treinar_experimento(
     )
     modelo.to(device)
 
-    parametros = [p for p in modelo.parameters() if p.requires_grad]
-    if not parametros:
-        raise ValueError("modelo nao possui parametros treinaveis")
+    grupos_parametros = grupos_parametros_otimizador(modelo, configuracao)
     otimizador = torch.optim.Adam(
-        parametros,
+        grupos_parametros,
         lr=configuracao.taxa_aprendizado,
         weight_decay=configuracao.decaimento_pesos,
     )
@@ -452,6 +492,7 @@ def treinar_experimento(
 
     historico: list[ResultadoEpoca] = []
     melhor_loss = float("inf")
+    melhor_pontuacao = -float("inf")
     epocas_sem_melhora = 0
     for epoca in range(1, configuracao.epocas + 1):
         inicio = time.perf_counter()
@@ -481,7 +522,17 @@ def treinar_experimento(
             f"F1 val={float(metricas['f1']):.4f} | {resultado.tempo_segundos:.1f}s"
         )
 
-        if loss_validacao < melhor_loss:
+        if configuracao.criterio_checkpoint == "loss":
+            pontuacao = -loss_validacao
+        else:
+            valor = metricas.get(configuracao.criterio_checkpoint)
+            pontuacao = -float("inf") if valor is None else float(valor)
+        # Empate na metrica: preferir menor loss da validacao.
+        melhorou = pontuacao > melhor_pontuacao or (
+            pontuacao == melhor_pontuacao and loss_validacao < melhor_loss
+        )
+        if melhorou:
+            melhor_pontuacao = pontuacao
             melhor_loss = loss_validacao
             epocas_sem_melhora = 0
             salvar_checkpoint(
@@ -518,6 +569,8 @@ def salvar_historico_csv(
         "precisao",
         "acuracia",
         "f1",
+        "acuracia_balanceada",
+        "auc_roc",
     ]
     with destino.open("w", newline="", encoding="utf-8") as arquivo:
         escritor = csv.DictWriter(arquivo, fieldnames=campos, lineterminator="\n")
@@ -529,7 +582,7 @@ def salvar_historico_csv(
                 "loss_validacao": item.loss_validacao,
                 "tempo_segundos": item.tempo_segundos,
             }
-            linha.update({campo: item.metricas_validacao[campo] for campo in campos[4:]})
+            linha.update({campo: item.metricas_validacao.get(campo) for campo in campos[4:]})
             escritor.writerow(linha)
 
 

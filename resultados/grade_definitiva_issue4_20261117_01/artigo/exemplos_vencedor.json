@@ -1,0 +1,34 @@
+[
+  {
+    "tipo": "TN",
+    "paciente": "ISPY1_1004",
+    "rotulo": 0,
+    "probabilidade": 0.4984779357910156,
+    "previsto": 0,
+    "correto": true
+  },
+  {
+    "tipo": "TP",
+    "paciente": "ISPY1_1021",
+    "rotulo": 1,
+    "probabilidade": 0.49848076701164246,
+    "previsto": 1,
+    "correto": true
+  },
+  {
+    "tipo": "FP",
+    "paciente": "ISPY1_1017",
+    "rotulo": 0,
+    "probabilidade": 0.4984811246395111,
+    "previsto": 1,
+    "correto": false
+  },
+  {
+    "tipo": "FN",
+    "paciente": "ISPY1_1030",
+    "rotulo": 1,
+    "probabilidade": 0.4984797239303589,
+    "previsto": 0,
+    "correto": false
+  }
+]

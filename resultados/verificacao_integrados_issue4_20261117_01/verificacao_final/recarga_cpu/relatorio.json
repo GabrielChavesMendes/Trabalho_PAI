@@ -1,0 +1,318 @@
+{
+  "verificado_em_utc": "2026-11-17T19:55:12.957123+00:00",
+  "device": "cpu",
+  "validacao_real": false,
+  "treinamento_executado": false,
+  "teste_avaliado": false,
+  "modelos": [
+    {
+      "arquivo": "cnn__post-early__central__seed-42__final-v2.pt",
+      "sha256": "8ea882df35704e58273e42df9303864395a9b832e5b2ec75578e03701c2f3afd",
+      "recarga_estrita": true,
+      "configuracao": {
+        "arquitetura": "cnn",
+        "canais_entrada": 1,
+        "configuracao_temporal": "post_early",
+        "estrategia_corte": "central",
+        "epocas": 30,
+        "tamanho_lote": 64,
+        "taxa_aprendizado": 0.001,
+        "taxa_aprendizado_backbone": null,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 1.7320508075688772,
+        "paciencia": 3,
+        "limiar": 0.5,
+        "criterio_limiar": "acuracia_balanceada",
+        "criterio_checkpoint": "auc_roc",
+        "fine_tuning": "completo",
+        "normalizacao_entrada": "percentil",
+        "tag": "final-v2",
+        "seed": 42
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "/mnt/d/PAI/dataset/BreastDCEDL_ISPY1_min_crop",
+        "csv": "/mnt/c/Users/gugsh/Repos/Trabalho_PAI/dataset/BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "post_early"
+        ],
+        "normalizacao": {
+          "tipo": "percentil_1_99_conjunto"
+        },
+        "corte": "central",
+        "mascara_como_filtro": false,
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "cortes em memoria por processo; variantes sob demanda",
+        "modelo": {
+          "modo": "completo",
+          "parametros_treinaveis": 101313,
+          "parametros_totais": 101313
+        }
+      },
+      "limiar": 0.39999999999999997
+    },
+    {
+      "arquivo": "resnet50__post-early__central__seed-42__final-v2.pt",
+      "sha256": "b027d09f78bfb908302a9d871ef1d86e56d3bb37536bb8839242df24f4087a39",
+      "recarga_estrita": true,
+      "configuracao": {
+        "arquitetura": "resnet50",
+        "canais_entrada": 1,
+        "configuracao_temporal": "post_early",
+        "estrategia_corte": "central",
+        "epocas": 30,
+        "tamanho_lote": 32,
+        "taxa_aprendizado": 0.0001,
+        "taxa_aprendizado_backbone": 1e-05,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 1.0,
+        "paciencia": 3,
+        "limiar": 0.5,
+        "criterio_limiar": "acuracia_balanceada",
+        "criterio_checkpoint": "auc_roc",
+        "fine_tuning": "layer4",
+        "normalizacao_entrada": "percentil",
+        "tag": "final-v2",
+        "seed": 42
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "/mnt/d/PAI/dataset/BreastDCEDL_ISPY1_min_crop",
+        "csv": "/mnt/c/Users/gugsh/Repos/Trabalho_PAI/dataset/BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "post_early"
+        ],
+        "normalizacao": {
+          "tipo": "percentil_1_99_conjunto"
+        },
+        "corte": "central",
+        "mascara_como_filtro": false,
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "cortes em memoria por processo; variantes sob demanda",
+        "modelo": {
+          "modo": "layer4",
+          "parametros_treinaveis": 14944257,
+          "parametros_totais": 23503809
+        }
+      },
+      "limiar": 0.2
+    },
+    {
+      "arquivo": "resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt",
+      "sha256": "924a6b00ca7ee951b6e79f698f2a63f61ee7324de44c616ddfe15ece78dd9733",
+      "recarga_estrita": true,
+      "configuracao": {
+        "arquitetura": "resnet50",
+        "canais_entrada": 1,
+        "configuracao_temporal": "post_early",
+        "estrategia_corte": "maior_tumor",
+        "epocas": 30,
+        "tamanho_lote": 32,
+        "taxa_aprendizado": 0.0001,
+        "taxa_aprendizado_backbone": 1e-05,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 1.0,
+        "paciencia": 6,
+        "limiar": 0.5,
+        "criterio_limiar": "acuracia_balanceada",
+        "criterio_checkpoint": "auc_roc",
+        "fine_tuning": "layer4",
+        "normalizacao_entrada": "imagenet",
+        "tag": "imagenet-resnet-s84",
+        "seed": 84
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "/mnt/d/PAI/dataset/BreastDCEDL_ISPY1_min_crop",
+        "csv": "/mnt/c/Users/gugsh/Repos/Trabalho_PAI/dataset/BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "post_early"
+        ],
+        "normalizacao": {
+          "tipo": "percentil_1_99_seguido_normalizacao_imagenet",
+          "medias": [
+            0.4490000009536743
+          ],
+          "desvios": [
+            0.22599999606609344
+          ]
+        },
+        "corte": "maior_tumor",
+        "mascara_como_filtro": false,
+        "recorte_roi": false,
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "cortes em memoria por processo; variantes sob demanda",
+        "modelo": {
+          "modo": "layer4",
+          "parametros_treinaveis": 14944257,
+          "parametros_totais": 23503809
+        }
+      },
+      "limiar": 0.25
+    },
+    {
+      "arquivo": "resnet50__tres__maior-tumor__seed-42__final-v2.pt",
+      "sha256": "ec6a1fac483c0fc188d6a580e5aee777aaeb5ce7dde4531ba7f750bcad8ec95b",
+      "recarga_estrita": true,
+      "configuracao": {
+        "arquitetura": "resnet50",
+        "canais_entrada": 3,
+        "configuracao_temporal": "tres",
+        "estrategia_corte": "maior_tumor",
+        "epocas": 30,
+        "tamanho_lote": 32,
+        "taxa_aprendizado": 0.0001,
+        "taxa_aprendizado_backbone": 1e-05,
+        "decaimento_pesos": 0.0001,
+        "pos_weight": 1.0,
+        "paciencia": 3,
+        "limiar": 0.5,
+        "criterio_limiar": "acuracia_balanceada",
+        "criterio_checkpoint": "auc_roc",
+        "fine_tuning": "layer4",
+        "normalizacao_entrada": "percentil",
+        "tag": "final-v2",
+        "seed": 42
+      },
+      "preprocessamento": {
+        "dataset": "BreastDCEDL I-SPY1 MinCrop",
+        "dataset_dir": "/mnt/d/PAI/dataset/BreastDCEDL_ISPY1_min_crop",
+        "csv": "/mnt/c/Users/gugsh/Repos/Trabalho_PAI/dataset/BreastDCEDL_SPY1_min_crop_metadata.csv",
+        "fases": [
+          "pre",
+          "post_early",
+          "post_late"
+        ],
+        "normalizacao": {
+          "tipo": "percentil_1_99_conjunto"
+        },
+        "corte": "maior_tumor",
+        "mascara_como_filtro": false,
+        "augmentation": {
+          "particoes": [
+            "treino",
+            "validacao"
+          ],
+          "angulos_graus": [
+            -20,
+            -10,
+            0,
+            10,
+            20
+          ],
+          "espelhamento": [
+            false,
+            true
+          ],
+          "variacoes_por_paciente": 10,
+          "teste_aumentado": false
+        },
+        "particoes": {
+          "treino": 0,
+          "validacao": 2,
+          "teste": 1
+        },
+        "pacientes": {
+          "treino": 104,
+          "validacao": 33,
+          "teste": 35
+        },
+        "num_workers": 0,
+        "cache_preprocessamento": "cortes em memoria por processo; variantes sob demanda",
+        "modelo": {
+          "modo": "layer4",
+          "parametros_treinaveis": 14944257,
+          "parametros_totais": 23510081
+        }
+      },
+      "limiar": 0.05
+    }
+  ]
+}

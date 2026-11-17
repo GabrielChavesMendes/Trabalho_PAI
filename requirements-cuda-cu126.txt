@@ -1,0 +1,6 @@
+# Windows / GTX 1650 (Turing): conjunto de versoes usado na Issue #4.
+# Instalar no ambiente virtual: python -m pip install -r requirements-cuda-cu126.txt
+--extra-index-url https://download.pytorch.org/whl/cu126
+torch==2.9.1+cu126
+torchvision==0.24.1+cu126
+-r requirements.txt

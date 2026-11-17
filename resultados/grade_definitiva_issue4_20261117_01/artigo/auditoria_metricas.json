@@ -1,0 +1,199 @@
+{
+  "modelos": [
+    {
+      "id": "cnn__post-early__central__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "cnn__post-early__maior-tumor__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "cnn__tres__central__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "cnn__tres__maior-tumor__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "mobilenetv2__post-early__central__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "mobilenetv2__post-early__maior-tumor__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "mobilenetv2__tres__central__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "mobilenetv2__tres__maior-tumor__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "resnet50__post-early__central__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "resnet50__post-early__maior-tumor__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "resnet50__tres__central__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "resnet50__tres__maior-tumor__seed-42",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "e1_cnn_lr_menor",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "e2_cnn_leaky",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "e3_resnet_imagenet",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_cnn_post_early_central",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_cnn_post_early_maior_tumor",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_cnn_tres_central",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_cnn_tres_maior_tumor",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_resnet50_post_early_central",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_resnet50_post_early_maior_tumor",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_resnet50_tres_central",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_resnet50_tres_maior_tumor",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_mobilenetv2_post_early_central",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_mobilenetv2_post_early_maior_tumor",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_mobilenetv2_tres_central",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    },
+    {
+      "id": "c_mobilenetv2_tres_maior_tumor",
+      "validacao_sklearn": true,
+      "teste_sklearn": true,
+      "treino_sklearn": true,
+      "pacientes_teste": 35
+    }
+  ],
+  "coorte": 27,
+  "representantes": 12,
+  "particoes_disjuntas": true,
+  "conferido_com_sklearn": true,
+  "selecao_sha256": "5c635bc65d7239535425ae4a39219a4829751aeb76b14de2a06e780d82c97caa",
+  "manifesto_sha256": "b0efd0f922e46ec17f0bd3e2e1e31902d4bf7156e3423f41a56c07d3c530fe40"
+}

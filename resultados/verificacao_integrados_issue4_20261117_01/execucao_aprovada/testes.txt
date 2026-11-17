@@ -1,0 +1,274 @@
+...E.EE.......EE....EE..............EE..EEE..E..E.......E.EE......E..... [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_avaliador_nao_abre_manifesto_ou_teste_sem_confirmacao _
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_pesos_modificados_sao_rejeitados_antes_de_carregar_modelo _
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+____ ERROR at setup of test_saida_existente_impede_repetir_avaliacao_final ____
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+_______ ERROR at setup of test_consolidacao_usa_epoca_do_checkpoint_auc _______
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_recarga_segura_dos_pesos_proprios_no_mesmo_adaptador _
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+_______ ERROR at setup of test_comando_unico_propaga_falha_e_guarda_log _______
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+______ ERROR at setup of test_verificacao_nao_sobrescreve_saida_anterior ______
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+__________________ ERROR at setup of test_arquivos_ausentes ___________________
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+________________ ERROR at setup of test_rejeita_pid_duplicado _________________
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+_____ ERROR at setup of test_uma_fase_e_tres_fases_com_mascara_sintetica ______
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+___________ ERROR at setup of test_geometria_incompativel_rejeitada ___________
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+____________ ERROR at setup of test_min_crop_rejeita_eixo_trocado _____________
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+____ ERROR at setup of test_fabrica_integra_particoes_sem_carregar_volumes ____
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+_________ ERROR at setup of test_treino_salva_checkpoint_recarregavel _________
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+___________ ERROR at setup of test_recusa_sobrescrever_experimentos ___________
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_auditoria_independente_rejeita_classe_ou_metrica_incorreta _
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_leaky_preserva_parametros_mas_evitaria_carga_silenciosa_na_relu _
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+____ ERROR at setup of test_groupnorm_inicializacao_conv_linear_e_recarga _____
+
+self = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699/tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] O sistema não pode encontrar o caminho especificado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\verificacao-37fd134cd73c4c0eb8b3f9ba67b8b699\\tmp'
+
+C:\Python312\Lib\pathlib.py:1311: FileNotFoundError
+=========================== short test summary info ===========================
+ERROR tests/test_analise_validacao_issue4.py::test_avaliador_nao_abre_manifesto_ou_teste_sem_confirmacao
+ERROR tests/test_analise_validacao_issue4.py::test_pesos_modificados_sao_rejeitados_antes_de_carregar_modelo
+ERROR tests/test_analise_validacao_issue4.py::test_saida_existente_impede_repetir_avaliacao_final
+ERROR tests/test_consolidar_resultados.py::test_consolidacao_usa_epoca_do_checkpoint_auc
+ERROR tests/test_execucao_issue4.py::test_recarga_segura_dos_pesos_proprios_no_mesmo_adaptador
+ERROR tests/test_execucao_issue4.py::test_comando_unico_propaga_falha_e_guarda_log
+ERROR tests/test_execucao_issue4.py::test_verificacao_nao_sobrescreve_saida_anterior
+ERROR tests/test_modulo_dataset.py::test_arquivos_ausentes - FileNotFoundErro...
+ERROR tests/test_modulo_dataset.py::test_rejeita_pid_duplicado - FileNotFound...
+ERROR tests/test_modulo_dataset.py::test_uma_fase_e_tres_fases_com_mascara_sintetica
+ERROR tests/test_modulo_dataset.py::test_geometria_incompativel_rejeitada - F...
+ERROR tests/test_modulo_dataset.py::test_min_crop_rejeita_eixo_trocado - File...
+ERROR tests/test_modulo_treinamento.py::test_fabrica_integra_particoes_sem_carregar_volumes
+ERROR tests/test_modulo_treinamento.py::test_treino_salva_checkpoint_recarregavel
+ERROR tests/test_refinar_limiares.py::test_recusa_sobrescrever_experimentos
+ERROR tests/test_relatorio_final_issue4.py::test_auditoria_independente_rejeita_classe_ou_metrica_incorreta
+ERROR tests/test_rodada_final_issue4.py::test_leaky_preserva_parametros_mas_evitaria_carga_silenciosa_na_relu
+ERROR tests/test_ultima_grade_issue4.py::test_groupnorm_inicializacao_conv_linear_e_recarga
+54 passed, 18 errors in 6.24s

@@ -1,0 +1,32 @@
+{
+  "vencedor_validacao": "cnn__post-early__maior-tumor__seed-42",
+  "melhores_por_arquitetura_validacao": {
+    "cnn": "cnn__post-early__maior-tumor__seed-42",
+    "resnet50": "resnet50__tres__maior-tumor__seed-42",
+    "mobilenetv2": "c_mobilenetv2_tres_central"
+  },
+  "maior_ba_observada_teste": "c_resnet50_tres_central",
+  "maior_auc_observada_teste": "c_resnet50_tres_central",
+  "maior_f1_observado_teste": "c_resnet50_tres_central",
+  "maior_auc_observada_treino": "c_mobilenetv2_post_early_central",
+  "empates_maior_auc_treino": [
+    "resnet50__post-early__central__seed-42",
+    "resnet50__post-early__maior-tumor__seed-42",
+    "resnet50__tres__central__seed-42",
+    "resnet50__tres__maior-tumor__seed-42",
+    "c_resnet50_post_early_maior_tumor",
+    "c_resnet50_tres_central",
+    "c_mobilenetv2_post_early_central",
+    "c_mobilenetv2_tres_central"
+  ],
+  "empates_maior_ba_teste": [
+    "c_resnet50_tres_central"
+  ],
+  "empates_maior_auc_teste": [
+    "c_resnet50_tres_central"
+  ],
+  "empates_maior_f1_teste": [
+    "c_resnet50_tres_central"
+  ],
+  "selecoes_alteradas": false
+}

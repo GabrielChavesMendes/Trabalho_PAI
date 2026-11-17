@@ -1,0 +1,10 @@
+Integridade SHA-256 verificada para os quatro checkpoints.
+[1/4] Recarga estrita OK: cnn__post-early__central__seed-42__final-v2.pt; normalizacao=percentil; fases=['post_early']; corte=central; limiar=0.39999999999999997
+    Validacao reproduzida: 33 pacientes; sensibilidade=0.5455; especificidade=0.6364; precisao=0.4286; acuracia=0.6061; f1=0.4800; auc_roc=0.6033; acuracia_balanceada=0.5909; loss=0.8684
+[2/4] Recarga estrita OK: resnet50__post-early__central__seed-42__final-v2.pt; normalizacao=percentil; fases=['post_early']; corte=central; limiar=0.2
+    Validacao reproduzida: 33 pacientes; sensibilidade=0.9091; especificidade=0.1364; precisao=0.3448; acuracia=0.3939; f1=0.5000; auc_roc=0.4215; acuracia_balanceada=0.5227; loss=0.6777
+[3/4] Recarga estrita OK: resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt; normalizacao=imagenet; fases=['post_early']; corte=maior_tumor; limiar=0.25
+    Validacao reproduzida: 33 pacientes; sensibilidade=0.5455; especificidade=0.8182; precisao=0.6000; acuracia=0.7273; f1=0.5714; auc_roc=0.6983; acuracia_balanceada=0.6818; loss=0.6387
+[4/4] Recarga estrita OK: resnet50__tres__maior-tumor__seed-42__final-v2.pt; normalizacao=percentil; fases=['pre', 'post_early', 'post_late']; corte=maior_tumor; limiar=0.05
+    Validacao reproduzida: 33 pacientes; sensibilidade=0.6364; especificidade=0.6818; precisao=0.5000; acuracia=0.6667; f1=0.5600; auc_roc=0.6074; acuracia_balanceada=0.6591; loss=1.3903
+Quatro checkpoints externos verificados. Validacao real OK.

@@ -1,0 +1,27 @@
+{
+  "arquivos_iniciais_inalterados": true,
+  "hashes": {
+    "checkpoints\\integrados_issue4\\cnn__post-early__central__seed-42__final-v2.pt": "8ea882df35704e58273e42df9303864395a9b832e5b2ec75578e03701c2f3afd",
+    "checkpoints\\integrados_issue4\\resnet50__post-early__central__seed-42__final-v2.pt": "b027d09f78bfb908302a9d871ef1d86e56d3bb37536bb8839242df24f4087a39",
+    "checkpoints\\integrados_issue4\\resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt": "924a6b00ca7ee951b6e79f698f2a63f61ee7324de44c616ddfe15ece78dd9733",
+    "checkpoints\\integrados_issue4\\resnet50__tres__maior-tumor__seed-42__final-v2.pt": "ec6a1fac483c0fc188d6a580e5aee777aaeb5ce7dde4531ba7f750bcad8ec95b",
+    "resultados\\grade_definitiva_issue4_20261117_01\\artigo\\shortlist_integrada_validacao_12.csv": "a095917a9ea3fa6b27720c375c1c674014012722fde3ee02a5aa18bb4039692a",
+    "resultados\\grade_definitiva_issue4_20261117_01\\manifesto_final_27.json": "b0efd0f922e46ec17f0bd3e2e1e31902d4bf7156e3423f41a56c07d3c530fe40"
+  },
+  "doze_pesos_inalterados": true,
+  "modelos": {
+    "checkpoints/integrados_issue4/cnn__post-early__central__seed-42__final-v2.pt": "8ea882df35704e58273e42df9303864395a9b832e5b2ec75578e03701c2f3afd",
+    "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/cnn__post-early__maior-tumor__seed-42.pt": "206bc055e52464cd3144ab833eb92c3e835beb9d6d9bde2022eeafe027807d0b",
+    "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/cnn__tres__central__seed-42.pt": "b91bc79c6a9a798981ce2d7dd926e5f3378f1a515ab3a426b4a63fe79b653693",
+    "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/cnn__tres__maior-tumor__seed-42.pt": "b5c16ac90174fad578ef1f0e79fd36a0fb3275e01bb9328b901e686eb2b9994d",
+    "checkpoints/integrados_issue4/resnet50__post-early__central__seed-42__final-v2.pt": "b027d09f78bfb908302a9d871ef1d86e56d3bb37536bb8839242df24f4087a39",
+    "checkpoints/integrados_issue4/resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt": "924a6b00ca7ee951b6e79f698f2a63f61ee7324de44c616ddfe15ece78dd9733",
+    "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/resnet50__tres__central__seed-42.pt": "98443ab06fb237d3d273ea9a1f1d4679648959bd50307f0ebea16f9231c5bafe",
+    "checkpoints/integrados_issue4/resnet50__tres__maior-tumor__seed-42__final-v2.pt": "ec6a1fac483c0fc188d6a580e5aee777aaeb5ce7dde4531ba7f750bcad8ec95b",
+    "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/mobilenetv2__post-early__central__seed-42.pt": "a3221c0c06029f0bdefad8f5f85c7f02681f361a749ac6b68f28a20a6b40adc3",
+    "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/mobilenetv2__post-early__maior-tumor__seed-42.pt": "5197c482d6adce90ac12b7713a89f785c95dc907c39a0df0e32ad3c6d7c0c663",
+    "checkpoints/grade_definitiva_issue4_20261117_01/c_mobilenetv2_tres_central__mobilenetv2__tres__central__seed-42.pt": "f486784eee3c613727c1eda5d9791db9699290d9f65a425727aa589f02ad8372",
+    "checkpoints/grade_definitiva_issue4_20261117_01/c_mobilenetv2_tres_maior_tumor__mobilenetv2__tres__maior-tumor__seed-42.pt": "ddbfc2818f60763f2fd63bde3f16354a04dc7e40a57872c6f283bbc6311771f8"
+  },
+  "catalogo_12_preservado": true
+}

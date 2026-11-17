@@ -1,0 +1,3 @@
+git fetch origin: sucesso
+HEAD...origin/feature/felipe-issue4-finalizacao: 0 0
+Nenhum merge realizado.

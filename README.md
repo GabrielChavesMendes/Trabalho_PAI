@@ -2,7 +2,7 @@
 
 **Grupo G10 — PUC Minas — classificação da resposta patológica completa (pCR) ao tratamento de câncer de mama usando DCE-MRI.**
 
-> **Estado:** preparação e implementação em andamento. A branch `develop` contém a estrutura inicial, sem substituir a implementação anterior preservada na `main`.
+> **Estado (17/11/2026):** a execução experimental da Issue #4 foi concluída na branch `feature/felipe-issue4-finalizacao` (27 checkpoints, avaliação final com 35 pacientes, 12 representantes). A integração à `develop`, a interface final/Grad-CAM e o arquivo Python único ainda exigem revisão. Resultados: [`docs/GRADE_DEFINITIVA_ISSUE_4_20261117.md`](docs/GRADE_DEFINITIVA_ISSUE_4_20261117.md).
 
 ## Integrantes e professor
 
@@ -14,6 +14,12 @@
 - Alessandra Faria Rodrigues
 
 **Professor:** Alexei Manso Correa Machado
+
+## Resultado consolidado e documentação para o artigo
+
+Leia primeiro a **[síntese integrada para o artigo](docs/SINTESE_INTEGRADA_ISSUE_4.md)**: tabela única com as 12 combinações e comparação das duas linhas de experimentação. Os quatro pesos externos passaram pela recarga CPU e reproduziram as métricas nos 33 pacientes de validação em CUDA. Os 12 selecionados também tiveram recarga CPU e previsão de um paciente verificadas. Evidências: [`resultados/verificacao_integrados_issue4_20261117_01/README.md`](resultados/verificacao_integrados_issue4_20261117_01/README.md). Os resultados das 27 execuções anteriores continuam preservados.
+
+**Sem retreino:** `python scripts/verificar_issue4.py` executa testes, recarga CPU e validação real; `python scripts/inferir_paciente_issue4.py --modelo 6 --paciente ISPY1_1009` demonstra uma previsão. Ambos usam a `.venv` e detectam CUDA/CPU. [Guia de execução](docs/COMO_EXECUTAR_MODELO_TREINADO.md). Interface gráfica/Grad-CAM: Issue #5.
 
 ## Objetivo
 Treinar e avaliar **três modelos** (CNN autoral ≥5 camadas com parâmetros, ResNet50 ImageNet e MobileNetV2) para prever pCR a partir de imagens DCE-MRI. Comparar uma fase temporal isolada com a combinação de três fases e ao menos duas estratégias de cortes de volumes 3D.
@@ -65,7 +71,7 @@ python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase pre --
 python -m pytest -q
 ```
 
-O segundo comando verifica os caminhos de todas as fases DCE e máscaras; os dois comandos seguintes **carregam imagens reais** e verificam cortes/canais e normalização. Os 9 testes automatizados incluem exemplos sintéticos e teste de regressão do eixo Z, sem precisar dos volumes completos. **Treinamento e augmentação ainda pertencem às Issues #4 e #1.**
+O segundo comando verifica os caminhos de todas as fases DCE e máscaras; os dois comandos seguintes **carregam imagens reais** e verificam cortes/canais e normalização. Os testes automatizados do dataset incluem exemplos sintéticos e regressão do eixo Z. **Treinamento e augmentation já foram executados para a Issue #4 na branch de finalização**; os 58 testes automatizados da coorte experimental passaram, conforme relatório. A integração final permanece pendente.
 
 Partições oficiais da coluna `test`: `0=treino` (104 pacientes), `1=teste` (35) e `2=validação` (33), conforme o artigo do BreastDCEDL. Cada paciente permanece numa única partição.
 

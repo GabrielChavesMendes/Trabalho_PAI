@@ -1,0 +1,53 @@
+{
+  "maximo_treinamentos": 3,
+  "seed": 42,
+  "batch": 4,
+  "epocas": 30,
+  "paciencia": 5,
+  "pos_weight": 3.0,
+  "weight_decay": 0.0001,
+  "checkpoint": "auc_roc; desempate menor loss",
+  "limiar": "pontos medios validacao; criterio acuracia_balanceada",
+  "casos": [
+    {
+      "id": "e1_cnn_lr_menor",
+      "arquitetura": "cnn",
+      "fase": "post_early",
+      "corte": "maior_tumor",
+      "lr": 0.0003,
+      "normalizacao_adicional": "nenhuma"
+    },
+    {
+      "id": "e2_cnn_leaky",
+      "arquitetura": "cnn_leaky",
+      "fase": "post_early",
+      "corte": "maior_tumor",
+      "lr": 0.001,
+      "normalizacao_adicional": "nenhuma",
+      "negative_slope": 0.01
+    },
+    {
+      "id": "e3_resnet_imagenet",
+      "arquitetura": "resnet50",
+      "fase": "tres",
+      "corte": "maior_tumor",
+      "lr": 0.0001,
+      "normalizacao_adicional": "imagenet_rgb",
+      "fine_tuning": false
+    }
+  ],
+  "criterios_recomendacao": {
+    "auc_maior_que": 0.6818181818181818,
+    "balanced_min": 0.7272727272727273,
+    "sens_min": 0.5454545454545454,
+    "pior_balanced_mais_menos_001_maior_que": 0.5,
+    "ambas_classes_previstas": true
+  },
+  "bootstrap": {
+    "n": 2000,
+    "seed": 2026,
+    "pareado": true,
+    "estratificado": true
+  },
+  "teste_autorizado": false
+}

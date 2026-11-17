@@ -46,6 +46,36 @@ class DatasetCacheMemoria(Dataset):
         return self._cache[indice]
 
 
+class DatasetNormalizacaoImageNet(Dataset):
+    """Padronizacao por canal apos percentis 1/99, antes do augmentation.
+
+    Uma fase usa a aproximacao monocanal 0.449/0.226 registrada nos pesos
+    de transferencia. Tres fases usam media/desvio ImageNet por canal.
+    """
+
+    def __init__(self, dataset_base: Dataset):
+        self.dataset_base = dataset_base
+        self.pacientes = dataset_base.pacientes
+
+    def __len__(self) -> int:
+        return len(self.dataset_base)
+
+    def __getitem__(self, indice: int) -> dict[str, Any]:
+        amostra = dict(self.dataset_base[indice])
+        imagem = amostra["imagem"]
+        canais = imagem.shape[0]
+        if canais == 1:
+            medias = imagem.new_tensor([0.449]).reshape(1, 1, 1)
+            desvios = imagem.new_tensor([0.226]).reshape(1, 1, 1)
+        elif canais == 3:
+            medias = imagem.new_tensor([0.485, 0.456, 0.406]).reshape(3, 1, 1)
+            desvios = imagem.new_tensor([0.229, 0.224, 0.225]).reshape(3, 1, 1)
+        else:
+            raise ValueError("A normalizacao ImageNet requer 1 ou 3 canais")
+        amostra["imagem"] = (imagem - medias) / desvios
+        return amostra
+
+
 def _resolver_fase(configuracao_temporal: str) -> str:
     aliases = {"tres_fases": "tres", "tres-fases": "tres"}
     fase = aliases.get(configuracao_temporal, configuracao_temporal)
@@ -83,11 +113,14 @@ def criar_carregadores(
     estrategia_corte: str,
     tamanho_lote: int,
     seed: int,
+    normalizacao_entrada: str = "percentil",
 ) -> dict[str, Any]:
     """Cria treino/validacao aumentados e teste reservado sem augmentation."""
 
     fase = _resolver_fase(configuracao_temporal)
     corte = _resolver_corte(estrategia_corte)
+    if normalizacao_entrada not in ("percentil", "imagenet"):
+        raise ValueError("normalizacao_entrada deve ser percentil ou imagenet")
     pasta_dataset = Path(
         os.environ.get(
             "PAI_DATASET_DIR",
@@ -126,6 +159,10 @@ def criar_carregadores(
         DatasetDCE(pacientes_validacao, fase=fase, estrategia=corte)
     )
     teste = DatasetDCE(pacientes_teste, fase=fase, estrategia=corte)
+    if normalizacao_entrada == "imagenet":
+        treino_base = DatasetNormalizacaoImageNet(treino_base)
+        validacao_base = DatasetNormalizacaoImageNet(validacao_base)
+        teste = DatasetNormalizacaoImageNet(teste)
     treino = DatasetDCEAumentado(treino_base, "treino")
     validacao = DatasetDCEAumentado(validacao_base, "validacao")
 
@@ -146,7 +183,10 @@ def criar_carregadores(
             "dataset_dir": str(pasta_dataset.resolve()),
             "csv": str(caminho_csv.resolve()),
             "fases": list(FASES) if fase == "tres" else [fase],
-            "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+            "normalizacao": (
+                "percentis 1/99 conjuntos por amostra; clip [0,1]"
+                + ("; padronizacao ImageNet por canal" if normalizacao_entrada == "imagenet" else "")
+            ),
             "corte": corte,
             "augmentation": {
                 "particoes": ["treino", "validacao"],

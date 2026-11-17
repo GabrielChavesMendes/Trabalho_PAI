@@ -1,0 +1,6 @@
+Integridade SHA-256 verificada para os quatro checkpoints.
+[1/4] Recarga estrita OK: cnn__post-early__central__seed-42__final-v2.pt; normalizacao=percentil; fases=['post_early']; corte=central; limiar=0.39999999999999997
+[2/4] Recarga estrita OK: resnet50__post-early__central__seed-42__final-v2.pt; normalizacao=percentil; fases=['post_early']; corte=central; limiar=0.2
+[3/4] Recarga estrita OK: resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt; normalizacao=imagenet; fases=['post_early']; corte=maior_tumor; limiar=0.25
+[4/4] Recarga estrita OK: resnet50__tres__maior-tumor__seed-42__final-v2.pt; normalizacao=percentil; fases=['pre', 'post_early', 'post_late']; corte=maior_tumor; limiar=0.05
+Quatro checkpoints externos verificados. Falta testar no dataset real.

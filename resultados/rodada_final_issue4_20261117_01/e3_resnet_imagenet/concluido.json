@@ -1,0 +1,122 @@
+{
+  "id": "e3_resnet_imagenet",
+  "nome": "e3_resnet_imagenet__resnet50__tres__maior-tumor__seed-42",
+  "checkpoint": "checkpoints\\rodada_final_issue4_20261117_01\\e3_resnet_imagenet__resnet50__tres__maior-tumor__seed-42.pt",
+  "checkpoint_sha256": "86a4e198d3b05dd362e68f94b0e0244620b43e330b0761a840eeb0720ce020e5",
+  "validacao": "resultados\\rodada_final_issue4_20261117_01\\e3_resnet_imagenet\\e3_resnet_imagenet__resnet50__tres__maior-tumor__seed-42__validation.json",
+  "historico": "resultados\\rodada_final_issue4_20261117_01\\e3_resnet_imagenet\\e3_resnet_imagenet__resnet50__tres__maior-tumor__seed-42__history.csv",
+  "configuracao": {
+    "arquitetura": "resnet50",
+    "canais_entrada": 3,
+    "configuracao_temporal": "tres",
+    "estrategia_corte": "maior_tumor",
+    "epocas": 30,
+    "tamanho_lote": 4,
+    "taxa_aprendizado": 0.0001,
+    "decaimento_pesos": 0.0001,
+    "pos_weight": 3.0,
+    "paciencia": 5,
+    "limiar": 0.5,
+    "seed": 42,
+    "taxa_aprendizado_backbone": null,
+    "criterio_checkpoint": "auc_roc"
+  },
+  "preprocessamento": {
+    "fases": [
+      "pre",
+      "post_early",
+      "post_late"
+    ],
+    "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+    "normalizacao_adicional": "imagenet_rgb",
+    "parametros_normalizacao_adicional": {
+      "media": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "desvio": [
+        0.229,
+        0.224,
+        0.225
+      ],
+      "momento": "depois do aumento; sem resize/crop adicional"
+    },
+    "corte": "maior_tumor",
+    "augmentation": {
+      "particoes": [
+        "treino",
+        "validacao"
+      ],
+      "angulos_graus": [
+        -20,
+        -10,
+        0,
+        10,
+        20
+      ],
+      "espelhamento": [
+        false,
+        true
+      ],
+      "variacoes_por_paciente": 10,
+      "teste_aumentado": false
+    },
+    "particoes": {
+      "treino": 0,
+      "validacao": 2,
+      "teste": 1
+    },
+    "pacientes": {
+      "treino": 104,
+      "validacao": 33,
+      "teste": 35
+    },
+    "rodada_final_issue4": {
+      "id": "e3_resnet_imagenet",
+      "arquitetura": "resnet50",
+      "pre_treinado": true,
+      "fine_tuning": false,
+      "dropout_cnn": 0.3,
+      "ativacao_cnn": "ReLU"
+    },
+    "plano_antes_treinamento_sha256": "bb632f0dfbd4b2059b64fdd6ae3ed9fedcce29a5d0e7beeb4c65ec91cdf625f1"
+  },
+  "epoca_escolhida": 1,
+  "epocas_executadas": 6,
+  "tempo_treinamento_segundos": 178.38189019993297,
+  "metricas": {
+    "sensibilidade": 0.2727272727272727,
+    "especificidade": 1.0,
+    "precisao": 1.0,
+    "acuracia": 0.7575757575757576,
+    "f1": 0.42857142857142855,
+    "acuracia_balanceada": 0.6363636363636364,
+    "auc_roc": 0.5785123966942148,
+    "tn": 22,
+    "fp": 0,
+    "fn": 8,
+    "tp": 3,
+    "numero_pacientes": 33,
+    "limiar": 0.5356386035680771,
+    "loss": 1.1432399742531054
+  },
+  "metricas_treino": {
+    "sensibilidade": 0.3076923076923077,
+    "especificidade": 0.9871794871794872,
+    "precisao": 0.8888888888888888,
+    "acuracia": 0.8173076923076923,
+    "f1": 0.4571428571428572,
+    "acuracia_balanceada": 0.6474358974358975,
+    "auc_roc": 0.8471400394477318,
+    "tn": 77,
+    "fp": 1,
+    "fn": 18,
+    "tp": 8,
+    "numero_pacientes": 104,
+    "limiar": 0.5356386035680771
+  },
+  "plano_sha256": "bb632f0dfbd4b2059b64fdd6ae3ed9fedcce29a5d0e7beeb4c65ec91cdf625f1",
+  "normalizacao_recarga": "imagenet_rgb",
+  "teste_avaliado": false
+}

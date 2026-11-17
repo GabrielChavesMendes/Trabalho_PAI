@@ -1,0 +1,242 @@
+[
+  {
+    "modelo": 1,
+    "checkpoint": "checkpoints/integrados_issue4/cnn__post-early__central__seed-42__final-v2.pt",
+    "sha256": "8ea882df35704e58273e42df9303864395a9b832e5b2ec75578e03701c2f3afd",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "cnn",
+    "fases": [
+      "post_early"
+    ],
+    "corte": "central",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.40302005410194397,
+    "limiar": 0.39999999999999997,
+    "classificacao_pcr": 1,
+    "aumento": false
+  },
+  {
+    "modelo": 2,
+    "checkpoint": "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/cnn__post-early__maior-tumor__seed-42.pt",
+    "sha256": "206bc055e52464cd3144ab833eb92c3e835beb9d6d9bde2022eeafe027807d0b",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "cnn",
+    "fases": [
+      "post_early"
+    ],
+    "corte": "maior_tumor",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.498480886220932,
+    "limiar": 0.49848052859306335,
+    "classificacao_pcr": 1,
+    "aumento": false
+  },
+  {
+    "modelo": 3,
+    "checkpoint": "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/cnn__tres__central__seed-42.pt",
+    "sha256": "b91bc79c6a9a798981ce2d7dd926e5f3378f1a515ab3a426b4a63fe79b653693",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "cnn",
+    "fases": [
+      "pre",
+      "post_early",
+      "post_late"
+    ],
+    "corte": "central",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.47677937150001526,
+    "limiar": 0.47722066491842274,
+    "classificacao_pcr": 0,
+    "aumento": false
+  },
+  {
+    "modelo": 4,
+    "checkpoint": "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/cnn__tres__maior-tumor__seed-42.pt",
+    "sha256": "b5c16ac90174fad578ef1f0e79fd36a0fb3275e01bb9328b901e686eb2b9994d",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "cnn",
+    "fases": [
+      "pre",
+      "post_early",
+      "post_late"
+    ],
+    "corte": "maior_tumor",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.47089868783950806,
+    "limiar": 0.4819288983941078,
+    "classificacao_pcr": 0,
+    "aumento": false
+  },
+  {
+    "modelo": 5,
+    "checkpoint": "checkpoints/integrados_issue4/resnet50__post-early__central__seed-42__final-v2.pt",
+    "sha256": "b027d09f78bfb908302a9d871ef1d86e56d3bb37536bb8839242df24f4087a39",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "resnet50",
+    "fases": [
+      "post_early"
+    ],
+    "corte": "central",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.318166047334671,
+    "limiar": 0.2,
+    "classificacao_pcr": 1,
+    "aumento": false
+  },
+  {
+    "modelo": 6,
+    "checkpoint": "checkpoints/integrados_issue4/resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt",
+    "sha256": "924a6b00ca7ee951b6e79f698f2a63f61ee7324de44c616ddfe15ece78dd9733",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "resnet50",
+    "fases": [
+      "post_early"
+    ],
+    "corte": "maior_tumor",
+    "corte_z": 13,
+    "normalizacao": "imagenet",
+    "probabilidade_pcr": 0.3113216161727905,
+    "limiar": 0.25,
+    "classificacao_pcr": 1,
+    "aumento": false
+  },
+  {
+    "modelo": 7,
+    "checkpoint": "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/resnet50__tres__central__seed-42.pt",
+    "sha256": "98443ab06fb237d3d273ea9a1f1d4679648959bd50307f0ebea16f9231c5bafe",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "resnet50",
+    "fases": [
+      "pre",
+      "post_early",
+      "post_late"
+    ],
+    "corte": "central",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.9357073307037354,
+    "limiar": 0.7724838942289352,
+    "classificacao_pcr": 1,
+    "aumento": false
+  },
+  {
+    "modelo": 8,
+    "checkpoint": "checkpoints/integrados_issue4/resnet50__tres__maior-tumor__seed-42__final-v2.pt",
+    "sha256": "ec6a1fac483c0fc188d6a580e5aee777aaeb5ce7dde4531ba7f750bcad8ec95b",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "resnet50",
+    "fases": [
+      "pre",
+      "post_early",
+      "post_late"
+    ],
+    "corte": "maior_tumor",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.7773361206054688,
+    "limiar": 0.05,
+    "classificacao_pcr": 1,
+    "aumento": false
+  },
+  {
+    "modelo": 9,
+    "checkpoint": "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/mobilenetv2__post-early__central__seed-42.pt",
+    "sha256": "a3221c0c06029f0bdefad8f5f85c7f02681f361a749ac6b68f28a20a6b40adc3",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "mobilenetv2",
+    "fases": [
+      "post_early"
+    ],
+    "corte": "central",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.3810845613479614,
+    "limiar": 0.566841208934784,
+    "classificacao_pcr": 0,
+    "aumento": false
+  },
+  {
+    "modelo": 10,
+    "checkpoint": "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao/mobilenetv2__post-early__maior-tumor__seed-42.pt",
+    "sha256": "5197c482d6adce90ac12b7713a89f785c95dc907c39a0df0e32ad3c6d7c0c663",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "mobilenetv2",
+    "fases": [
+      "post_early"
+    ],
+    "corte": "maior_tumor",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.42612603306770325,
+    "limiar": 0.42850990891456603,
+    "classificacao_pcr": 0,
+    "aumento": false
+  },
+  {
+    "modelo": 11,
+    "checkpoint": "checkpoints/grade_definitiva_issue4_20261117_01/c_mobilenetv2_tres_central__mobilenetv2__tres__central__seed-42.pt",
+    "sha256": "f486784eee3c613727c1eda5d9791db9699290d9f65a425727aa589f02ad8372",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "mobilenetv2",
+    "fases": [
+      "pre",
+      "post_early",
+      "post_late"
+    ],
+    "corte": "central",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.08685709536075592,
+    "limiar": 0.061849540378898386,
+    "classificacao_pcr": 1,
+    "aumento": false
+  },
+  {
+    "modelo": 12,
+    "checkpoint": "checkpoints/grade_definitiva_issue4_20261117_01/c_mobilenetv2_tres_maior_tumor__mobilenetv2__tres__maior-tumor__seed-42.pt",
+    "sha256": "ddbfc2818f60763f2fd63bde3f16354a04dc7e40a57872c6f283bbc6311771f8",
+    "recarga_cpu": true,
+    "device": "cuda",
+    "paciente": "ISPY1_1009",
+    "arquitetura": "mobilenetv2",
+    "fases": [
+      "pre",
+      "post_early",
+      "post_late"
+    ],
+    "corte": "maior_tumor",
+    "corte_z": 13,
+    "normalizacao": "percentil",
+    "probabilidade_pcr": 0.28729549050331116,
+    "limiar": 0.3731868088245392,
+    "classificacao_pcr": 0,
+    "aumento": false
+  }
+]

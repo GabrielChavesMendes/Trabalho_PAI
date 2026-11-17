@@ -1,0 +1,27 @@
+{
+  "artefatos_anteriores": 266,
+  "alterados_ou_ausentes": [],
+  "fontes_treinamento_inalteradas_desde_registro": true,
+  "csv_oficial_inalterado": true,
+  "treinamentos_novos": 3,
+  "novos_checkpoints_preservados": [
+    {
+      "id": "e1_cnn_lr_menor",
+      "checkpoint": "checkpoints\\rodada_final_issue4_20261117_01\\e1_cnn_lr_menor__cnn__post-early__maior-tumor__seed-42.pt",
+      "sha256": "56c38a648d2c64d52f6eb82285d5b785f6d22f999a506d055e6a7a75e1162754"
+    },
+    {
+      "id": "e2_cnn_leaky",
+      "checkpoint": "checkpoints\\rodada_final_issue4_20261117_01\\e2_cnn_leaky__cnn-leaky__post-early__maior-tumor__seed-42.pt",
+      "sha256": "1dbd422f5f07321d661c2830733879d26e4ccce76fed84fa057eb3ef7fde63e1"
+    },
+    {
+      "id": "e3_resnet_imagenet",
+      "checkpoint": "checkpoints\\rodada_final_issue4_20261117_01\\e3_resnet_imagenet__resnet50__tres__maior-tumor__seed-42.pt",
+      "sha256": "86a4e198d3b05dd362e68f94b0e0244620b43e330b0761a840eeb0720ce020e5"
+    }
+  ],
+  "teste_executado": false,
+  "predicoes_teste_geradas": 0,
+  "manifesto_final_sha256": "7912a867a2c68a2787c9bf868afcdecc2afd38e2acdac333c33028592ded8255"
+}

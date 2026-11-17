@@ -1,0 +1,123 @@
+{
+  "id": "c_mobilenetv2_post_early_central",
+  "nome": "c_mobilenetv2_post_early_central__mobilenetv2__post-early__central__seed-42",
+  "checkpoint": "checkpoints\\grade_definitiva_issue4_20261117_01\\c_mobilenetv2_post_early_central__mobilenetv2__post-early__central__seed-42.pt",
+  "checkpoint_sha256": "b5ce3664f023f8e5934c8c2383b493abe7fd9c9913926ba9d1ec1c95a5f6a081",
+  "validacao": "resultados\\grade_definitiva_issue4_20261117_01\\c_mobilenetv2_post_early_central\\c_mobilenetv2_post_early_central__mobilenetv2__post-early__central__seed-42__validation.json",
+  "historico": "resultados\\grade_definitiva_issue4_20261117_01\\c_mobilenetv2_post_early_central\\c_mobilenetv2_post_early_central__mobilenetv2__post-early__central__seed-42__history.csv",
+  "configuracao": {
+    "arquitetura": "mobilenetv2",
+    "canais_entrada": 1,
+    "configuracao_temporal": "post_early",
+    "estrategia_corte": "central",
+    "epocas": 30,
+    "tamanho_lote": 4,
+    "taxa_aprendizado": 0.0001,
+    "decaimento_pesos": 0.0001,
+    "pos_weight": 3.0,
+    "paciencia": 5,
+    "limiar": 0.5,
+    "seed": 42,
+    "taxa_aprendizado_backbone": 1e-05,
+    "criterio_checkpoint": "auc_roc"
+  },
+  "preprocessamento": {
+    "fases": [
+      "post_early"
+    ],
+    "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+    "normalizacao_adicional": "nenhuma",
+    "parametros_normalizacao_adicional": {},
+    "corte": "central",
+    "augmentation": {
+      "particoes": [
+        "treino",
+        "validacao"
+      ],
+      "angulos_graus": [
+        -20,
+        -10,
+        0,
+        10,
+        20
+      ],
+      "espelhamento": [
+        false,
+        true
+      ],
+      "variacoes_por_paciente": 10,
+      "teste_aumentado": false
+    },
+    "particoes": {
+      "treino": 0,
+      "validacao": 2,
+      "teste": 1
+    },
+    "pacientes": {
+      "treino": 104,
+      "validacao": 33,
+      "teste": 35
+    },
+    "rodada_final_issue4": {
+      "id": "c_mobilenetv2_post_early_central",
+      "arquitetura": "mobilenetv2",
+      "pre_treinado": true,
+      "fine_tuning": true,
+      "dropout_cnn": 0.3,
+      "ativacao_cnn": "ReLU",
+      "normalizacao_interna_cnn": "GroupNorm(4)"
+    },
+    "grade_final_issue4": {
+      "id": "c_mobilenetv2_post_early_central",
+      "arquitetura": "mobilenetv2",
+      "fase": "post_early",
+      "corte": "central",
+      "lr": 0.0001,
+      "lr_backbone": 1e-05,
+      "intervencao": "features[17:19]+classifier; todas BN congeladas",
+      "normalizacao_adicional": "nenhuma",
+      "grade_final": true,
+      "comparador": "mobilenetv2__post-early__central__seed-42"
+    },
+    "plano_antes_treinamento_sha256": "a87377f16b25c080ef38a84794f865d3c87e5f638858eb70fe084af6e63246a5"
+  },
+  "epoca_escolhida": 11,
+  "epocas_executadas": 16,
+  "tempo_treinamento_segundos": 194.31333549998817,
+  "metricas": {
+    "sensibilidade": 0.9090909090909091,
+    "especificidade": 0.2727272727272727,
+    "precisao": 0.38461538461538464,
+    "acuracia": 0.48484848484848486,
+    "f1": 0.5405405405405405,
+    "acuracia_balanceada": 0.5909090909090908,
+    "auc_roc": 0.5371900826446281,
+    "tn": 6,
+    "fp": 16,
+    "fn": 1,
+    "tp": 10,
+    "numero_pacientes": 33,
+    "limiar": 0.09664575625211,
+    "loss": 2.0534910675251123
+  },
+  "metricas_treino": {
+    "sensibilidade": 1.0,
+    "especificidade": 0.7051282051282052,
+    "precisao": 0.5306122448979592,
+    "acuracia": 0.7788461538461539,
+    "f1": 0.6933333333333334,
+    "acuracia_balanceada": 0.8525641025641026,
+    "auc_roc": 1.0,
+    "tn": 55,
+    "fp": 23,
+    "fn": 0,
+    "tp": 26,
+    "numero_pacientes": 104,
+    "limiar": 0.09664575625211,
+    "loss": 0.2095684543538552
+  },
+  "pico_vram_bytes": 99105792,
+  "plano_sha256": "a87377f16b25c080ef38a84794f865d3c87e5f638858eb70fe084af6e63246a5",
+  "normalizacao_recarga": "nenhuma",
+  "teste_avaliado": false
+}
