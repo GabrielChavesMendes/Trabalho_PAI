@@ -19,6 +19,8 @@
 
 Leia primeiro a **[síntese integrada para o artigo](docs/SINTESE_INTEGRADA_ISSUE_4.md)**: tabela única com as 12 combinações, comparação das duas linhas de experimentação e encadeamento das intervenções. Os resultados de 27 checkpoints e a auditoria continuam preservados em [`docs/GRADE_DEFINITIVA_ISSUE_4_20261117.md`](docs/GRADE_DEFINITIVA_ISSUE_4_20261117.md). Quatro pesos externos foram recebidos e tiveram recarga estrutural verificada; falta reproduzir a validação com o dataset real antes do uso no executável. Consulte a síntese para nomes e comandos.
 
+**Para executar os modelos já treinados sem retreinar:** consulte [Como executar um modelo já treinado](docs/COMO_EXECUTAR_MODELO_TREINADO.md) (passos para Git Bash, checkpoints e validação real).
+
 ## Objetivo
 Treinar e avaliar **três modelos** (CNN autoral ≥5 camadas com parâmetros, ResNet50 ImageNet e MobileNetV2) para prever pCR a partir de imagens DCE-MRI. Comparar uma fase temporal isolada com a combinação de três fases e ao menos duas estratégias de cortes de volumes 3D.
 
