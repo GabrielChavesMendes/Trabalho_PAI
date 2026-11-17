@@ -310,7 +310,7 @@ def gerar_gradcam(
             raise RuntimeError("Ativacoes/gradientes Grad-CAM nao foram capturados.")
         pesos = gradientes[-1].mean(dim=(2, 3), keepdim=True)
         bruto = F.relu((pesos * ativacoes[-1]).sum(dim=1, keepdim=True))
-        minimo, maximo = float(bruto.min()), float(bruto.max())
+        minimo, maximo = float(bruto.detach().min()), float(bruto.detach().max())
         amplitude = maximo - minimo
         if amplitude <= 1e-12:
             mapa = torch.zeros(
@@ -649,10 +649,10 @@ class AplicacaoPAI:
         if self.figura is not None:
             from matplotlib import pyplot as plt
             plt.close(self.figura)
-        figura = Figure(figsize=(13, 4.5), dpi=120)
+        figura = Figure(figsize=(13, 8), dpi=110)
         if titulo:
             figura.suptitle(titulo, fontsize=11, fontweight="bold", y=0.98)
-        eixos = figura.subplots(1, 4)
+        eixos = figura.subplots(2, 2).ravel()
         eixos[0].imshow(original, cmap="gray", vmin=0, vmax=1)
         eixos[0].set_title(f"DCE-MRI ({fase})")
         eixos[1].imshow(original, cmap="gray", vmin=0, vmax=1)
