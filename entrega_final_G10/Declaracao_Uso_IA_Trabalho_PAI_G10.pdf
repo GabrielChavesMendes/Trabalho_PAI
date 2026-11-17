@@ -1,0 +1,76 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Times-Roman /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Times-Bold /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Length 4901 >>
+stream
+BT /F2 12.5 Tf 48 800.00 Td (DECLARA\307\303O DE UTILIZA\307\303O DE INTELIG\312NCIA ARTIFICIAL) Tj ET
+BT /F1 9.9 Tf 48 775.00 Td (Institui\347\343o: Pontif\355cia Universidade Cat\363lica de Minas Gerais \(PUC Minas\)) Tj ET
+BT /F1 9.9 Tf 48 760.80 Td (Disciplina: Processamento e An\341lise de Imagens \(PAI\)) Tj ET
+BT /F1 9.9 Tf 48 746.60 Td (Grupo: G10) Tj ET
+BT /F1 9.9 Tf 48 732.40 Td (Integrantes: Alessandra Faria Rodrigues; Felipe Barros Ratton de Almeida; Gabriel Chaves Mendes; Gustavo) Tj ET
+BT /F1 9.9 Tf 48 721.20 Td (Henrique Rodrigues de Castro) Tj ET
+BT /F1 9.9 Tf 48 707.00 Td (Trabalho: Classifica\347\343o de resposta patol\363gica completa \(pCR\) a partir de imagens DCE-MRI) Tj ET
+BT /F2 10.7 Tf 48 683.80 Td (1. Ferramentas utilizadas) Tj ET
+BT /F1 9.9 Tf 48 667.60 Td (Durante o desenvolvimento do trabalho, o grupo utilizou ferramentas de intelig\352ncia artificial generativa,) Tj ET
+BT /F1 9.9 Tf 48 656.40 Td (principalmente ChatGPT e Codex \(OpenAI\), como recursos de apoio ao aprendizado, \340 pesquisa t\351cnica, \340) Tj ET
+BT /F1 9.9 Tf 48 645.20 Td (programa\347\343o e \340 organiza\347\343o das atividades.) Tj ET
+BT /F2 10.7 Tf 48 622.00 Td (2. Finalidades da utiliza\347\343o) Tj ET
+BT /F1 9.9 Tf 48 605.80 Td (As ferramentas auxiliaram na compreens\343o de conceitos de vis\343o computacional e aprendizado profundo, no) Tj ET
+BT /F1 9.9 Tf 48 594.60 Td (esclarecimento de d\372vidas sobre imagens m\351dicas e redes neurais, na discuss\343o de alternativas de) Tj ET
+BT /F1 9.9 Tf 48 583.40 Td (implementa\347\343o, na revis\343o e otimiza\347\343o de trechos de c\363digo, na identifica\347\343o de poss\355veis erros e na) Tj ET
+BT /F1 9.9 Tf 48 572.20 Td (elabora\347\343o de estrat\351gias de teste.) Tj ET
+BT /F1 9.9 Tf 48 556.00 Td (Tamb\351m foram utilizadas para apoiar a interpreta\347\343o de m\351tricas experimentais, a compara\347\343o entre) Tj ET
+BT /F1 9.9 Tf 48 544.80 Td (configura\347\365es de treinamento, a an\341lise de resultados, a discuss\343o de decis\365es t\351cnicas, a organiza\347\343o de) Tj ET
+BT /F1 9.9 Tf 48 533.60 Td (tarefas e a revis\343o de textos explicativos e de documenta\347\343o. As sugest\365es recebidas foram avaliadas em) Tj ET
+BT /F1 9.9 Tf 48 522.40 Td (fun\347\343o dos requisitos do trabalho, dos resultados obtidos e dos testes executados.) Tj ET
+BT /F2 10.7 Tf 48 499.20 Td (3. Exemplos de prompts utilizados) Tj ET
+BT /F1 9.9 Tf 48 483.00 Td (Os textos abaixo s\343o formula\347\365es representativas das solicita\347\365es feitas durante o projeto, organizadas) Tj ET
+BT /F1 9.9 Tf 48 471.80 Td (para descrever as finalidades do uso de IA; n\343o constituem transcri\347\365es literais de todas as conversas.) Tj ET
+BT /F1 9.9 Tf 48 455.60 Td (1. \223Explique o formato NIfTI e como os volumes DCE-MRI e as m\341scaras de tumor podem ser utilizados na) Tj ET
+BT /F1 9.9 Tf 48 444.40 Td (prepara\347\343o de imagens para uma CNN.\224) Tj ET
+BT /F1 9.9 Tf 48 428.20 Td (2. \223Explique a utiliza\347\343o de uma ou tr\352s fases temporais como canais de entrada, os m\351todos de sele\347\343o do) Tj ET
+BT /F1 9.9 Tf 48 417.00 Td (corte e como manter esses par\342metros consistentes na infer\352ncia.\224) Tj ET
+BT /F1 9.9 Tf 48 400.80 Td (3. \223Analise a estrutura das arquiteturas CNN, ResNet50 e MobileNetV2 e indique cuidados com transfer\352ncia) Tj ET
+BT /F1 9.9 Tf 48 389.60 Td (de aprendizado, n\372mero de canais e classifica\347\343o bin\341ria.\224) Tj ET
+BT /F1 9.9 Tf 48 373.40 Td (4. \223Revise a divis\343o por paciente, os testes automatizados e poss\355veis otimiza\347\365es de mem\363ria e tempo de) Tj ET
+BT /F1 9.9 Tf 48 362.20 Td (execu\347\343o, preservando os requisitos do projeto.\224) Tj ET
+BT /F1 9.9 Tf 48 346.00 Td (5. \223Explique acur\341cia, precis\343o, sensibilidade, especificidade, F1 e AUC, e ajude a comparar os resultados) Tj ET
+BT /F1 9.9 Tf 48 334.80 Td (para decidir quais checkpoints j\341 treinados utilizar.\224) Tj ET
+BT /F1 9.9 Tf 48 318.60 Td (6. \223Explique como carregar pesos e configura\347\365es de um checkpoint sem retreinar e como interpretar o) Tj ET
+BT /F1 9.9 Tf 48 307.40 Td (Grad-CAM em rela\347\343o \340 m\341scara tumoral.\224) Tj ET
+BT /F2 10.7 Tf 48 284.20 Td (4. Considera\347\365es finais) Tj ET
+BT /F1 9.9 Tf 48 268.00 Td (A intelig\352ncia artificial foi empregada como ferramenta de aux\355lio t\351cnico e educacional durante o) Tj ET
+BT /F1 9.9 Tf 48 256.80 Td (projeto. A interpreta\347\343o dos resultados, a escolha das configura\347\365es apresentadas e a verifica\347\343o do) Tj ET
+BT /F1 9.9 Tf 48 245.60 Td (funcionamento das implementa\347\365es foram conduzidas com base nos dados, nos experimentos e nos requisitos da) Tj ET
+BT /F1 9.9 Tf 48 234.40 Td (atividade. Este registro busca apresentar de forma transparente as principais finalidades do uso dessas) Tj ET
+BT /F1 9.9 Tf 48 223.20 Td (ferramentas.) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000350 00000 n 
+0000000448 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+5400
+%%EOF
