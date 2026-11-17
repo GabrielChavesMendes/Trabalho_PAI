@@ -27,6 +27,7 @@ sys.path.insert(0, str(RAIZ))
 from modulos.modulo_redes import criar_modelo  # noqa: E402
 from modulos.modulo_treinamento import (  # noqa: E402
     ConfiguracaoTreinamento,
+    configurar_reprodutibilidade,
     avaliar_modelo,
     calcular_metricas,
     calcular_pos_weight_treino,
@@ -161,6 +162,8 @@ def main() -> int:
     nome = _nome_experimento(configuracao)
     checkpoint = args.checkpoints / f"{nome}.pt"
     dispositivo = escolher_dispositivo(args.device)
+    # Fixar seed ANTES de inicializar a cabeca aleatoria das redes.
+    configurar_reprodutibilidade(args.seed)
     modelo = criar_modelo(
         args.arquitetura,
         args.canais,
