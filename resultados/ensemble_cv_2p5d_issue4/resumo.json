@@ -1,0 +1,63 @@
+{
+  "protocolo": "ensemble de 5 folds estratificados em treino+validacao",
+  "representacao": "vizinhanca_2p5d",
+  "seeds": [
+    84,
+    85,
+    86,
+    87,
+    88
+  ],
+  "limiar_oof": 0.05,
+  "metricas_oof": {
+    "sensibilidade": 0.8378378378378378,
+    "especificidade": 0.33,
+    "precisao": 0.3163265306122449,
+    "acuracia": 0.46715328467153283,
+    "f1": 0.4592592592592593,
+    "auc_roc": 0.6113513513513513,
+    "acuracia_balanceada": 0.5839189189189189,
+    "tn": 33,
+    "fp": 67,
+    "fn": 6,
+    "tp": 31,
+    "numero_pacientes": 137,
+    "limiar": 0.05
+  },
+  "metricas_teste": {
+    "sensibilidade": 1.0,
+    "especificidade": 0.0,
+    "precisao": 0.34285714285714286,
+    "acuracia": 0.34285714285714286,
+    "f1": 0.5106382978723404,
+    "auc_roc": 0.7028985507246377,
+    "acuracia_balanceada": 0.5,
+    "tn": 0,
+    "fp": 23,
+    "fn": 0,
+    "tp": 12,
+    "numero_pacientes": 35,
+    "limiar": 0.05
+  },
+  "configuracao": {
+    "arquitetura": "resnet50",
+    "canais_entrada": 3,
+    "configuracao_temporal": "post_early",
+    "estrategia_corte": "maior_tumor",
+    "epocas": 12,
+    "tamanho_lote": 32,
+    "taxa_aprendizado": 0.0001,
+    "taxa_aprendizado_backbone": 1e-05,
+    "decaimento_pesos": 0.0001,
+    "pos_weight": 1,
+    "paciencia": 4,
+    "limiar": 0.5,
+    "criterio_limiar": "acuracia_balanceada",
+    "criterio_checkpoint": "auc_roc",
+    "fine_tuning": "layer4",
+    "normalizacao_entrada": "imagenet",
+    "representacao_entrada": "vizinhanca_2p5d",
+    "tag": "cv-fold-5",
+    "seed": 88
+  }
+}

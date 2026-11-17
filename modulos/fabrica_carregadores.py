@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
@@ -20,7 +21,10 @@ from modulos.modulo_dataset import (
     DatasetDCE,
     carregar_metadados,
     criar_manifesto,
+    ler_volume,
+    normalizar_canais,
     selecionar_particao,
+    selecionar_corte,
     verificar_arquivos,
 )
 from modulos.modulo_dataset_issue1 import DatasetDCEAumentado
@@ -126,6 +130,60 @@ class DatasetRecorteROI(Dataset):
         return amostra
 
 
+class DatasetMapasRealce(Dataset):
+    """Converte tres fases em post-early e dois mapas de subtracao temporal."""
+
+    def __init__(self, dataset_base: Dataset):
+        self.dataset_base = dataset_base
+        self.pacientes = dataset_base.pacientes
+
+    def __len__(self) -> int:
+        return len(self.dataset_base)
+
+    def __getitem__(self, indice: int) -> dict[str, Any]:
+        amostra = dict(self.dataset_base[indice])
+        imagem = amostra["imagem"]
+        if imagem.shape[0] != 3:
+            raise ValueError("mapas de realce requerem pre, post_early e post_late")
+        pre, post_early, post_late = imagem
+        delta_early = ((post_early - pre) + 1.0) / 2.0
+        delta_late = ((post_late - pre) + 1.0) / 2.0
+        amostra["imagem"] = torch.stack(
+            (post_early, delta_early.clamp(0, 1), delta_late.clamp(0, 1))
+        )
+        return amostra
+
+
+class DatasetVizinhanca2p5D(Dataset):
+    """Empilha as fatias vizinhas da fase post-early como tres canais."""
+
+    def __init__(self, pacientes):
+        self.pacientes = list(pacientes)
+
+    def __len__(self) -> int:
+        return len(self.pacientes)
+
+    def __getitem__(self, indice: int) -> dict[str, Any]:
+        paciente = self.pacientes[indice]
+        mascara, affine_mascara = ler_volume(paciente.caminho_mascara)
+        volume, affine_volume = ler_volume(paciente.caminhos_dce[1])
+        if volume.shape != mascara.shape or not np.allclose(
+            affine_volume, affine_mascara, rtol=1e-4, atol=1e-3
+        ):
+            raise ValueError(f"DCE/mask desalinhados: {paciente.identificador}")
+        z = selecionar_corte(mascara, "maior_tumor")
+        indices = (max(0, z - 1), z, min(volume.shape[0] - 1, z + 1))
+        imagem = normalizar_canais(np.stack([volume[i] for i in indices], axis=0))
+        mascara_2d = np.ascontiguousarray((mascara[z] > 0)[None], dtype=np.float32)
+        return {
+            "imagem": torch.from_numpy(imagem),
+            "mascara": torch.from_numpy(mascara_2d),
+            "rotulo": torch.tensor(float(paciente.pcr), dtype=torch.float32),
+            "paciente": paciente.identificador,
+            "corte_z": z,
+        }
+
+
 def _estatisticas_treino(dataset: Dataset) -> tuple[torch.Tensor, torch.Tensor]:
     soma = soma_quadrados = None
     quantidade_pixels = 0
@@ -184,6 +242,7 @@ def criar_carregadores(
     normalizacao_entrada: str = "percentil",
     usar_mascara: bool = False,
     recorte_roi: bool = False,
+    representacao_entrada: str = "fases",
 ) -> dict[str, Any]:
     """Cria treino/validacao aumentados e teste reservado sem augmentation."""
 
@@ -201,6 +260,16 @@ def criar_carregadores(
         raise ValueError("tamanho_lote deve ser positivo e PAI_NUM_WORKERS nao negativo")
     if normalizacao_entrada not in ("percentil", "zscore_treino", "imagenet"):
         raise ValueError("normalizacao_entrada deve ser percentil, zscore_treino ou imagenet")
+    if representacao_entrada not in ("fases", "mapas_realce", "vizinhanca_2p5d"):
+        raise ValueError(
+            "representacao_entrada deve ser fases, mapas_realce ou vizinhanca_2p5d"
+        )
+    if representacao_entrada == "mapas_realce" and fase != "tres":
+        raise ValueError("mapas_realce requer configuracao temporal tres")
+    if representacao_entrada == "vizinhanca_2p5d" and (
+        fase != "post_early" or corte != "maior_tumor"
+    ):
+        raise ValueError("vizinhanca_2p5d requer post_early e maior_tumor")
 
     tabela = carregar_metadados(caminho_csv)
     manifesto = criar_manifesto(tabela, pasta_dataset)
@@ -222,13 +291,18 @@ def criar_carregadores(
     if any(conjuntos_ids[i] & conjuntos_ids[j] for i in range(3) for j in range(i + 1, 3)):
         raise ValueError("Paciente presente em mais de uma particao")
 
-    treino_base = DatasetCacheMemoria(
-        DatasetDCE(pacientes_treino, fase=fase, estrategia=corte)
-    )
-    validacao_base = DatasetCacheMemoria(
-        DatasetDCE(pacientes_validacao, fase=fase, estrategia=corte)
-    )
-    teste_base: Dataset = DatasetDCE(pacientes_teste, fase=fase, estrategia=corte)
+    def criar_base(pacientes):
+        if representacao_entrada == "vizinhanca_2p5d":
+            return DatasetVizinhanca2p5D(pacientes)
+        return DatasetDCE(pacientes, fase=fase, estrategia=corte)
+
+    treino_base = DatasetCacheMemoria(criar_base(pacientes_treino))
+    validacao_base = DatasetCacheMemoria(criar_base(pacientes_validacao))
+    teste_base: Dataset = criar_base(pacientes_teste)
+    if representacao_entrada == "mapas_realce":
+        treino_base = DatasetMapasRealce(treino_base)
+        validacao_base = DatasetMapasRealce(validacao_base)
+        teste_base = DatasetMapasRealce(teste_base)
     if recorte_roi:
         if corte != "maior_tumor":
             raise ValueError("recorte ROI requer estrategia maior_tumor")
@@ -290,6 +364,7 @@ def criar_carregadores(
             "corte": corte,
             "mascara_como_filtro": usar_mascara,
             "recorte_roi": recorte_roi,
+            "representacao_entrada": representacao_entrada,
             "augmentation": {
                 "particoes": ["treino", "validacao"],
                 "angulos_graus": [-20, -10, 0, 10, 20],

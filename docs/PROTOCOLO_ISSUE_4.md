@@ -136,3 +136,8 @@ Uma tentativa final usa `scripts/executar_ensemble_cv_issue4.py`: cinco folds
 estratificados sobre os 137 pacientes originalmente reservados a treino e
 validacao, teste sempre excluido do treinamento, selecao de epoca em cada fold,
 limiar calculado nas previsoes out-of-fold e media dos cinco modelos no teste.
+
+A entrada `vizinhanca_2p5d` empilha as fatias adjacentes ao maior corte tumoral
+da fase `post_early`. A combinacao exploratoria final usa media 50/50 dos ranks
+do vencedor 2,5D e do ensemble CV de uma fatia; nenhum peso e ajustado. O teste
+ja conhecido impede interpretar essa combinacao como validacao externa.

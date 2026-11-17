@@ -1,0 +1,9 @@
+{
+  "metodo": "media 50/50 dos ranks; sem pesos ajustados",
+  "fontes": [
+    "resultados/busca_2p5d_issue4/resnet50__post-early__maior-tumor__seed-84__vizinhanca-2p5d-s84__test.json",
+    "resultados/ensemble_cv_issue4/ensemble__test.json"
+  ],
+  "limiar": 0.5,
+  "observacao": "Resultado exploratorio: o teste ja havia sido consultado em rodadas anteriores e nao deve ser descrito como estimativa intocada."
+}

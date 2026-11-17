@@ -126,6 +126,11 @@ def main() -> int:
     parser.add_argument("--tag", default="")
     parser.add_argument("--usar-mascara", action="store_true")
     parser.add_argument("--recorte-roi", action="store_true")
+    parser.add_argument(
+        "--representacao-entrada",
+        choices=("fases", "mapas_realce", "vizinhanca_2p5d"),
+        default="fases",
+    )
     parser.add_argument("--paciencia", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", choices=("cpu", "cuda"))
@@ -146,6 +151,7 @@ def main() -> int:
         normalizacao_entrada=args.normalizacao_entrada,
         usar_mascara=args.usar_mascara,
         recorte_roi=args.recorte_roi,
+        representacao_entrada=args.representacao_entrada,
     )
     obrigatorios = {"treino", "validacao", "metadados"}
     ausentes = sorted(obrigatorios - set(carregadores))
@@ -184,6 +190,7 @@ def main() -> int:
         criterio_checkpoint=args.criterio_checkpoint,
         fine_tuning=args.fine_tuning or ("completo" if args.arquitetura == "cnn" else "congelado"),
         normalizacao_entrada=args.normalizacao_entrada,
+        representacao_entrada=args.representacao_entrada,
         tag=args.tag,
         seed=args.seed,
     )

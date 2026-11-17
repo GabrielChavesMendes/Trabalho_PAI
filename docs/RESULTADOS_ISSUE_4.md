@@ -167,3 +167,31 @@ alvo de aproximadamente 0,8. A AUC OOF inferior mostra que o resultado do teste
 tem alta variancia e nao justifica novas escolhas guiadas pelos mesmos 35
 pacientes. Os artefatos estao em `resultados/ensemble_cv_issue4/`; os cinco
 checkpoints locais somam aproximadamente 1 GB e permanecem ignorados pelo Git.
+
+## Entrada 2,5D e combinacao final exploratoria
+
+Uma entrada 2,5D empilhou as fatias `z-1`, `z` e `z+1` de `post_early` como os
+tres canais da ResNet50. O modelo seed 84 foi escolhido por AUC 0,727 na
+validacao oficial e obteve AUC 0,746 no teste. Um ensemble CV 2,5D obteve AUC
+OOF 0,611 e AUC 0,703 no teste.
+
+Por fim, foi predefinida uma combinacao simples, sem ajuste de pesos: media
+50/50 dos ranks do modelo 2,5D selecionado e do ensemble CV de uma fatia. Como
+os ranks ficam em `[0,1]`, usou-se o ponto central 0,5, sem otimizar o limiar no
+teste.
+
+| Resultado exploratorio no teste | Valor |
+|---|---:|
+| AUC-ROC | **0,786** |
+| Acuracia balanceada | **0,763** |
+| Sensibilidade | 0,917 |
+| Especificidade | 0,609 |
+| Precisao | 0,550 |
+| Acuracia | 0,714 |
+| F1 | 0,687 |
+
+Esse resultado chega proximo de 0,8, mas precisa ser apresentado como
+**exploratorio**, pois o teste ja havia sido consultado em varias rodadas. Ele
+nao substitui uma avaliacao externa intocada. O calculo reproduzivel esta em
+`scripts/combinar_ensembles_issue4.py` e os artefatos em
+`resultados/ensemble_ranks_issue4/`.

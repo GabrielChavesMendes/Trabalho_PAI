@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import random
 import sys
+import argparse
 from collections import defaultdict
 from dataclasses import asdict
 from pathlib import Path
@@ -19,6 +20,7 @@ from modulos.fabrica_carregadores import (  # noqa: E402
     CSV_PADRAO,
     DatasetCacheMemoria,
     DatasetPadronizado,
+    DatasetVizinhanca2p5D,
 )
 from modulos.modulo_dataset import (  # noqa: E402
     DatasetDCE,
@@ -55,7 +57,14 @@ def _folds_estratificados(pacientes, quantidade: int, seed: int):
     return folds
 
 
-def _base(pacientes):
+def _base(pacientes, representacao: str):
+    if representacao == "vizinhanca_2p5d":
+        dataset = DatasetCacheMemoria(DatasetVizinhanca2p5D(pacientes))
+        return DatasetPadronizado(
+            dataset,
+            torch.tensor([0.485, 0.456, 0.406]),
+            torch.tensor([0.229, 0.224, 0.225]),
+        )
     dataset = DatasetCacheMemoria(
         DatasetDCE(pacientes, fase="post_early", estrategia="maior_tumor")
     )
@@ -88,9 +97,16 @@ class DatasetAumentadoCV(Dataset):
 def main() -> int:
     import os
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--representacao", choices=("fase", "vizinhanca_2p5d"), default="fase"
+    )
+    args = parser.parse_args()
+
     pasta_dataset = Path(os.environ["PAI_DATASET_DIR"])
-    saida = RAIZ / "resultados" / "ensemble_cv_issue4"
-    checkpoints = RAIZ / "checkpoints" / "ensemble_cv_issue4"
+    sufixo = "ensemble_cv_2p5d_issue4" if args.representacao == "vizinhanca_2p5d" else "ensemble_cv_issue4"
+    saida = RAIZ / "resultados" / sufixo
+    checkpoints = RAIZ / "checkpoints" / sufixo
     saida.mkdir(parents=True, exist_ok=True)
     checkpoints.mkdir(parents=True, exist_ok=True)
 
@@ -111,8 +127,8 @@ def main() -> int:
         treino_pacientes = [p for p in desenvolvimento if p.identificador not in ids_validacao]
         seed = 84 + indice - 1
         configurar_reprodutibilidade(seed)
-        treino_base = _base(treino_pacientes)
-        validacao_base = _base(validacao_pacientes)
+        treino_base = _base(treino_pacientes, args.representacao)
+        validacao_base = _base(validacao_pacientes, args.representacao)
         gerador = torch.Generator().manual_seed(seed)
         opcoes = {"batch_size": 32, "num_workers": 0, "pin_memory": True}
         treino_loader = DataLoader(
@@ -122,17 +138,25 @@ def main() -> int:
         # A validacao CV usa uma previsao por paciente, sem augmentation.
         validacao_loader = DataLoader(validacao_base, shuffle=False, **opcoes)
         configuracao = ConfiguracaoTreinamento(
-            arquitetura="resnet50", canais_entrada=1,
+            arquitetura="resnet50",
+            canais_entrada=3 if args.representacao == "vizinhanca_2p5d" else 1,
             configuracao_temporal="post_early", estrategia_corte="maior_tumor",
             epocas=12, tamanho_lote=32, taxa_aprendizado=1e-4,
             taxa_aprendizado_backbone=1e-5, decaimento_pesos=1e-4,
             pos_weight=1, paciencia=4, criterio_limiar="acuracia_balanceada",
             criterio_checkpoint="auc_roc", fine_tuning="layer4",
             normalizacao_entrada="imagenet", tag=f"cv-fold-{indice}", seed=seed,
+            representacao_entrada=args.representacao,
         )
-        modelo = criar_modelo("resnet50", 1, pre_treinado=True)
+        modelo = criar_modelo(
+            "resnet50", 3 if args.representacao == "vizinhanca_2p5d" else 1,
+            pre_treinado=True,
+        )
         resumo = configurar_fine_tuning(modelo, "resnet50", "layer4")
-        checkpoint = checkpoints / f"resnet50__post-early__maior-tumor__seed-{seed}__cv-fold-{indice}.pt"
+        checkpoint = checkpoints / (
+            f"resnet50__post-early__maior-tumor__seed-{seed}__"
+            f"cv-fold-{indice}__{args.representacao}.pt"
+        )
         metadados = {
             "fases": ["post_early"],
             "normalizacao": {"tipo": "percentil_1_99_seguido_normalizacao_imagenet"},
@@ -141,6 +165,7 @@ def main() -> int:
             "particoes": {"desenvolvimento": [0, 2], "fold": indice},
             "modelo": resumo,
             "protocolo": "5-fold estratificado; teste excluido",
+            "representacao_entrada": args.representacao,
         }
         print(
             f"Fold {indice}/5: treino={len(treino_pacientes)}, "
@@ -160,7 +185,7 @@ def main() -> int:
         )
         oof.extend(predicoes_fold)
 
-        teste_loader = DataLoader(_base(teste), shuffle=False, **opcoes)
+        teste_loader = DataLoader(_base(teste, args.representacao), shuffle=False, **opcoes)
         _, _, predicoes_teste = avaliar_modelo(
             modelo, teste_loader, criterio, dispositivo, 0.5
         )
@@ -187,6 +212,7 @@ def main() -> int:
     )
     resumo = {
         "protocolo": "ensemble de 5 folds estratificados em treino+validacao",
+        "representacao": args.representacao,
         "seeds": [84, 85, 86, 87, 88],
         "limiar_oof": limiar,
         "metricas_oof": metricas_oof,

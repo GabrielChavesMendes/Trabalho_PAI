@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader, Dataset
 
 from modulos.modulo_redes import CNNSimples, configurar_fine_tuning, criar_modelo
 from modulos import fabrica_carregadores
-from modulos.fabrica_carregadores import DatasetRecorteROI
+from modulos.fabrica_carregadores import DatasetMapasRealce, DatasetRecorteROI
 from modulos.modulo_treinamento import (
     ConfiguracaoTreinamento,
     RegistroPredicao,
@@ -166,6 +166,25 @@ def test_recorte_roi_preserva_formato_e_amplia_tumor():
     assert recortado["mascara"].shape == original["mascara"].shape
     assert recortado["mascara"].sum() > original["mascara"].sum()
     assert recortado["recorte_roi"]["lado"] == 64
+
+
+def test_mapas_realce_explicitam_subtracoes_temporais():
+    class DatasetTresFases(Dataset):
+        pacientes = [object()]
+
+        def __len__(self):
+            return 1
+
+        def __getitem__(self, indice):
+            pre = torch.full((2, 2), 0.2)
+            early = torch.full((2, 2), 0.6)
+            late = torch.full((2, 2), 0.4)
+            return {"imagem": torch.stack((pre, early, late))}
+
+    imagem = DatasetMapasRealce(DatasetTresFases())[0]["imagem"]
+    assert torch.allclose(imagem[0], torch.full((2, 2), 0.6))
+    assert torch.allclose(imagem[1], torch.full((2, 2), 0.7))
+    assert torch.allclose(imagem[2], torch.full((2, 2), 0.6))
 
 
 def test_treino_salva_checkpoint_recarregavel(tmp_path: Path):

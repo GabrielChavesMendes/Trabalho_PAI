@@ -52,6 +52,9 @@ def main() -> int:
         normalizacao_entrada=configuracao.get("normalizacao_entrada", "percentil"),
         usar_mascara=bool(bruto.get("preprocessamento", {}).get("mascara_como_filtro", False)),
         recorte_roi=bool(bruto.get("preprocessamento", {}).get("recorte_roi", False)),
+        representacao_entrada=str(
+            bruto.get("preprocessamento", {}).get("representacao_entrada", "fases")
+        ),
     )
     criterio = torch.nn.BCEWithLogitsLoss(
         pos_weight=torch.tensor([float(configuracao["pos_weight"])], device=dispositivo)

@@ -43,6 +43,7 @@ class ConfiguracaoTreinamento:
     criterio_checkpoint: str = "loss"
     fine_tuning: str = "congelado"
     normalizacao_entrada: str = "percentil"
+    representacao_entrada: str = "fases"
     tag: str = ""
     seed: int = 42
 
