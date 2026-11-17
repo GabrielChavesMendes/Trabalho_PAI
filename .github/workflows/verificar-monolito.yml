@@ -1,0 +1,20 @@
+name: Verificar monolito PAI
+on:
+  push:
+    branches:
+      - fix/Gabriel-ArqUnico
+  workflow_dispatch:
+jobs:
+  sintaxe:
+    name: Validacao estatica Python
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compilar monolito e testes
+        run: |
+          python -m py_compile entrega_final_G10/trabalho_pai.py
+          python -m py_compile tests/test_issue6_monolito_gradcam.py
