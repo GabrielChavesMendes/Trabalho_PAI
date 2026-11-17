@@ -83,7 +83,8 @@ def main() -> int:
         [sys.executable, str(RAIZ / "scripts" / "consolidar_resultados.py"),
          "--resultados", str(args.saida),
          "--saida", str(args.saida / "comparacao_validacao.csv"),
-         "--criterio", args.criterio_modelo],
+         "--criterio", args.criterio_modelo,
+         "--checkpoints", str(args.checkpoints)],
         cwd=RAIZ,
         check=True,
     )
