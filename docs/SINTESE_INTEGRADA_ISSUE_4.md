@@ -1,51 +1,74 @@
-# Síntese integrada — 12 combinações, três arquiteturas
+# Síntese integrada — 12 configurações definitivas da Issue #4
 
-**Objetivo:** reunir em **uma única tabela de resultados** os melhores valores de **AUC-ROC de validação relatados** pelas duas linhas de experimentação da Issue #4. Cada combinação de arquitetura, fases e estratégia de corte aparece uma única vez. Este documento é uma **comparação exploratória pós-execução**, não substitui o manifesto congelado dos 27 experimentos nem altera as suas escolhas anteriores ao teste.
+Este documento reúne **uma única configuração para cada combinação** de arquitetura, fase temporal e corte: CNN, ResNet50 e MobileNetV2; uma fase (`post_early`) ou três fases temporais (`pre`, `post_early`, `post_late`); corte central ou maior área tumoral. Não inclui 2,5D nem ensemble.
 
-## Tabela consolidada de validação
+Os resultados combinam treinamentos realizados em duas branches do mesmo grupo. São **resultados experimentais registrados**, não uma nova execução uniforme dos doze modelos. Escolhemos os representantes por comparação retrospectiva das métricas de **validação**. A comparação contém diferenças de protocolo e deve ser interpretada com cautela.
 
-| Arquitetura | Fases | Corte | Variante/ID | AUC val. | BA val. | F1 val. | AUC teste relatada | Disponibilidade de pesos |
-|---|---|---|---|---:|---:|---:|---:|---|
-| CNN | 1 | central | `cnn__post-early__central__seed-42__final-v2` | 0.6033 | 0.5909 | 0.4800 | 0.5906 | integrar e validar recarga |
-| CNN | 1 | maior tumor | `cnn__post-early__maior-tumor__seed-42` | 0.6818 | 0.7273 | 0.6316 | 0.5109 | na coorte local (Git ignora .pt) |
-| CNN | 3 | central | `cnn__tres__central__seed-42` | 0.5950 | 0.6591 | 0.5806 | 0.5616 | na coorte local (Git ignora .pt) |
-| CNN | 3 | maior tumor | `cnn__tres__maior-tumor__seed-42` | 0.6281 | 0.6591 | 0.5882 | 0.5942 | na coorte local (Git ignora .pt) |
-| ResNet50 | 1 | central | `resnet50__post-early__central__seed-42__final-v2` | 0.4215 | 0.5227 | 0.5000 | 0.4638 | integrar e validar recarga |
-| ResNet50 | 1 | maior tumor | `resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84` | 0.6983 | 0.6818 | 0.5714 | 0.5580 | integrar e validar recarga |
-| ResNet50 | 3 | central | `resnet50__tres__central__seed-42__final-v2` | 0.4504 | 0.5227 | 0.1538 | 0.7319 | integrar e validar recarga |
-| ResNet50 | 3 | maior tumor | `resnet50__tres__maior-tumor__seed-42__final-v2` | 0.6074 | 0.6591 | 0.5600 | 0.6341 | integrar e validar recarga |
-| MobileNetV2 | 1 | central | `c_mobilenetv2_post_early_central` | 0.5372 | 0.5909 | 0.5405 | 0.4783 | na coorte local (Git ignora .pt) |
-| MobileNetV2 | 1 | maior tumor | `mobilenetv2__post-early__maior-tumor__seed-42__imagenet-mobile-s42` | 0.6074 | 0.5227 | 0.5000 | não avaliada | integrar e validar recarga |
-| MobileNetV2 | 3 | central | `c_mobilenetv2_tres_central` | 0.6488 | 0.6591 | 0.5806 | 0.5652 | na coorte local (Git ignora .pt) |
-| MobileNetV2 | 3 | maior tumor | `c_mobilenetv2_tres_maior_tumor` | 0.5661 | 0.6136 | 0.4762 | 0.5435 | na coorte local (Git ignora .pt) |
+## Comparação definitiva na validação — 33 pacientes
 
-**Resumo da comparação:** das 12 combinações, 6 maiores AUCs de validação constam da coorte de 27 checkpoints, 4 da grade paralela final-v2 e 2 de experimentos paralelos com normalização ImageNet. O maior valor reportado é **0.6983** (resnet50, 1 fase, maior tumor; `resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84`). A diferença em relação à CNN A02 (0,6818) é pequena e não comprova superioridade estatística.
+Todos os valores são de validação, antes da avaliação do teste. Sens. = sensibilidade, Esp. = especificidade, Prec. = precisão, Acc. = acurácia, BA = acurácia balanceada.
 
-**Disponibilidade:** os checkpoints da coorte local foram recarregados na auditoria anterior. Os checkpoints da grade paralela são mantidos em outro ambiente; **não foram carregados nem retestados por esta integração**. Um asset do melhor ResNet50 ImageNet foi publicado em [release issue-4-modelo-selecionado-v2](https://github.com/GabrielChavesMendes/Trabalho_PAI/releases/tag/issue-4-modelo-selecionado-v2). Antes de adotar qualquer peso externo em inferência/Grad-CAM, copiar o arquivo, verificar metadados, implementar/validar o mesmo pré-processamento no carregador final e conferir as previsões. Os demais pesos precisam ser disponibilizados por quem os treinou. Não usar o ranking consolidado como declaração de que 12 pesos já estão prontos para demonstração.
+| Arquitetura | Fases temporais | Corte | Origem | Sens. | Esp. | Prec. | Acc. | F1 | AUC | BA |
+|---|---:|---|---|---:|---:|---:|---:|---:|---:|---:|
+| CNN | 1 | Central | Equipe (treinamento Gustavo) | 0.5455 | 0.6364 | 0.4286 | 0.6061 | 0.4800 | 0.6033 | 0.5909 |
+| CNN | 1 | Maior tumor | Equipe (linha principal) | 0.5455 | 0.9091 | 0.7500 | 0.7879 | 0.6316 | 0.6818 | 0.7273 |
+| CNN | 3 | Central | Equipe (linha principal) | 0.8182 | 0.5000 | 0.4500 | 0.6061 | 0.5806 | 0.5950 | 0.6591 |
+| CNN | 3 | Maior tumor | Equipe (linha principal) | 0.9091 | 0.4091 | 0.4348 | 0.5758 | 0.5882 | 0.6281 | 0.6591 |
+| ResNet50 | 1 | Central | Equipe (treinamento Gustavo) | 0.9091 | 0.1364 | 0.3448 | 0.3939 | 0.5000 | 0.4215 | 0.5227 |
+| ResNet50 | 1 | Maior tumor | Equipe (treinamento Gustavo) | 0.5455 | 0.8182 | 0.6000 | 0.7273 | 0.5714 | 0.6983 | 0.6818 |
+| ResNet50 | 3 | Central | Equipe (linha principal) | 0.2727 | 0.9091 | 0.6000 | 0.6970 | 0.3750 | 0.4050 | 0.5909 |
+| ResNet50 | 3 | Maior tumor | Equipe (treinamento Gustavo) | 0.6364 | 0.6818 | 0.5000 | 0.6667 | 0.5600 | 0.6074 | 0.6591 |
+| MobileNetV2 | 1 | Central | Equipe (linha principal) | 0.2727 | 0.9545 | 0.7500 | 0.7273 | 0.4000 | 0.4959 | 0.6136 |
+| MobileNetV2 | 1 | Maior tumor | Equipe (linha principal) | 0.9091 | 0.2273 | 0.3704 | 0.4545 | 0.5263 | 0.4752 | 0.5682 |
+| MobileNetV2 | 3 | Central | Equipe (linha principal) | 0.8182 | 0.5000 | 0.4500 | 0.6061 | 0.5806 | 0.6488 | 0.6591 |
+| MobileNetV2 | 3 | Maior tumor | Equipe (linha principal) | 0.4545 | 0.7727 | 0.5000 | 0.6667 | 0.4762 | 0.5661 | 0.6136 |
 
-## Encadeamento dos ajustes: hipótese → experimento → decisão
+**Resumo:** 8 checkpoints da linha experimental principal e 4 treinados na linha paralela do Gustavo. Cada linha corresponde a uma das doze configurações, **sem repetições**. A métrica AUC auxilia a análise, mas não substitui sensibilidade, especificidade, precisão, acurácia e F1, exigidas no enunciado. O CSV contém também limiar, loss, tempo e métricas de teste *reportadas*.
 
-| Arquitetura | Diagnóstico na grade original | Investigações intermediárias | Última grade e conclusão |
-|---|---|---|---|
-| **CNN** | Previsões muito concentradas, canais de ativação inativos e capacidade discriminativa limitada. | Diminuir LR (AUC 0,6694) e usar LeakyReLU (0,5702) não superou a referência de 0,6818. | Adicionar GroupNorm após convoluções para estabilizar ativações, sem trocar pooling nem dropout. A nova grade não superou a CNN original na configuração principal. |
-| **ResNet50** | Distância elevada entre desempenho de treino e validação, indicando sobreajuste. | Normalização ImageNet isolada na cabeça congelada (AUC 0,5785) explorou incompatibilidade de escala; ajustes de pesos de classe/fine-tuning foram avaliados separadamente. | Congelar estatísticas e parâmetros de BatchNorm com `layer4` liberada. A grade nova não resolveu o sobreajuste. Outra linha de experimentação combinou pré-processamento ImageNet e seed 84, com AUC de validação 0,6983 em uma fase/maior tumor. |
-| **MobileNetV2** | Backbone congelado, baixa AUC em múltiplas combinações. | A normalização ImageNet foi explorada na linha paralela para uma fase/maior tumor (AUC 0,6074). | Fine-tuning de `features[17:19]` e classificador, mantendo BatchNorm congelada. Três fases/corte central subiu de AUC 0,5207 para 0,6488, sem demonstrar generalização robusta. |
+[CSV da seleção e das métricas](../resultados/grade_definitiva_issue4_20261117_01/artigo/shortlist_integrada_validacao_12.csv) · [Tabela LaTeX](../resultados/grade_definitiva_issue4_20261117_01/artigo/shortlist_integrada_validacao_12.tex)
 
-Dessa forma, **os três ajustes intermediários NÃO aparecem como testes soltos**: eles explicam as hipóteses e limitações que motivaram a última rodada; as intervenções finais foram fixadas antes de observar seus resultados. Para o artigo, usar este quadro como narrativa e escolher apenas as principais curvas de loss, uma figura de topologia, uma tabela compacta de 12 combinações e exemplos de acertos/erros. Os CSVs e relatórios integrais ficam como material de apoio e não precisam entrar todos no ZIP.
+## Rastreabilidade e diferenças de treinamento
 
-## Critérios de comparação e limitações
+O identificador interno do arquivo de checkpoint indica arquitetura, fase, corte, seed e, quando presente, variante de treinamento. Ele **não** designa uma configuração adicional. Os códigos usados na investigação histórica (grupos A, B e C) serviram apenas para diferenciar rodadas internas e não aparecem como rótulos desta tabela.
 
-- A ordem desta tabela usa **AUC de validação** dentro de cada combinação. Sensibilidade, especificidade, precisão, acurácia, F1 e BA estão disponíveis no [CSV consolidado](../resultados/grade_definitiva_issue4_20261117_01/artigo/shortlist_integrada_validacao_12.csv). AUC independe do limiar; as métricas de classificação dependem dos limiares escolhidos em cada linha experimental e não são perfeitamente intercambiáveis.
-- A coorte de 27 tem seleção congelada anterior à sua avaliação de teste. A comparação integrada acrescenta resultados posteriormente e tem caráter exploratório: **não deve ser apresentada como uma nova seleção confirmada por teste inteiramente independente**. O histórico de desenvolvimento inclui consulta prévia ao conjunto de teste; documentar a limitação de forma impessoal e precisa, sem imputar decisões de uma branch a outra.
-- As duas linhas usam os 172 pacientes oficiais (104 treino, 33 validação e 35 teste), porém ainda é necessário conferir compatibilidade completa dos IDs, das transformações, da agregação por paciente e dos arquivos de pesos antes de afirmar equivalência plena dos experimentos.
-- Treinamentos diferentes usaram limiares, otimizadores, pesos e normalizações em condições distintas. Não comparar diretamente os valores de loss como se fossem a mesma função e escala sem verificar as configurações. Diferenças de AUC pequenas não provam superioridade. **Nenhum resultado autoriza afirmar utilidade clínica**.
-- O ensemble com cinco folds é um experimento metodologicamente distinto (validação OOF) e não entra nos 12 representantes únicos da grade fase/corte. Pode ser citado como discussão de variação/generalização se houver espaço, não como uma 13ª combinação equivalente.
+- **CNN:** arquitetura com quatro convoluções e duas camadas lineares (seis camadas com parâmetros). Ajustes de taxa de aprendizagem, LeakyReLU e GroupNorm foram investigados na linha principal; a seleção final preserva os melhores resultados por configuração.
+- **ResNet50:** rede iniciada com pesos pré-treinados ImageNet, com cabeça de classificação binária e ajustes de fine-tuning conforme os experimentos. A linha paralela também testou normalização ImageNet após a normalização por percentis. O melhor modelo de uma fase/maior tumor utiliza essa opção e seed 84.
+- **MobileNetV2:** rede pré-treinada ImageNet; a linha principal investigou fine-tuning parcial para aperfeiçoar a validação. Os modelos definitivos mantêm a entrada temporal prevista no enunciado.
 
-A tabela em [LaTeX](../resultados/grade_definitiva_issue4_20261117_01/artigo/shortlist_integrada_validacao_12.tex) está pronta para servir como base do artigo SBC. Reduzir colunas caso o espaço da versão final de até 12 páginas exija.
+As linhas experimentais usam o CSV oficial de 172 pacientes com 104 treino, 33 validação e 35 teste. A avaliação de métricas ocorre por paciente, agregando as probabilidades das variações de validação. As diferenças de normalização, função de perda e limiares devem ser preservadas na reprodução dos checkpoints; **loss entre protocolos distintos não deve ser interpretada como comparação direta**. A documentação completa das 27 execuções anteriores permanece em [GRADE_DEFINITIVA_ISSUE_4_20261117.md](GRADE_DEFINITIVA_ISSUE_4_20261117.md).
 
-## Fontes e próximo passo técnico
+## Integração dos quatro checkpoints externos
 
-- Coorte de 27: [GRADE_DEFINITIVA_ISSUE_4_20261117.md](GRADE_DEFINITIVA_ISSUE_4_20261117.md), [RELATORIO_FINAL.md](../resultados/grade_definitiva_issue4_20261117_01/RELATORIO_FINAL.md), [ranking dos 12 da coorte](../resultados/grade_definitiva_issue4_20261117_01/artigo/ranking_teste_12_acuracia_balanceada.csv).
-- Grade paralela: [resultados final-v2](https://github.com/GabrielChavesMendes/Trabalho_PAI/blob/release/treinamento-issue-4/resultados/finais_issue4/comparacao_validacao.csv) e [experimentos ImageNet](https://github.com/GabrielChavesMendes/Trabalho_PAI/blob/release/treinamento-issue-4/resultados/busca_imagenet_issue4/comparacao_validacao.csv).
-- **Integração futura:** validar carregamento e correspondência das predições dos seis checkpoints externos. Não duplicar a implementação principal; adaptar o carregador existente para reconhecer os metadados/normalizações necessários, sem reescrever o pipeline da coorte principal. Se faltarem pesos, manter resultado como comparativo reportado, nunca como modelo executável.
-- **Para entrega final:** consolidar código Python único, interface, inferência e Grad-CAM, relatório SBC/LaTeX/PDF e declaração fiel de uso de IA. Os pesos não entram no ZIP principal.
+Os **seis arquivos externos** recebidos foram abertos com `weights_only=True` (com suporte a `TorchVersion`), verificados quanto a fase/canais/corte e recarregados com correspondência estrita de `state_dict` em CPU. Todos produziram saída finita de dimensão `[1,1]` em entrada artificial. Somente **quatro** fazem parte da tabela definitiva:
+
+- **CNN, uma fase, central**: `cnn__post-early__central__seed-42__final-v2.pt`; SHA-256 `8ea882df35704e58273e42df9303864395a9b832e5b2ec75578e03701c2f3afd`.
+- **ResNet50, uma fase, central**: `resnet50__post-early__central__seed-42__final-v2.pt`; SHA-256 `b027d09f78bfb908302a9d871ef1d86e56d3bb37536bb8839242df24f4087a39`.
+- **ResNet50, uma fase, maior tumor**: `resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt`; SHA-256 `924a6b00ca7ee951b6e79f698f2a63f61ee7324de44c616ddfe15ece78dd9733`.
+- **ResNet50, três fases, maior tumor**: `resnet50__tres__maior-tumor__seed-42__final-v2.pt`; SHA-256 `ec6a1fac483c0fc188d6a580e5aee777aaeb5ce7dde4531ba7f750bcad8ec95b`.
+
+O código adicional é restrito a `modulos/checkpoints_integrados_issue4.py`, ao modo opcional de normalização ImageNet em `modulos/fabrica_carregadores.py` e ao script de verificação. O pipeline e os experimentos anteriores continuam com a normalização padrão `percentil`; **nenhuma alteração retroativa dos pesos é feita**.
+
+Arquivos de histórico, loss, validação, teste e matrizes de confusão dos quatro modelos externos estão em `resultados/grade_definitiva_issue4_20261117_01/integracao_gustavo/`. Os checkpoints binários **não vão para Git** nem para o ZIP principal.
+
+### Procedimento de verificação local (sem retreino)
+
+Copiar os quatro pesos citados para `checkpoints/integrados_issue4/` (pasta plana, preservando os nomes) e executar na raiz do projeto:
+
+```bash
+python -m pytest -q
+python scripts/verificar_checkpoints_integrados_issue4.py --device cpu
+# Com PAI_DATASET_DIR e PAI_CSV configurados e GPU disponível:
+python scripts/verificar_checkpoints_integrados_issue4.py --device cuda --validar-dataset
+```
+
+O primeiro teste de recarga (sintético) **já foi efetuado** no ambiente de integração dos arquivos externos. **A reexecução da validação nos 33 pacientes reais ainda é necessária no computador com o dataset**, antes de declarar que as métricas foram reproduzidas. Nossos oito checkpoints permanecem nos caminhos originais registrados em `manifesto_final_27.json` e também precisam estar acessíveis no ambiente local.
+
+## Apresentação dos resultados e limitações
+
+Sensibilidade, especificidade, precisão, acurácia, F1, AUC, BA e matriz de confusão por paciente devem acompanhar a comparação; gráficos de loss e tempos de treinamento preservam o histórico de cada treinamento. Não há evidência suficiente para inferir uso clínico ou superioridade estatística a partir de diferenças pequenas.
+
+**Limitação metodológica:** esta comparação integrada foi organizada retrospectivamente e o histórico experimental já continha consultas ao conjunto de teste. Portanto, os resultados relatados no teste não representam uma avaliação externa totalmente intocada; a escolha dos representantes desta síntese foi baseada em validação. A limitação deve ser descrita fielmente no artigo.
+
+## Próxima etapa
+
+Concluir verificação local dos quatro externos e dos oito pesos próprios; revisar testes e documentação; somente então revisar o PR #17 para merge em `develop` e encerrar a Issue #4. As próximas entregas de interface, inferência, Grad-CAM e arquivo Python único dependem das respectivas issues e não são afirmadas como concluídas aqui.
