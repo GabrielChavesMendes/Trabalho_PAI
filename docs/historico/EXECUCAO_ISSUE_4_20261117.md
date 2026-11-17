@@ -8,7 +8,7 @@
 **Estado final desta sessão: aguardando revisão do usuário, antes do teste.**
 CUDA corrigido; 36 testes aprovados; quatro ajustes e 12 treinamentos da grade
 concluídos. Resultados, tabelas completas, curvas e limitações estão na
-[revisão anterior ao teste](../resultados/execucao_issue4_20261117_01/REVISAO_ANTES_TESTE.md).
+[revisão anterior ao teste](../../resultados/execucao_issue4_20261117_01/REVISAO_ANTES_TESTE.md).
 O teste não foi avaliado. Não houve merge ou fechamento da issue.
 
 Configuração escolhida por AUC de validação: **CNN, `post_early`, maior área

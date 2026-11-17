@@ -147,8 +147,8 @@ a parada foi a paciência 5 previamente definida. O teste não foi avaliado.
 
 Tabela completa das **12 configurações anteriores e três candidatas**, com
 hiperparâmetros nos JSONs e medidas de estabilidade:
-[comparacao_validacao.csv](../resultados/rodada_final_issue4_20261117_01/comparacao_validacao.csv)
-e [comparacao_validacao.json](../resultados/rodada_final_issue4_20261117_01/comparacao_validacao.json).
+[comparacao_validacao.csv](../../resultados/rodada_final_issue4_20261117_01/comparacao_validacao.csv)
+e [comparacao_validacao.json](../../resultados/rodada_final_issue4_20261117_01/comparacao_validacao.json).
 Todas usam o mesmo método de busca fina de limiar na validação; portanto, a
 comparação acima não mistura a grade antiga de passo 0,05 com a busca refinada.
 
@@ -243,9 +243,9 @@ Também registra o hash do CSV e o modelo selecionado previamente pela validaç�
 
 ## Figuras e artefatos
 
-![Convergência](../resultados/rodada_final_issue4_20261117_01/figuras_revisadas/convergencia.png)
-![Distribuição de escores](../resultados/rodada_final_issue4_20261117_01/figuras_revisadas/distribuicao_probabilidades.png)
-![Estabilidade do limiar](../resultados/rodada_final_issue4_20261117_01/figuras_revisadas/estabilidade_limiar.png)
+![Convergência](../../resultados/rodada_final_issue4_20261117_01/figuras_revisadas/convergencia.png)
+![Distribuição de escores](../../resultados/rodada_final_issue4_20261117_01/figuras_revisadas/distribuicao_probabilidades.png)
+![Estabilidade do limiar](../../resultados/rodada_final_issue4_20261117_01/figuras_revisadas/estabilidade_limiar.png)
 
 - Plano original imutável: `plano_antes_treinamento.json`.
 - Diagnóstico: `diagnostico_cnn.json` (oito pacientes de treino, zero otimizações).

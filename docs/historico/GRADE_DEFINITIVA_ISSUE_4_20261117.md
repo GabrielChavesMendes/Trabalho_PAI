@@ -1,6 +1,6 @@
 # Grade definitiva e avaliação final da Issue #4
 
-> **Leitura dos códigos de experimento:** A = primeira grade de modelos; B = três investigações intermediárias; C = rodada de intervenções finais. Os números (por exemplo, A12 ou C11) são identificadores internos de execução, não nomes de arquiteturas nem configurações adicionais. A comparação única das 12 configurações, em linguagem descritiva e com resultados integrados, está em [SINTESE_INTEGRADA_ISSUE_4.md](SINTESE_INTEGRADA_ISSUE_4.md).
+> **Leitura dos códigos de experimento:** A = primeira grade de modelos; B = três investigações intermediárias; C = rodada de intervenções finais. Os números (por exemplo, A12 ou C11) são identificadores internos de execução, não nomes de arquiteturas nem configurações adicionais. A comparação única das 12 configurações, em linguagem descritiva e com resultados integrados, está em [SINTESE_INTEGRADA_ISSUE_4.md](../RESULTADOS_FINAIS.md).
 
 Branch `feature/felipe-issue4-finalizacao`. Registro iniciado antes do treino.
 O prompt definitivo de 17/11/2026 autoriza 12 novos treinos e a avaliação automática
@@ -194,7 +194,7 @@ não é um benchmark isolado de latência. O cache é criado somente após o pre
 sem repetição ou mudança de intervenção. A consolidação auditou os 27 históricos
 e confirmou que cada época selecionada coincide com a maior AUC/menor loss.
 Revisão humana legível registrada em UTC antes do teste:
-[REVISAO_VALIDACAO_27.md](../resultados/grade_definitiva_issue4_20261117_01/REVISAO_VALIDACAO_27.md).
+[REVISAO_VALIDACAO_27.md](../../resultados/grade_definitiva_issue4_20261117_01/REVISAO_VALIDACAO_27.md).
 Contém todas as cinco métricas obrigatórias, AUC/BA e comparação pareada C/A.
 
 | Melhor por arquitetura | Código | Fases/corte | AUC val. | BA val. | Época/total |
@@ -351,7 +351,7 @@ antiga do grupo; nesta rodada houve exatamente a avaliação final documentada.
 
 ## Artefatos finais, apresentação e revisão dos integrantes
 
-- [Relatório completo, rankings e mapa dos checkpoints](../resultados/grade_definitiva_issue4_20261117_01/RELATORIO_FINAL.md).
+- [Relatório completo, rankings e mapa dos checkpoints](../../resultados/grade_definitiva_issue4_20261117_01/RELATORIO_FINAL.md).
 - `comparacao_validacao_27.csv`: métricas, intervenção, época, tempo, limiar e estabilidade.
 - `artigo/comparacao_validacao_teste_27.csv`: treino/validação/teste, confusões e mudanças de posições.
 - `artigo/ranking_teste_27_acuracia_balanceada.csv` e `ranking_teste_12_acuracia_balanceada.csv`.

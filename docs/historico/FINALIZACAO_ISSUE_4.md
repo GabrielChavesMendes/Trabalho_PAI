@@ -1,6 +1,6 @@
 # Issue #4 — finalização experimental (instruções ao grupo)
 
-> **Integração com a linha paralela (17/11):** a [síntese integrada](SINTESE_INTEGRADA_ISSUE_4.md) fixa 12 configurações únicas (8 da coorte principal, 4 da linha do Gustavo). Os seis arquivos externos foram recarregados estruturalmente em CPU; os quatro escolhidos têm identificadores e SHA-256 documentados. **Ainda depende de reexecutar a validação dos 4 pesos externos no dataset real e conferir os 8 pesos locais antes do merge.** Os passos históricos abaixo não substituem esse roteiro.
+> **Integração com a linha paralela (17/11):** a [síntese integrada](../RESULTADOS_FINAIS.md) fixa 12 configurações únicas (8 da coorte principal, 4 da linha do Gustavo). Os seis arquivos externos foram recarregados estruturalmente em CPU; os quatro escolhidos têm identificadores e SHA-256 documentados. **Ainda depende de reexecutar a validação dos 4 pesos externos no dataset real e conferir os 8 pesos locais antes do merge.** Os passos históricos abaixo não substituem esse roteiro.
 
 > **Atualização de 17/11/2026:** a coorte definitiva de 27 checkpoints foi
 > treinada/preservada, selecionada pela validação e avaliada uma única vez no teste

@@ -1,6 +1,6 @@
 # Resultados experimentais — Issue #4
 
-> **Registro histórico:** este arquivo descreve os experimentos iniciais de 15/11/2026 e não representa os resultados finais da Issue #4. Para a coorte mais recente (27 checkpoints, seleção de 12 representantes, avaliação final e figuras para o artigo), consultar [`GRADE_DEFINITIVA_ISSUE_4_20261117.md`](GRADE_DEFINITIVA_ISSUE_4_20261117.md) e [`RELATORIO_FINAL.md`](../resultados/grade_definitiva_issue4_20261117_01/RELATORIO_FINAL.md). Os resultados experimentais de outras branches devem permanecer identificados separadamente.
+> **Registro histórico:** este arquivo descreve os experimentos iniciais de 15/11/2026 e não representa os resultados finais da Issue #4. Para a coorte mais recente (27 checkpoints, seleção de 12 representantes, avaliação final e figuras para o artigo), consultar [`GRADE_DEFINITIVA_ISSUE_4_20261117.md`](GRADE_DEFINITIVA_ISSUE_4_20261117.md) e [`RELATORIO_FINAL.md`](../../resultados/grade_definitiva_issue4_20261117_01/RELATORIO_FINAL.md). Os resultados experimentais de outras branches devem permanecer identificados separadamente.
 
 Execucao local em 15/11/2026 com o BreastDCEDL I-SPY1 MinCrop real: 104
 pacientes de treino, 33 de validacao e 35 de teste. O teste foi consultado uma
