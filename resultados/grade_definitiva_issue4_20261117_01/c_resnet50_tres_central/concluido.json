@@ -1,0 +1,125 @@
+{
+  "id": "c_resnet50_tres_central",
+  "nome": "c_resnet50_tres_central__resnet50__tres__central__seed-42",
+  "checkpoint": "checkpoints\\grade_definitiva_issue4_20261117_01\\c_resnet50_tres_central__resnet50__tres__central__seed-42.pt",
+  "checkpoint_sha256": "b72c022780aef91000f2a57a89e0c63822499d0ce93c68cf5c132a12a589d507",
+  "validacao": "resultados\\grade_definitiva_issue4_20261117_01\\c_resnet50_tres_central\\c_resnet50_tres_central__resnet50__tres__central__seed-42__validation.json",
+  "historico": "resultados\\grade_definitiva_issue4_20261117_01\\c_resnet50_tres_central\\c_resnet50_tres_central__resnet50__tres__central__seed-42__history.csv",
+  "configuracao": {
+    "arquitetura": "resnet50",
+    "canais_entrada": 3,
+    "configuracao_temporal": "tres",
+    "estrategia_corte": "central",
+    "epocas": 30,
+    "tamanho_lote": 4,
+    "taxa_aprendizado": 0.0001,
+    "decaimento_pesos": 0.0001,
+    "pos_weight": 3.0,
+    "paciencia": 5,
+    "limiar": 0.5,
+    "seed": 42,
+    "taxa_aprendizado_backbone": 1e-05,
+    "criterio_checkpoint": "auc_roc"
+  },
+  "preprocessamento": {
+    "fases": [
+      "pre",
+      "post_early",
+      "post_late"
+    ],
+    "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+    "normalizacao_adicional": "nenhuma",
+    "parametros_normalizacao_adicional": {},
+    "corte": "central",
+    "augmentation": {
+      "particoes": [
+        "treino",
+        "validacao"
+      ],
+      "angulos_graus": [
+        -20,
+        -10,
+        0,
+        10,
+        20
+      ],
+      "espelhamento": [
+        false,
+        true
+      ],
+      "variacoes_por_paciente": 10,
+      "teste_aumentado": false
+    },
+    "particoes": {
+      "treino": 0,
+      "validacao": 2,
+      "teste": 1
+    },
+    "pacientes": {
+      "treino": 104,
+      "validacao": 33,
+      "teste": 35
+    },
+    "rodada_final_issue4": {
+      "id": "c_resnet50_tres_central",
+      "arquitetura": "resnet50",
+      "pre_treinado": true,
+      "fine_tuning": true,
+      "dropout_cnn": 0.3,
+      "ativacao_cnn": "ReLU",
+      "normalizacao_interna_cnn": "GroupNorm(4)"
+    },
+    "grade_final_issue4": {
+      "id": "c_resnet50_tres_central",
+      "arquitetura": "resnet50",
+      "fase": "tres",
+      "corte": "central",
+      "lr": 0.0001,
+      "lr_backbone": 1e-05,
+      "intervencao": "layer4+fc; todas BN affine/estatisticas congeladas",
+      "normalizacao_adicional": "nenhuma",
+      "grade_final": true,
+      "comparador": "resnet50__tres__central__seed-42"
+    },
+    "plano_antes_treinamento_sha256": "a87377f16b25c080ef38a84794f865d3c87e5f638858eb70fe084af6e63246a5"
+  },
+  "epoca_escolhida": 6,
+  "epocas_executadas": 11,
+  "tempo_treinamento_segundos": 329.0277962999535,
+  "metricas": {
+    "sensibilidade": 0.5454545454545454,
+    "especificidade": 0.5,
+    "precisao": 0.35294117647058826,
+    "acuracia": 0.5151515151515151,
+    "f1": 0.42857142857142855,
+    "acuracia_balanceada": 0.5227272727272727,
+    "auc_roc": 0.4462809917355372,
+    "tn": 11,
+    "fp": 11,
+    "fn": 5,
+    "tp": 6,
+    "numero_pacientes": 33,
+    "limiar": 0.014535749325091274,
+    "loss": 7.608860474283045
+  },
+  "metricas_treino": {
+    "sensibilidade": 1.0,
+    "especificidade": 1.0,
+    "precisao": 1.0,
+    "acuracia": 1.0,
+    "f1": 1.0,
+    "acuracia_balanceada": 1.0,
+    "auc_roc": 1.0,
+    "tn": 78,
+    "fp": 0,
+    "fn": 0,
+    "tp": 26,
+    "numero_pacientes": 104,
+    "limiar": 0.014535749325091274,
+    "loss": 0.00022607619645607604
+  },
+  "pico_vram_bytes": 580501504,
+  "plano_sha256": "a87377f16b25c080ef38a84794f865d3c87e5f638858eb70fe084af6e63246a5",
+  "normalizacao_recarga": "nenhuma",
+  "teste_avaliado": false
+}

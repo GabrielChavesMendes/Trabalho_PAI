@@ -1,5 +1,10 @@
 # Execução da Issue #4 — 17/11/2026
 
+> **Atualização posterior:** a execução definitiva concluiu 12 novos treinos,
+> consolidou a coorte de 27 e realizou o teste final autorizado, sem alterar
+> escolhas por validação. Ver [relatório definitivo](GRADE_DEFINITIVA_ISSUE_4_20261117.md).
+> Esta página mantém o registro da primeira sessão, que terminou antes do teste.
+
 **Estado final desta sessão: aguardando revisão do usuário, antes do teste.**
 CUDA corrigido; 36 testes aprovados; quatro ajustes e 12 treinamentos da grade
 concluídos. Resultados, tabelas completas, curvas e limitações estão na

@@ -36,6 +36,9 @@ class CNNLeaky(CNNSimples):
 def criar_modelo_registrado(arquitetura, canais_entrada, pre_treinado=False):
     if arquitetura == 'cnn_leaky':
         return CNNLeaky(canais_entrada)
+    if arquitetura == 'cnn_groupnorm':
+        from modulos.grade_final_issue4 import CNNGroupNorm
+        return CNNGroupNorm(canais_entrada)
     return criar_modelo(arquitetura, canais_entrada, pre_treinado=pre_treinado)
 
 

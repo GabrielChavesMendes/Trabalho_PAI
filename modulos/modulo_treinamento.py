@@ -416,6 +416,28 @@ def registrar_validacao_checkpoint(
     os.replace(temporario, destino)
 
 
+def grupos_parametros_otimizador(modelo, configuracao):
+    """Mantém o protocolo ResNet; permite o último bloco da MobileNetV2."""
+    parametros = [p for p in modelo.parameters() if p.requires_grad]
+    if not parametros:
+        raise ValueError("modelo nao possui parametros treinaveis")
+    if configuracao.taxa_aprendizado_backbone is None:
+        return parametros
+    if hasattr(modelo, 'layer4'):
+        bloco = modelo.layer4
+    elif configuracao.arquitetura == 'mobilenetv2' and hasattr(modelo, 'features'):
+        bloco = modelo.features[17:]
+    else:
+        raise ValueError('fine-tuning diferencial requer ResNet50 ou MobileNetV2 registrada')
+    backbone = [p for p in bloco.parameters() if p.requires_grad]
+    ids = {id(p) for p in backbone}
+    cabeca = [p for p in parametros if id(p) not in ids]
+    if not backbone or not cabeca:
+        raise ValueError('fine-tuning precisa de backbone e classificador treinaveis')
+    return [{'params': backbone, 'lr': configuracao.taxa_aprendizado_backbone},
+            {'params': cabeca, 'lr': configuracao.taxa_aprendizado}]
+
+
 def treinar_experimento(
     modelo: nn.Module,
     carregador_treino: Iterable[Any],
@@ -458,23 +480,7 @@ def treinar_experimento(
     )
     modelo.to(device)
 
-    parametros = [p for p in modelo.parameters() if p.requires_grad]
-    if not parametros:
-        raise ValueError("modelo nao possui parametros treinaveis")
-    if configuracao.taxa_aprendizado_backbone is None:
-        grupos_parametros = parametros
-    else:
-        if not hasattr(modelo, "layer4"):
-            raise ValueError("fine-tuning diferencial requer ResNet50 com layer4")
-        parametros_backbone = [p for p in modelo.layer4.parameters() if p.requires_grad]
-        ids_backbone = {id(p) for p in parametros_backbone}
-        parametros_cabeca = [p for p in parametros if id(p) not in ids_backbone]
-        if not parametros_backbone or not parametros_cabeca:
-            raise ValueError("fine-tuning precisa de layer4 e classificador treinaveis")
-        grupos_parametros = [
-            {"params": parametros_backbone, "lr": configuracao.taxa_aprendizado_backbone},
-            {"params": parametros_cabeca, "lr": configuracao.taxa_aprendizado},
-        ]
+    grupos_parametros = grupos_parametros_otimizador(modelo, configuracao)
     otimizador = torch.optim.Adam(
         grupos_parametros,
         lr=configuracao.taxa_aprendizado,

@@ -1,5 +1,11 @@
 # Última rodada controlada — Issue #4
 
+> **Atualização posterior:** a rodada definitiva de 12 novos treinamentos e o
+> teste único dos 27 foram concluídos com autorização expressa do usuário.
+> Ver [relatório definitivo](GRADE_DEFINITIVA_ISSUE_4_20261117.md). Os resultados
+> e as restrições abaixo registram a sessão histórica dos três experimentos;
+> seus artefatos foram preservados sem alteração.
+
 **Estado final: três treinamentos concluídos; nenhuma melhoria convincente;
 aguardando revisão do usuário antes da Etapa 3.**
 Branch: `feature/felipe-issue4-finalizacao`. Etapa 3 proibida nesta execução.

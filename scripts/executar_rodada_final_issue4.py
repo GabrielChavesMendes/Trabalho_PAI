@@ -42,8 +42,14 @@ def executar_caso(caso, plano, base, checkpoints, device, plano_hash):
         epocas=plano['epocas'], tamanho_lote=plano['batch'], taxa_aprendizado=caso['lr'],
         decaimento_pesos=plano['weight_decay'], pos_weight=plano['pos_weight'],
         paciencia=plano['paciencia'], seed=plano['seed'], criterio_checkpoint='auc_roc',
+        taxa_aprendizado_backbone=caso.get('lr_backbone'),
     )
     meta = metadados_rodada(caso)
+    if caso.get('grade_final'):
+        meta['grade_final_issue4'] = caso
+        meta['rodada_final_issue4']['pre_treinado'] = caso['arquitetura'] != 'cnn_groupnorm'
+        meta['rodada_final_issue4']['fine_tuning'] = caso['arquitetura'] in ('resnet50', 'mobilenetv2')
+        meta['rodada_final_issue4']['normalizacao_interna_cnn'] = 'GroupNorm(4)'
     meta['plano_antes_treinamento_sha256'] = plano_hash
     (pasta / 'configuracao_antes_treino.json').write_text(
         json.dumps({'configuracao': asdict(conf), 'preprocessamento': meta}, indent=2), encoding='utf-8')
@@ -51,7 +57,12 @@ def executar_caso(caso, plano, base, checkpoints, device, plano_hash):
     validacao = criar_carregador('validacao', asdict(conf), caso['normalizacao_adicional'])
     configurar_reprodutibilidade(conf.seed)
     modelo = criar_modelo_registrado(conf.arquitetura, conf.canais_entrada,
-                                    pre_treinado=conf.arquitetura == 'resnet50')
+                                    pre_treinado=conf.arquitetura in ('resnet50', 'mobilenetv2'))
+    if caso.get('grade_final'):
+        from modulos.grade_final_issue4 import preparar_fine_tuning
+        preparar_fine_tuning(modelo, conf.arquitetura)
+    if device.type == 'cuda':
+        torch.cuda.reset_peak_memory_stats(device)
     historico = treinar_experimento(modelo, treino, validacao, conf, cp, meta, device)
     salvar_historico_csv(pasta / (nome + '__history.csv'), historico)
     salvar_grafico_convergencia(pasta / (nome + '__loss.png'), historico)
@@ -77,7 +88,8 @@ def executar_caso(caso, plano, base, checkpoints, device, plano_hash):
               'configuracao': asdict(conf), 'preprocessamento': meta,
               'epoca_escolhida': bruto['epoca'], 'epocas_executadas':len(historico),
               'tempo_treinamento_segundos':sum(h.tempo_segundos for h in historico),
-              'metricas':metricas, 'metricas_treino':metricas_treino,
+              'metricas':metricas, 'metricas_treino':{**metricas_treino, 'loss':loss_treino},
+              'pico_vram_bytes':torch.cuda.max_memory_allocated(device) if device.type == 'cuda' else None,
               'plano_sha256':plano_hash, 'normalizacao_recarga':norm, 'teste_avaliado':False}
     (pasta / 'concluido.json').write_text(json.dumps(resumo,ensure_ascii=False,indent=2),encoding='utf-8')
     print(f"CONCLUÍDO {caso['id']}: AUC={metricas['auc_roc']:.4f}; BA={metricas['acuracia_balanceada']:.4f}; F1={metricas['f1']:.4f}",flush=True)

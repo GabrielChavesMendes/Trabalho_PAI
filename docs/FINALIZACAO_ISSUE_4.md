@@ -1,5 +1,12 @@
 # Issue #4 — finalização experimental (instruções ao grupo)
 
+> **Atualização de 17/11/2026:** a coorte definitiva de 27 checkpoints foi
+> treinada/preservada, selecionada pela validação e avaliada uma única vez no teste
+> após autorização expressa no prompt definitivo. Resultado e auditoria em
+> [GRADE_DEFINITIVA_ISSUE_4_20261117.md](GRADE_DEFINITIVA_ISSUE_4_20261117.md).
+> O texto abaixo preserva o roteiro e o estado histórico anterior. Não repetir
+> a avaliação para ajustar modelos. Issue aberta, sem merge na develop.
+
 **Branch:** `feature/felipe-issue4-finalizacao` (não altera diretamente `develop`).
 
 Este roteiro mantém o protocolo com **172 pacientes I-SPY1**, partições oficiais

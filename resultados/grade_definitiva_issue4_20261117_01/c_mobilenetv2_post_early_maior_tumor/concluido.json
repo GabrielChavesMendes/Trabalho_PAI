@@ -1,0 +1,123 @@
+{
+  "id": "c_mobilenetv2_post_early_maior_tumor",
+  "nome": "c_mobilenetv2_post_early_maior_tumor__mobilenetv2__post-early__maior-tumor__seed-42",
+  "checkpoint": "checkpoints\\grade_definitiva_issue4_20261117_01\\c_mobilenetv2_post_early_maior_tumor__mobilenetv2__post-early__maior-tumor__seed-42.pt",
+  "checkpoint_sha256": "312d421b73fda0f65a3bd9b8424b85c26b39115c249589177842889ee98b1d57",
+  "validacao": "resultados\\grade_definitiva_issue4_20261117_01\\c_mobilenetv2_post_early_maior_tumor\\c_mobilenetv2_post_early_maior_tumor__mobilenetv2__post-early__maior-tumor__seed-42__validation.json",
+  "historico": "resultados\\grade_definitiva_issue4_20261117_01\\c_mobilenetv2_post_early_maior_tumor\\c_mobilenetv2_post_early_maior_tumor__mobilenetv2__post-early__maior-tumor__seed-42__history.csv",
+  "configuracao": {
+    "arquitetura": "mobilenetv2",
+    "canais_entrada": 1,
+    "configuracao_temporal": "post_early",
+    "estrategia_corte": "maior_tumor",
+    "epocas": 30,
+    "tamanho_lote": 4,
+    "taxa_aprendizado": 0.0001,
+    "decaimento_pesos": 0.0001,
+    "pos_weight": 3.0,
+    "paciencia": 5,
+    "limiar": 0.5,
+    "seed": 42,
+    "taxa_aprendizado_backbone": 1e-05,
+    "criterio_checkpoint": "auc_roc"
+  },
+  "preprocessamento": {
+    "fases": [
+      "post_early"
+    ],
+    "normalizacao": "percentis 1/99 conjuntos por amostra; clip [0,1]",
+    "normalizacao_adicional": "nenhuma",
+    "parametros_normalizacao_adicional": {},
+    "corte": "maior_tumor",
+    "augmentation": {
+      "particoes": [
+        "treino",
+        "validacao"
+      ],
+      "angulos_graus": [
+        -20,
+        -10,
+        0,
+        10,
+        20
+      ],
+      "espelhamento": [
+        false,
+        true
+      ],
+      "variacoes_por_paciente": 10,
+      "teste_aumentado": false
+    },
+    "particoes": {
+      "treino": 0,
+      "validacao": 2,
+      "teste": 1
+    },
+    "pacientes": {
+      "treino": 104,
+      "validacao": 33,
+      "teste": 35
+    },
+    "rodada_final_issue4": {
+      "id": "c_mobilenetv2_post_early_maior_tumor",
+      "arquitetura": "mobilenetv2",
+      "pre_treinado": true,
+      "fine_tuning": true,
+      "dropout_cnn": 0.3,
+      "ativacao_cnn": "ReLU",
+      "normalizacao_interna_cnn": "GroupNorm(4)"
+    },
+    "grade_final_issue4": {
+      "id": "c_mobilenetv2_post_early_maior_tumor",
+      "arquitetura": "mobilenetv2",
+      "fase": "post_early",
+      "corte": "maior_tumor",
+      "lr": 0.0001,
+      "lr_backbone": 1e-05,
+      "intervencao": "features[17:19]+classifier; todas BN congeladas",
+      "normalizacao_adicional": "nenhuma",
+      "grade_final": true,
+      "comparador": "mobilenetv2__post-early__maior-tumor__seed-42"
+    },
+    "plano_antes_treinamento_sha256": "a87377f16b25c080ef38a84794f865d3c87e5f638858eb70fe084af6e63246a5"
+  },
+  "epoca_escolhida": 6,
+  "epocas_executadas": 11,
+  "tempo_treinamento_segundos": 136.4487299999455,
+  "metricas": {
+    "sensibilidade": 1.0,
+    "especificidade": 0.13636363636363635,
+    "precisao": 0.36666666666666664,
+    "acuracia": 0.42424242424242425,
+    "f1": 0.5365853658536585,
+    "acuracia_balanceada": 0.5681818181818181,
+    "auc_roc": 0.49586776859504134,
+    "tn": 3,
+    "fp": 19,
+    "fn": 0,
+    "tp": 11,
+    "numero_pacientes": 33,
+    "limiar": 0.09836509246379138,
+    "loss": 1.5983788613117103
+  },
+  "metricas_treino": {
+    "sensibilidade": 1.0,
+    "especificidade": 0.21794871794871795,
+    "precisao": 0.2988505747126437,
+    "acuracia": 0.41346153846153844,
+    "f1": 0.46017699115044247,
+    "acuracia_balanceada": 0.608974358974359,
+    "auc_roc": 0.9916173570019724,
+    "tn": 17,
+    "fp": 61,
+    "fn": 0,
+    "tp": 26,
+    "numero_pacientes": 104,
+    "limiar": 0.09836509246379138,
+    "loss": 0.4491795226931572
+  },
+  "pico_vram_bytes": 115430400,
+  "plano_sha256": "a87377f16b25c080ef38a84794f865d3c87e5f638858eb70fe084af6e63246a5",
+  "normalizacao_recarga": "nenhuma",
+  "teste_avaliado": false
+}

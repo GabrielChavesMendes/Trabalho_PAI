@@ -1,0 +1,15 @@
+{
+  "registrado_em_utc": "2026-11-17T16:38:11.638931+00:00",
+  "python": "3.12.7 (tags/v3.12.7:0b05ead, Oct  1 2024, 03:06:41) [MSC v.1941 64 bit (AMD64)]",
+  "versoes": {
+    "torch": "2.9.1+cu126",
+    "torchvision": "0.24.1+cu126",
+    "numpy": "2.1.2",
+    "pandas": "2.2.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "matplotlib": "3.9.2",
+    "nibabel": "5.5.0"
+  },
+  "alteracoes_ambiente_nesta_rodada": false
+}
