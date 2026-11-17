@@ -6,8 +6,12 @@ Requer: torch, torchvision, numpy, nibabel, matplotlib e Tkinter.
 """
 from __future__ import annotations
 
+import argparse
 import csv
+import json
 import os
+import random
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
@@ -32,6 +36,7 @@ class Paciente:
     pcr: int
     caminhos_dce: tuple[Path, Path, Path]
     caminho_mascara: Path
+    particao_codigo: int = 0
 
 
 def carregar_metadados(caminho: Path) -> list[Paciente]:
@@ -39,7 +44,7 @@ def carregar_metadados(caminho: Path) -> list[Paciente]:
         raise FileNotFoundError(f"CSV de metadados nao encontrado: {caminho}")
     with caminho.open("r", encoding="utf-8-sig", newline="") as arquivo:
         leitor = csv.DictReader(arquivo)
-        obrigatorias = {"pid", "pCR", "dataset", "pre", "post_early", "post_late"}
+        obrigatorias = {"pid", "pCR", "dataset", "test", "pre", "post_early", "post_late"}
         ausentes = obrigatorias - set(leitor.fieldnames or [])
         if ausentes:
             raise ValueError("CSV sem colunas: " + ", ".join(sorted(ausentes)))
@@ -65,6 +70,7 @@ def carregar_metadados(caminho: Path) -> list[Paciente]:
                 return int(numero)
 
             rotulo = converter_inteiro(linha["pCR"], "pCR")
+            particao = converter_inteiro(linha["test"], "test")
             indices = [
                 converter_inteiro(linha[f], f)
                 for f in FASES
@@ -74,12 +80,12 @@ def carregar_metadados(caminho: Path) -> list[Paciente]:
             raise ValueError(
                 f"Metadados invalidos para {pid}: {exc}"
             ) from exc
-        if rotulo not in (0, 1) or min(indices) < 0:
+        if rotulo not in (0, 1) or particao not in (0, 1, 2) or min(indices) < 0:
             raise ValueError(f"Rotulo ou indices temporais invalidos para {pid}")
         prefixo = f"{pid}_spy1_vis1"
         dce = tuple(DATASET_PADRAO / "dce" / f"{prefixo}_dce_aqc_{idx}.nii.gz" for idx in indices)
         mascara = DATASET_PADRAO / "mask" / f"{prefixo}_mask.nii.gz"
-        pacientes.append(Paciente(pid, rotulo, dce, mascara))
+        pacientes.append(Paciente(pid, rotulo, dce, mascara, particao))
     return pacientes
 
 
@@ -181,7 +187,7 @@ def adaptar_primeira_convolucao(original: nn.Conv2d, canais: int):
     return nova
 
 
-def criar_modelo(arquitetura: str, canais: int):
+def criar_modelo(arquitetura: str, canais: int, pretreinado: bool = False):
     if arquitetura == "cnn":
         return CNNSimples(canais)
     try:
@@ -189,12 +195,12 @@ def criar_modelo(arquitetura: str, canais: int):
     except ImportError as exc:
         raise ImportError("torchvision compativel com PyTorch nao esta instalado.") from exc
     if arquitetura == "resnet50":
-        modelo = resnet50(weights=None)
+        modelo = resnet50(weights=ResNet50_Weights.DEFAULT if pretreinado else None)
         modelo.conv1 = adaptar_primeira_convolucao(modelo.conv1, canais)
         modelo.fc = nn.Linear(modelo.fc.in_features, 1)
         return modelo
     if arquitetura == "mobilenetv2":
-        modelo = mobilenet_v2(weights=None)
+        modelo = mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT if pretreinado else None)
         modelo.features[0][0] = adaptar_primeira_convolucao(modelo.features[0][0], canais)
         modelo.classifier[1] = nn.Linear(modelo.last_channel, 1)
         return modelo
@@ -677,7 +683,329 @@ def resumir_relevancia_gradcam(mapa: np.ndarray, mascara: np.ndarray, diagnostic
 
 
 
+
+class DatasetTreinoDCE(torch.utils.data.Dataset):
+    """Cacheia um corte por paciente e oferece as dez variacoes oficiais.
+
+    Nenhuma amostra de teste entra nos loaders de treinamento/validacao.
+    As transformacoes espaciais sao iguais em todos os canais temporais.
+    """
+    ANGULOS = (-20, -10, 0, 10, 20)
+
+    def __init__(self, pacientes, configuracao, prep, augmentar):
+        from scipy.ndimage import rotate
+        self._rotate = rotate
+        self.amostras = []
+        self.augmentar = augmentar
+        for paciente in pacientes:
+            imagem, _, _ = preparar_paciente(paciente, configuracao, prep)
+            self.amostras.append((imagem, float(paciente.pcr), paciente.identificador))
+        if not self.amostras:
+            raise ValueError("Conjunto vazio para treinamento ou validacao.")
+
+    def __len__(self):
+        return len(self.amostras) * (10 if self.augmentar else 1)
+
+    def __getitem__(self, indice):
+        factor = 10 if self.augmentar else 1
+        imagem, rotulo, pid = self.amostras[indice // factor]
+        if not self.augmentar:
+            return imagem, torch.tensor(rotulo, dtype=torch.float32), pid
+        variante = indice % 10
+        angulo = self.ANGULOS[variante % 5]
+        # A mesma rotacao/espelhamento e aplicada a todos os canais.
+        dados = np.stack([
+            self._rotate(
+                canal, angulo, reshape=False, order=1,
+                mode="constant", cval=0.0,
+            ) for canal in imagem.numpy()
+        ], axis=0)
+        if variante >= 5:
+            dados = np.flip(dados, axis=2)
+        return (
+            torch.from_numpy(np.ascontiguousarray(dados, dtype=np.float32)),
+            torch.tensor(rotulo, dtype=torch.float32),
+            pid,
+        )
+
+
+def auc_roc_pacientes(rotulos: np.ndarray, probabilidades: np.ndarray) -> float:
+    """AUC por pares positivo/negativo, sem dependencia de sklearn."""
+    positivos = probabilidades[rotulos == 1]
+    negativos = probabilidades[rotulos == 0]
+    if len(positivos) == 0 or len(negativos) == 0:
+        raise ValueError("AUC requer ambas as classes.")
+    comparacoes = positivos[:, None] - negativos[None, :]
+    return float(((comparacoes > 0) + 0.5 * (comparacoes == 0)).mean())
+
+
+def resumir_predicoes_validacao(registros: list[tuple[str, int, float]]):
+    """Agrega as dez variacoes por paciente antes de escolher o limiar."""
+    agrupados = {}
+    for pid, rotulo, prob in registros:
+        if pid in agrupados and agrupados[pid][0] != rotulo:
+            raise ValueError("Rotulos conflitantes para o mesmo paciente.")
+        if pid not in agrupados:
+            agrupados[pid] = (rotulo, [])
+        agrupados[pid][1].append(prob)
+    rotulos = np.asarray([v[0] for v in agrupados.values()], dtype=int)
+    probabilidades = np.asarray(
+        [np.mean(v[1]) for v in agrupados.values()], dtype=float
+    )
+    auc = auc_roc_pacientes(rotulos, probabilidades)
+    melhor = None
+    for limiar in np.arange(0.05, 1., 0.05):
+        previsto = (probabilidades >= limiar).astype(int)
+        tp = int(np.sum((rotulos == 1) & (previsto == 1)))
+        tn = int(np.sum((rotulos == 0) & (previsto == 0)))
+        fp = int(np.sum((rotulos == 0) & (previsto == 1)))
+        fn = int(np.sum((rotulos == 1) & (previsto == 0)))
+        sens = tp / (tp + fn) if tp + fn else 0.
+        esp = tn / (tn + fp) if tn + fp else 0.
+        bacc = (sens + esp) / 2.
+        precisao = tp / (tp + fp) if tp + fp else 0.
+        f1 = 2 * precisao * sens / (precisao + sens) if precisao + sens else 0.
+        metrica = {
+            "auc_roc": auc, "acuracia_balanceada": bacc,
+            "sensibilidade": sens, "especificidade": esp,
+            "precisao": precisao, "acuracia": (tp + tn) / len(rotulos),
+            "f1": f1, "tn": tn, "tp": tp, "fp": fp, "fn": fn,
+            "limiar": float(round(limiar, 5)), "numero_pacientes": len(rotulos),
+        }
+        if melhor is None or (bacc, f1) > (
+            melhor["acuracia_balanceada"], melhor["f1"]
+        ):
+            melhor = metrica
+    return melhor
+
+
+def configurar_treino_modelo(modelo: nn.Module, arquitetura: str):
+    """Treina cabeca e, na ResNet50, layer4; congela BatchNorm pre-treinada."""
+    if arquitetura == "cnn":
+        return
+    for parametro in modelo.parameters():
+        parametro.requires_grad = False
+    if arquitetura == "resnet50":
+        for parametro in modelo.layer4.parameters():
+            parametro.requires_grad = True
+        for parametro in modelo.fc.parameters():
+            parametro.requires_grad = True
+    else:
+        for parametro in modelo.classifier.parameters():
+            parametro.requires_grad = True
+    for modulo in modelo.modules():
+        if isinstance(modulo, nn.modules.batchnorm._BatchNorm):
+            modulo.eval()
+            for parametro in modulo.parameters():
+                parametro.requires_grad = False
+
+
+def executar_epoca_treino(modelo, carregador, criterio, otimizador, dispositivo, treino):
+    modelo.train(treino)
+    if treino:
+        for modulo in modelo.modules():
+            if isinstance(modulo, nn.modules.batchnorm._BatchNorm):
+                modulo.eval()
+    soma_loss, contagem = 0., 0
+    registros = []
+    contexto = torch.enable_grad() if treino else torch.no_grad()
+    with contexto:
+        for imagens, rotulos, ids in carregador:
+            imagens = imagens.to(dispositivo)
+            rotulos = rotulos.to(dispositivo)
+            if treino:
+                otimizador.zero_grad(set_to_none=True)
+            logits = modelo(imagens).reshape(-1)
+            loss = criterio(logits, rotulos)
+            if treino:
+                loss.backward()
+                otimizador.step()
+            soma_loss += float(loss.detach()) * len(rotulos)
+            contagem += len(rotulos)
+            if not treino:
+                probabilidades = torch.sigmoid(logits).detach().cpu().tolist()
+                registros.extend(
+                    (str(pid), int(y), float(prob))
+                    for pid, y, prob in zip(ids, rotulos.cpu().tolist(), probabilidades)
+                )
+    return soma_loss / max(contagem, 1), registros
+
+
+def treinar_configuracao(pacientes, arquitetura, fase, corte, args, dispositivo):
+    """Treinamento CLI sem consultar teste. Seleciona epoca e limiar na validacao."""
+    treino = [p for p in pacientes if p.particao_codigo == 0]
+    validacao = [p for p in pacientes if p.particao_codigo == 2]
+    teste = [p for p in pacientes if p.particao_codigo == 1]
+    if (len(treino), len(validacao), len(teste)) != (104, 33, 35):
+        raise ValueError("Particoes oficiais esperadas: 104 treino, 33 validacao, 35 teste.")
+    if set(p.identificador for p in treino) & set(p.identificador for p in validacao):
+        raise ValueError("Paciente em mais de uma particao.")
+    torch.manual_seed(args.seed)
+    np.random.seed(args.seed)
+    random.seed(args.seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(args.seed)
+    canais = 3 if fase == "tres" else 1
+    conf = {
+        "arquitetura": arquitetura, "canais_entrada": canais,
+        "configuracao_temporal": fase, "estrategia_corte": corte,
+        "seed": args.seed, "epocas": args.epocas, "tamanho_lote": args.batch,
+    }
+    prep = {
+        "fases": FASES_TRES if fase == "tres" else [fase],
+        "normalizacao": {"tipo": "percentil_1_99_conjunto"},
+        "corte": corte, "representacao_entrada": "fases",
+        "mascara_como_filtro": False, "recorte_roi": False,
+        "augmentation": {
+            "angulos_graus": list(DatasetTreinoDCE.ANGULOS),
+            "espelhamento": [False, True], "variacoes_por_paciente": 10,
+            "teste_aumentado": False,
+        },
+        "particoes": {"treino": 0, "validacao": 2, "teste": 1},
+    }
+    conjunto_treino = DatasetTreinoDCE(treino, conf, prep, augmentar=True)
+    conjunto_validacao = DatasetTreinoDCE(validacao, conf, prep, augmentar=True)
+    gerador = torch.Generator().manual_seed(args.seed)
+    loader_treino = torch.utils.data.DataLoader(
+        conjunto_treino, batch_size=args.batch, shuffle=True, generator=gerador,
+    )
+    loader_validacao = torch.utils.data.DataLoader(
+        conjunto_validacao, batch_size=args.batch, shuffle=False,
+    )
+    modelo = criar_modelo(arquitetura, canais, pretreinado=arquitetura != "cnn")
+    configurar_treino_modelo(modelo, arquitetura)
+    modelo.to(dispositivo)
+    params = [p for p in modelo.parameters() if p.requires_grad]
+    taxa = args.lr if args.lr is not None else (
+        1e-3 if arquitetura == "cnn" else 1e-4
+    )
+    otimizador = torch.optim.Adam(params, lr=taxa, weight_decay=1e-4)
+    negativos = sum(p.pcr == 0 for p in treino)
+    positivos = sum(p.pcr == 1 for p in treino)
+    if not positivos or not negativos:
+        raise ValueError("Treino exige as duas classes.")
+    peso_positivo = (
+        1.0 if arquitetura == "resnet50" else (negativos / positivos) ** 0.5
+    )
+    criterio = nn.BCEWithLogitsLoss(
+        pos_weight=torch.tensor([peso_positivo], device=dispositivo)
+    )
+    melhor_auc = -1.
+    epoca_melhor, sem_melhora = 0, 0
+    melhor_estado, melhor_metricas = None, None
+    historico = []
+    for epoca in range(1, args.epocas + 1):
+        inicio = time.perf_counter()
+        loss_treino, _ = executar_epoca_treino(
+            modelo, loader_treino, criterio, otimizador, dispositivo, treino=True
+        )
+        loss_val, previsoes = executar_epoca_treino(
+            modelo, loader_validacao, criterio, None, dispositivo, treino=False
+        )
+        metricas = resumir_predicoes_validacao(previsoes)
+        atual = {
+            "epoca": epoca, "loss_treino": loss_treino,
+            "loss_validacao": loss_val, "auc_roc": metricas["auc_roc"],
+            "tempo_segundos": time.perf_counter() - inicio,
+        }
+        historico.append(atual)
+        print(
+            f"{arquitetura}/{fase}/{corte} epoca {epoca}: "
+            f"loss={loss_treino:.4f}/{loss_val:.4f} "
+            f"AUC val={metricas['auc_roc']:.4f}", flush=True,
+        )
+        if metricas["auc_roc"] > melhor_auc + 1e-9:
+            melhor_auc, epoca_melhor, sem_melhora = metricas["auc_roc"], epoca, 0
+            melhor_metricas = metricas
+            melhor_estado = {
+                k: v.detach().cpu().clone() for k, v in modelo.state_dict().items()
+            }
+        else:
+            sem_melhora += 1
+            if sem_melhora >= args.paciencia:
+                break
+    if melhor_estado is None:
+        raise RuntimeError("Nao foi possivel selecionar um checkpoint pela validacao.")
+    nome = f"{arquitetura}__{fase}__{corte}__seed-{args.seed}__monolito"
+    args.saida_checkpoints.mkdir(parents=True, exist_ok=True)
+    destino = args.saida_checkpoints / f"{nome}.pt"
+    conf.update({"taxa_aprendizado": taxa, "pos_weight": peso_positivo})
+    torch.save({
+        "formato_checkpoint": 1,
+        "model_state_dict": melhor_estado,
+        "configuracao": conf,
+        "preprocessamento": prep,
+        "selecao_validacao": {
+            "limiar": melhor_metricas["limiar"], "metricas": melhor_metricas,
+        },
+        "epoca": epoca_melhor,
+    }, destino)
+    with (destino.with_suffix(".csv")).open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=list(historico[0]))
+        writer.writeheader()
+        writer.writerows(historico)
+    with (destino.with_suffix(".json")).open("w", encoding="utf-8") as f:
+        json.dump({
+            "arquitetura": arquitetura, "fase": fase, "corte": corte,
+            "epoca_melhor": epoca_melhor, "metricas_validacao": melhor_metricas,
+            "pacientes": {"treino": 104, "validacao": 33, "teste_excluido": 35},
+            "observacao": "Checkpoint selecionado sem consultar o teste.",
+        }, f, indent=2, ensure_ascii=False)
+    print(f"Checkpoint salvo: {destino} | AUC validacao={melhor_auc:.4f}")
+    return destino
+
+
+def executar_treinamento_cli():
+    """Execucao opcional explicita: nunca reentreina ao abrir a interface."""
+    parser = argparse.ArgumentParser(description="Treinar modelos do trabalho PAI")
+    parser.add_argument("--treinar", action="store_true", required=True)
+    parser.add_argument("--grade", action="store_true", help="Executar as 12 configuracoes")
+    parser.add_argument("--arquitetura", choices=sorted(ARQUITETURAS), default="cnn")
+    parser.add_argument("--fases", choices=("post_early", "tres"), default="post_early")
+    parser.add_argument("--corte", choices=("central", "maior_tumor"), default="central")
+    parser.add_argument("--csv", type=Path, default=CSV_PADRAO)
+    parser.add_argument("--dataset-dir", type=Path, default=DATASET_PADRAO)
+    parser.add_argument("--saida-checkpoints", type=Path, default=RAIZ / "checkpoints/monolito")
+    parser.add_argument("--epocas", type=int, default=30)
+    parser.add_argument("--batch", type=int, default=32)
+    parser.add_argument("--paciencia", type=int, default=3)
+    parser.add_argument("--lr", type=float, default=None)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
+    args = parser.parse_args()
+    if args.epocas < 1 or args.batch < 1 or args.paciencia < 1:
+        parser.error("Epocas, batch e paciencia devem ser positivos.")
+    if args.lr is not None and args.lr <= 0:
+        parser.error("A taxa de aprendizado deve ser positiva.")
+    if args.device == "cuda" and not torch.cuda.is_available():
+        parser.error("CUDA indisponivel neste ambiente.")
+    dispositivo = torch.device(
+        "cuda" if (args.device == "cuda" or args.device == "auto"
+                   and torch.cuda.is_available()) else "cpu"
+    )
+    global DATASET_PADRAO
+    DATASET_PADRAO = args.dataset_dir.expanduser().resolve()
+    pacientes = carregar_metadados(args.csv.expanduser().resolve())
+    configuracoes = (
+        [(arq, fase, corte)
+         for arq in ("cnn", "resnet50", "mobilenetv2")
+         for fase in ("post_early", "tres")
+         for corte in ("central", "maior_tumor")]
+        if args.grade else [(args.arquitetura, args.fases, args.corte)]
+    )
+    for arq, fase, corte in configuracoes:
+        treinar_configuracao(pacientes, arq, fase, corte, args, dispositivo)
+
+
+
+
 def main():
+    import sys
+    if "--treinar" in sys.argv[1:]:
+        executar_treinamento_cli()
+        return
+    if len(sys.argv) > 1:
+        raise SystemExit("Use --treinar para o modo de treinamento; GUI nao recebe argumentos.")
     raiz = tk.Tk()
     AplicacaoPAI(raiz)
     raiz.mainloop()
