@@ -1,0 +1,8 @@
+{
+  "checkpoints\\integrados_issue4\\cnn__post-early__central__seed-42__final-v2.pt": "8ea882df35704e58273e42df9303864395a9b832e5b2ec75578e03701c2f3afd",
+  "checkpoints\\integrados_issue4\\resnet50__post-early__central__seed-42__final-v2.pt": "b027d09f78bfb908302a9d871ef1d86e56d3bb37536bb8839242df24f4087a39",
+  "checkpoints\\integrados_issue4\\resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt": "924a6b00ca7ee951b6e79f698f2a63f61ee7324de44c616ddfe15ece78dd9733",
+  "checkpoints\\integrados_issue4\\resnet50__tres__maior-tumor__seed-42__final-v2.pt": "ec6a1fac483c0fc188d6a580e5aee777aaeb5ce7dde4531ba7f750bcad8ec95b",
+  "resultados\\grade_definitiva_issue4_20261117_01\\artigo\\shortlist_integrada_validacao_12.csv": "a095917a9ea3fa6b27720c375c1c674014012722fde3ee02a5aa18bb4039692a",
+  "resultados\\grade_definitiva_issue4_20261117_01\\manifesto_final_27.json": "b0efd0f922e46ec17f0bd3e2e1e31902d4bf7156e3423f41a56c07d3c530fe40"
+}

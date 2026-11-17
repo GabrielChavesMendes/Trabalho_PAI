@@ -1,0 +1,2084 @@
+...E.EE.......EE....EE..............EE..EEE..E..E.......E.EE......E..... [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_avaliador_nao_abre_manifesto_ou_teste_sem_confirmacao _
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A5D42EE80>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+_ ERROR at setup of test_pesos_modificados_sao_rejeitados_antes_de_carregar_modelo _
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7A8A40>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+____ ERROR at setup of test_saida_existente_impede_repetir_avaliacao_final ____
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7A9800>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+_______ ERROR at setup of test_consolidacao_usa_epoca_do_checkpoint_auc _______
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7A9BC0>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+_ ERROR at setup of test_recarga_segura_dos_pesos_proprios_no_mesmo_adaptador _
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7AA200>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+_______ ERROR at setup of test_comando_unico_propaga_falha_e_guarda_log _______
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7A9D00>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+______ ERROR at setup of test_verificacao_nao_sobrescreve_saida_anterior ______
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1848D620>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+__________________ ERROR at setup of test_arquivos_ausentes ___________________
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A7C4B9080>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+________________ ERROR at setup of test_rejeita_pid_duplicado _________________
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7AB740>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+_____ ERROR at setup of test_uma_fase_e_tres_fases_com_mascara_sintetica ______
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A5D53DD00>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+___________ ERROR at setup of test_geometria_incompativel_rejeitada ___________
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7ABE20>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+____________ ERROR at setup of test_min_crop_rejeita_eixo_trocado _____________
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7AB920>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+____ ERROR at setup of test_fabrica_integra_particoes_sem_carregar_volumes ____
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1CB5CAE0>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+_________ ERROR at setup of test_treino_salva_checkpoint_recarregavel _________
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1CB5C540>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+___________ ERROR at setup of test_recusa_sobrescrever_experimentos ___________
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7ABC40>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+_ ERROR at setup of test_auditoria_independente_rejeita_classe_ou_metrica_incorreta _
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7A8220>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+_ ERROR at setup of test_leaky_preserva_parametros_mas_evitaria_carga_silenciosa_na_relu _
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7AA2A0>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+____ ERROR at setup of test_groupnorm_inicializacao_conv_linear_e_recarga _____
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x0000020A1C7A8AE0>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:250: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\logging.py:871: in pytest_runtest_setup
+    yield
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\capture.py:901: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:170: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\runner.py:536: in setup
+    col.setup()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\python.py:1801: in setup
+    self._request._fillfixtures()
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:877: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:701: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:797: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1301: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_caller.py:197: in __call__
+    return self._hookexec(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\pluggy\_manager.py:183: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1407: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\fixtures.py:1067: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:338: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:325: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:138: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:118: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\tmpdir.py:253: in getbasetemp
+    basetemp = make_numbered_dir_with_cleanup(
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:464: in make_numbered_dir_with_cleanup
+    raise e
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:445: in make_numbered_dir_with_cleanup
+    p = make_numbered_dir(root, prefix, mode)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:272: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:231: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/FELIPE/PUC Faculdade/SEMESTRE VI/PAI/TP/Trabalho_PAI/.venv/pytest-tmp/pytest-of-FELIPE')
+prefix = 'pytest-'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       PermissionError: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-tmp\\pytest-of-FELIPE'
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\pathlib.py:219: PermissionError
+============================== warnings summary ===============================
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\cacheprovider.py:487
+  C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\cacheprovider.py:487: PytestCacheWarning: could not create cache path D:\FELIPE\PUC Faculdade\SEMESTRE VI\PAI\TP\Trabalho_PAI\.venv\pytest-cache\v\cache\nodeids: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(str(n) for n in self.cached_nodeids))
+
+C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\cacheprovider.py:439
+  C:\Users\FELIPE\AppData\Roaming\Python\Python312\site-packages\_pytest\cacheprovider.py:439: PytestCacheWarning: could not create cache path D:\FELIPE\PUC Faculdade\SEMESTRE VI\PAI\TP\Trabalho_PAI\.venv\pytest-cache\v\cache\lastfailed: [WinError 5] Acesso negado: 'D:\\FELIPE\\PUC Faculdade\\SEMESTRE VI\\PAI\\TP\\Trabalho_PAI\\.venv\\pytest-cache\\v\\cache'
+    config.cache.set("cache/lastfailed", current_lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR tests/test_analise_validacao_issue4.py::test_avaliador_nao_abre_manifesto_ou_teste_sem_confirmacao
+ERROR tests/test_analise_validacao_issue4.py::test_pesos_modificados_sao_rejeitados_antes_de_carregar_modelo
+ERROR tests/test_analise_validacao_issue4.py::test_saida_existente_impede_repetir_avaliacao_final
+ERROR tests/test_consolidar_resultados.py::test_consolidacao_usa_epoca_do_checkpoint_auc
+ERROR tests/test_execucao_issue4.py::test_recarga_segura_dos_pesos_proprios_no_mesmo_adaptador
+ERROR tests/test_execucao_issue4.py::test_comando_unico_propaga_falha_e_guarda_log
+ERROR tests/test_execucao_issue4.py::test_verificacao_nao_sobrescreve_saida_anterior
+ERROR tests/test_modulo_dataset.py::test_arquivos_ausentes - PermissionError:...
+ERROR tests/test_modulo_dataset.py::test_rejeita_pid_duplicado - PermissionEr...
+ERROR tests/test_modulo_dataset.py::test_uma_fase_e_tres_fases_com_mascara_sintetica
+ERROR tests/test_modulo_dataset.py::test_geometria_incompativel_rejeitada - P...
+ERROR tests/test_modulo_dataset.py::test_min_crop_rejeita_eixo_trocado - Perm...
+ERROR tests/test_modulo_treinamento.py::test_fabrica_integra_particoes_sem_carregar_volumes
+ERROR tests/test_modulo_treinamento.py::test_treino_salva_checkpoint_recarregavel
+ERROR tests/test_refinar_limiares.py::test_recusa_sobrescrever_experimentos
+ERROR tests/test_relatorio_final_issue4.py::test_auditoria_independente_rejeita_classe_ou_metrica_incorreta
+ERROR tests/test_rodada_final_issue4.py::test_leaky_preserva_parametros_mas_evitaria_carga_silenciosa_na_relu
+ERROR tests/test_ultima_grade_issue4.py::test_groupnorm_inicializacao_conv_linear_e_recarga
+54 passed, 2 warnings, 18 errors in 9.06s

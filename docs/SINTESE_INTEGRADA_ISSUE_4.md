@@ -61,7 +61,9 @@ python scripts/verificar_checkpoints_integrados_issue4.py --device cpu
 python scripts/verificar_checkpoints_integrados_issue4.py --device cuda --validar-dataset
 ```
 
-O primeiro teste de recarga (sintético) **já foi efetuado** no ambiente de integração dos arquivos externos. **A reexecução da validação nos 33 pacientes reais ainda é necessária no computador com o dataset**, antes de declarar que as métricas foram reproduzidas. Nossos oito checkpoints permanecem nos caminhos originais registrados em `manifesto_final_27.json` e também precisam estar acessíveis no ambiente local.
+**Verificação local concluída:** os quatro externos passaram pela recarga estrita CPU e reproduziram as cinco métricas obrigatórias, AUC, BA, loss e confusão nos 33 pacientes reais em CUDA, preservando seus limiares. Os outros oito, em seus caminhos originais, também foram recarregados em CPU; os 12 produziram previsão CUDA de um paciente de validação. Isso não representa nova validação completa dos oito nesta sessão. Evidências em [verificação da integração](../resultados/verificacao_integrados_issue4_20261117_01/README.md).
+
+Execução simplificada: `python scripts/verificar_issue4.py`. Inferência individual: `python scripts/inferir_paciente_issue4.py --listar` e `python scripts/inferir_paciente_issue4.py --modelo 6 --paciente ISPY1_1009`. Os comandos usam a `.venv` existente e detectam CUDA/CPU. A seleção de 12 configurações e os resultados históricos não foram modificados.
 
 ## Apresentação dos resultados e limitações
 
@@ -71,4 +73,4 @@ Sensibilidade, especificidade, precisão, acurácia, F1, AUC, BA e matriz de con
 
 ## Próxima etapa
 
-Concluir verificação local dos quatro externos e dos oito pesos próprios; revisar testes e documentação; somente então revisar o PR #17 para merge em `develop` e encerrar a Issue #4. As próximas entregas de interface, inferência, Grad-CAM e arquivo Python único dependem das respectivas issues e não são afirmadas como concluídas aqui.
+Revisar o PR #17 e a integração com os demais módulos. O terminal de inferência está disponível; interface gráfica definitiva/Grad-CAM pertencem à Issue #5. Arquivo Python único, artigo e entrega integrada continuam pendentes. Esta execução não faz merge na `develop` nem fecha a Issue #4.

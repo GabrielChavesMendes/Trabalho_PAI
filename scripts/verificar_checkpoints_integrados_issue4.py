@@ -7,6 +7,9 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
+from datetime import datetime, timezone
+import math
 from pathlib import Path
 import sys
 
@@ -16,10 +19,10 @@ RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 
 from modulos.checkpoints_integrados_issue4 import (
-    carregar_modelo_checkpoint, normalizacao_checkpoint,
+    carregar_modelo_checkpoint, normalizacao_checkpoint, pacientes_dataset, dataset_checkpoint,
 )
-from modulos.fabrica_carregadores import criar_carregadores
-from modulos.modulo_treinamento import avaliar_modelo, calcular_metricas
+from modulos.modulo_treinamento import avaliar_modelo, salvar_resultado_json
+from torch.utils.data import DataLoader
 
 PESOS = {
     "cnn__post-early__central__seed-42__final-v2.pt": ("cnn", "post_early", "central"),
@@ -41,9 +44,12 @@ def main() -> int:
     parser.add_argument("--pasta", type=Path, default=RAIZ / "checkpoints" / "integrados_issue4")
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     parser.add_argument("--validar-dataset", action="store_true", help="Reexecutar validacao nos 33 pacientes reais")
+    parser.add_argument("--saida", type=Path, help="Pasta NOVA para relatorio e probabilidades, sem sobrescrita")
     args = parser.parse_args()
     if args.device == "cuda" and not torch.cuda.is_available():
         parser.error("CUDA indisponivel")
+    if args.saida and args.saida.exists():
+        raise FileExistsError(f"Saida existente preservada: {args.saida}")
     faltantes = [nome for nome in PESOS if not (args.pasta / nome).is_file()]
     if faltantes:
         raise FileNotFoundError("Checkpoints ausentes: " + ", ".join(faltantes))
@@ -56,6 +62,12 @@ def main() -> int:
         if digest.hexdigest() != SHA256[nome]:
             raise ValueError(f"SHA-256 diverge; confira o arquivo: {nome}")
     print("Integridade SHA-256 verificada para os quatro checkpoints.", flush=True)
+    if args.saida:
+        args.saida.mkdir(parents=True)
+    relatorio = []
+    pacientes = pacientes_dataset("validacao") if args.validar_dataset else None
+    if pacientes is not None and len(pacientes) != 33:
+        raise ValueError("Validacao oficial deve conter exatamente 33 pacientes")
     device = torch.device(args.device)
     for i, (nome, esperado) in enumerate(PESOS.items(), 1):
         modelo, dados = carregar_modelo_checkpoint(args.pasta / nome, device)
@@ -69,40 +81,51 @@ def main() -> int:
             y = modelo(x)
         if y.shape != (1, 1) or not bool(torch.isfinite(y).all()):
             raise AssertionError(f"Saida invalida para {nome}")
-        print(f"[{i}/4] Recarga estrita OK: {nome}; normalizacao={norma}", flush=True)
+        limiar = float(dados["selecao_validacao"]["limiar"])
+        print(f"[{i}/4] Recarga estrita OK: {nome}; normalizacao={norma}; "
+              f"fases={dados['preprocessamento']['fases']}; corte={conf['estrategia_corte']}; limiar={limiar!r}", flush=True)
+        linha = {"arquivo": nome, "sha256": SHA256[nome], "recarga_estrita": True,
+                 "configuracao": conf, "preprocessamento": dados["preprocessamento"], "limiar": limiar}
         if args.validar_dataset:
-            carregadores = criar_carregadores(
-                configuracao_temporal=conf["configuracao_temporal"],
-                estrategia_corte=conf["estrategia_corte"],
-                tamanho_lote=min(4, int(conf["tamanho_lote"])),  # avalia sem gradiente, economiza VRAM
-                seed=int(conf["seed"]),
-                normalizacao_entrada=norma,
-            )
+            loader = DataLoader(dataset_checkpoint(pacientes, dados, aumentar_validacao=True),
+                                batch_size=min(4, int(conf["tamanho_lote"])), shuffle=False,
+                                num_workers=0, pin_memory=device.type == "cuda")
             pos_weight = float(conf["pos_weight"])
             criterio = torch.nn.BCEWithLogitsLoss(
                 pos_weight=torch.tensor([pos_weight], device=device)
             )
-            _, _, predicoes = avaliar_modelo(
-                modelo, carregadores["validacao"], criterio, device,
-                limiar=float(dados["selecao_validacao"]["limiar"]),
-            )
-            metricas = calcular_metricas(
-                predicoes, float(dados["selecao_validacao"]["limiar"])
-            )
+            loss, metricas, predicoes = avaliar_modelo(modelo, loader, criterio, device, limiar=limiar)
+            metricas = {**metricas, "loss": loss}
+            if {p.paciente: p.rotulo for p in predicoes} != {p.identificador: p.pcr for p in pacientes}:
+                raise AssertionError("IDs/rotulos nao correspondem aos pacientes de validacao")
             reportadas = dados["selecao_validacao"]["metricas"]
             erros = [
                 f"{chave}: obtido={metricas[chave]:.5f}, salvo={reportadas[chave]:.5f}"
-                for chave in METRICAS
-                if abs(float(metricas[chave]) - float(reportadas[chave])) > 0.001
+                for chave in (*METRICAS, "loss", "tn", "fp", "fn", "tp")
+                if chave in reportadas and (not math.isfinite(float(metricas[chave]))
+                    or abs(float(metricas[chave]) - float(reportadas[chave])) > 0.001)
             ]
+            if args.saida:
+                salvar_resultado_json(args.saida / (Path(nome).stem + "__validation.json"), metricas, predicoes)
             if metricas["numero_pacientes"] != 33 or erros:
                 raise AssertionError(
                     f"Validacao nao reproduzida para {nome}: "
                     + "; ".join(erros)
                     + f" (pacientes={metricas['numero_pacientes']})"
                 )
-            print(f"    Validacao reproduzida: 33 pacientes; F1={metricas['f1']:.4f}; AUC={metricas['auc_roc']:.4f}",flush=True)
+            linha.update(metricas=metricas, metricas_salvas=reportadas, batch_inferencia=loader.batch_size)
+            print("    Validacao reproduzida: 33 pacientes; " + "; ".join(
+                f"{k}={metricas[k]:.4f}" for k in (*METRICAS, "loss")), flush=True)
+            del loader
+        relatorio.append(linha)
         del modelo, dados
+        if device.type == "cuda":
+            torch.cuda.empty_cache()
+    if args.saida:
+        (args.saida / "relatorio.json").write_text(json.dumps({
+            "verificado_em_utc": datetime.now(timezone.utc).isoformat(), "device": str(device),
+            "validacao_real": args.validar_dataset, "treinamento_executado": False,
+            "teste_avaliado": False, "modelos": relatorio}, ensure_ascii=False, indent=2), encoding="utf-8")
     print("Quatro checkpoints externos verificados." + (" Validacao real OK." if args.validar_dataset else " Falta testar no dataset real."))
     return 0
 

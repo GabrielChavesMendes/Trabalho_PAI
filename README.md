@@ -17,9 +17,9 @@
 
 ## Resultado consolidado e documentação para o artigo
 
-Leia primeiro a **[síntese integrada para o artigo](docs/SINTESE_INTEGRADA_ISSUE_4.md)**: tabela única com as 12 combinações, comparação das duas linhas de experimentação e encadeamento das intervenções. Os resultados de 27 checkpoints e a auditoria continuam preservados em [`docs/GRADE_DEFINITIVA_ISSUE_4_20261117.md`](docs/GRADE_DEFINITIVA_ISSUE_4_20261117.md). Quatro pesos externos foram recebidos e tiveram recarga estrutural verificada; falta reproduzir a validação com o dataset real antes do uso no executável. Consulte a síntese para nomes e comandos.
+Leia primeiro a **[síntese integrada para o artigo](docs/SINTESE_INTEGRADA_ISSUE_4.md)**: tabela única com as 12 combinações e comparação das duas linhas de experimentação. Os quatro pesos externos passaram pela recarga CPU e reproduziram as métricas nos 33 pacientes de validação em CUDA. Os 12 selecionados também tiveram recarga CPU e previsão de um paciente verificadas. Evidências: [`resultados/verificacao_integrados_issue4_20261117_01/README.md`](resultados/verificacao_integrados_issue4_20261117_01/README.md). Os resultados das 27 execuções anteriores continuam preservados.
 
-**Para executar os modelos já treinados sem retreinar:** consulte [Como executar um modelo já treinado](docs/COMO_EXECUTAR_MODELO_TREINADO.md) (passos para Git Bash, checkpoints e validação real).
+**Sem retreino:** `python scripts/verificar_issue4.py` executa testes, recarga CPU e validação real; `python scripts/inferir_paciente_issue4.py --modelo 6 --paciente ISPY1_1009` demonstra uma previsão. Ambos usam a `.venv` e detectam CUDA/CPU. [Guia de execução](docs/COMO_EXECUTAR_MODELO_TREINADO.md). Interface gráfica/Grad-CAM: Issue #5.
 
 ## Objetivo
 Treinar e avaliar **três modelos** (CNN autoral ≥5 camadas com parâmetros, ResNet50 ImageNet e MobileNetV2) para prever pCR a partir de imagens DCE-MRI. Comparar uma fase temporal isolada com a combinação de três fases e ao menos duas estratégias de cortes de volumes 3D.

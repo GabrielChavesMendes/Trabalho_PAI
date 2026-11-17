@@ -1,4 +1,4 @@
-"""Recarga segura e verificavel dos checkpoints externos da Issue #4.
+"""Recarga segura dos checkpoints externos e próprios selecionados da Issue #4.
 
 Nao altera o treinamento existente, nem usa fase espacial 2,5D ou ensemble.
 Os modelos sao inicializados sem download: os pesos ImageNet ja fazem parte do
@@ -8,14 +8,19 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
+import os
 
 import torch
 from torch.torch_version import TorchVersion
 
 from modulos.modulo_redes import criar_modelo
+from modulos.modulo_dataset import carregar_metadados, criar_manifesto, DatasetDCE
+from modulos.fabrica_carregadores import DatasetCacheMemoria, DatasetNormalizacaoImageNet
+from modulos.modulo_dataset_issue1 import DatasetDCEAumentado
 
 FASES_TRES = ["pre", "post_early", "post_late"]
 ARQUITETURAS = {"cnn", "resnet50", "mobilenetv2"}
+RAIZ = Path(__file__).resolve().parents[1]
 
 
 def carregar_dados_checkpoint(caminho: str | Path) -> dict[str, Any]:
@@ -53,9 +58,13 @@ def validar_configuracao(checkpoint: dict[str, Any]) -> None:
         raise ValueError("Apenas as fases temporais originais sao admitidas")
     norma = prep.get("normalizacao")
     tipo = norma.get("tipo") if isinstance(norma, dict) else None
-    if tipo not in ("percentil_1_99_conjunto", "percentil_1_99_seguido_normalizacao_imagenet"):
+    legado_percentil = (
+        norma == "percentis 1/99 conjuntos por amostra; clip [0,1]"
+        and prep.get("normalizacao_adicional", "nenhuma") == "nenhuma"
+    )
+    if not legado_percentil and tipo not in ("percentil_1_99_conjunto", "percentil_1_99_seguido_normalizacao_imagenet"):
         raise ValueError("Normalizacao nao suportada")
-    if tipo.endswith("imagenet"):
+    if tipo and tipo.endswith("imagenet"):
         medias = [0.485, 0.456, 0.406] if canais == 3 else [0.449]
         desvios = [0.229, 0.224, 0.225] if canais == 3 else [0.226]
         if any(abs(float(v) - e) > 1e-5 for v, e in zip(norma.get("medias", []), medias)) or len(norma.get("medias", [])) != canais:
@@ -70,7 +79,8 @@ def validar_configuracao(checkpoint: dict[str, Any]) -> None:
 
 
 def normalizacao_checkpoint(checkpoint: dict[str, Any]) -> str:
-    tipo = checkpoint["preprocessamento"]["normalizacao"]["tipo"]
+    norma = checkpoint["preprocessamento"]["normalizacao"]
+    tipo = norma["tipo"] if isinstance(norma, dict) else "percentil_1_99_conjunto"
     return "imagenet" if tipo.endswith("imagenet") else "percentil"
 
 
@@ -87,3 +97,48 @@ def carregar_modelo_checkpoint(
     modelo.to(dispositivo)
     modelo.eval()
     return modelo, dados
+
+
+def pacientes_dataset(particao: str | None = None):
+    """Lê metadados; filtra antes de construir caminhos das imagens."""
+    tabela = carregar_metadados(Path(os.environ.get(
+        "PAI_CSV", RAIZ / "dataset/BreastDCEDL_SPY1_min_crop_metadata.csv")))
+    if particao is not None:
+        from modulos.modulo_dataset import PARTICOES
+        tabela = tabela.loc[tabela.test.eq(PARTICOES[particao])]
+    pasta = Path(os.environ.get("PAI_DATASET_DIR", RAIZ / "dataset/BreastDCEDL_ISPY1_min_crop"))
+    return criar_manifesto(tabela, pasta)
+
+
+def dataset_checkpoint(pacientes, dados, *, aumentar_validacao=False):
+    """Mesmo preparo para validação e paciente único; nunca reajusta o limiar."""
+    validar_configuracao(dados)
+    conf = dados["configuracao"]
+    base = DatasetDCE(pacientes, fase=conf["configuracao_temporal"], estrategia=conf["estrategia_corte"])
+    if aumentar_validacao:
+        aug = dados["preprocessamento"].get("augmentation", {})
+        if (aug.get("angulos_graus") != [-20, -10, 0, 10, 20]
+                or aug.get("espelhamento") != [False, True]
+                or aug.get("variacoes_por_paciente") != 10):
+            raise ValueError("Augmentation do checkpoint nao corresponde ao protocolo de validacao")
+        base = DatasetCacheMemoria(base)
+    if normalizacao_checkpoint(dados) == "imagenet":
+        base = DatasetNormalizacaoImageNet(base)  # ANTES de rotacionar/espelhar.
+    return DatasetDCEAumentado(base, "validacao") if aumentar_validacao else base
+
+
+def prever_paciente(modelo, dados, paciente, dispositivo):
+    """Uma imagem por paciente, sem aumento, gradientes ou alteração dos pesos."""
+    amostra = dataset_checkpoint([paciente], dados)[0]
+    modelo.eval()
+    with torch.inference_mode():
+        logits = modelo(amostra["imagem"].unsqueeze(0).to(dispositivo))
+        if logits.shape != (1, 1) or not bool(torch.isfinite(logits).all()):
+            raise ValueError("Saida do modelo deve ser um logit finito [1,1]")
+        probabilidade = float(torch.sigmoid(logits).item())
+    limiar = float(dados["selecao_validacao"]["limiar"])
+    return {"paciente": paciente.identificador, "arquitetura": dados["configuracao"]["arquitetura"],
+            "fases": dados["preprocessamento"]["fases"], "corte": dados["preprocessamento"]["corte"],
+            "corte_z": int(amostra["corte_z"]), "normalizacao": normalizacao_checkpoint(dados),
+            "probabilidade_pcr": probabilidade, "limiar": limiar, "classificacao_pcr": int(probabilidade >= limiar),
+            "aumento": False}

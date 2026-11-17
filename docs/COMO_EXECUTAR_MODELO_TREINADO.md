@@ -1,25 +1,27 @@
-# Como executar um modelo já treinado (sem treinar novamente)
+# Executar modelos treinados — Issue #4
 
-Este guia explica como executar modelos recebidos de outro integrante, como os quatro checkpoints da Issue #4. **Não é necessário treinar novamente.**
+Na raiz do projeto, em PowerShell ou Git Bash, com a `.venv` existente:
 
-## O que precisamos receber?
+```text
+python scripts/verificar_issue4.py
+python scripts/inferir_paciente_issue4.py --listar
+python scripts/inferir_paciente_issue4.py --modelo 6 --paciente ISPY1_1009
+```
 
-1. **Pesos treinados** (arquivo `.pt`): contêm os parâmetros aprendidos.
-2. **Arquitetura/código compatível**: por exemplo, CNN ou ResNet50, com a entrada e a saída esperadas.
-3. **Configuração de pré-processamento**: fases temporais, corte, normalização, canais e limiar de decisão. Nos checkpoints atuais, esses dados estão salvos dentro do próprio `.pt`.
-4. **Imagens reais** e, para calcular métricas, os **rótulos corretos** do CSV.
+Os comandos usam automaticamente o Python da **`.venv` do projeto**, mesmo que
+`python` aponte para a instalação global. Detectam CUDA; se indisponível, usam CPU.
+Não instalam pacotes, treinam redes ou ajustam limiares. Para solicitar CPU:
+adicionar `--device cpu`. `--device cuda` exige uma GPU CUDA disponível.
 
-> Receber **só os hiperparâmetros ou a configuração, sem o arquivo de pesos treinados**, não permite recuperar um modelo já treinado. Nesse caso seria necessário obter os pesos ou realizar novo treinamento.
+## O que significa receber um modelo já treinado?
 
-## O que acontece ao executar?
+Precisamos do arquivo **`.pt` com os pesos**, código da arquitetura compatível e
+configurações de entrada/saída. Os checkpoints atuais já guardam arquitetura,
+fases, corte, normalização e limiar. Hiperparâmetros sozinhos não recuperam os
+pesos aprendidos. Não é preciso baixar ImageNet ou treinar novamente: a recarga
+reconstrói a rede, carrega `state_dict` com `strict=True` e coloca em `eval()`.
 
-O programa carrega a rede com os **pesos já aprendidos**, aplica nas imagens **o mesmo pré-processamento usado no treinamento** e calcula uma probabilidade de pCR. Usa-se o limiar escolhido na validação para gerar a classificação 0/1.
-
-Para avaliar um conjunto rotulado, comparamos as previsões com os rótulos e calculamos **sensibilidade, especificidade, precisão, acurácia, F1**, AUC e acurácia balanceada. **Isso é avaliação/inferência, não treinamento.** O código não executa `backward()` nem atualiza os pesos.
-
-## Exemplo do projeto: os quatro modelos integrados da Issue #4
-
-Na raiz do repositório, coloque estes quatro arquivos recebidos em `checkpoints/integrados_issue4/`:
+Os quatro recebidos do Gustavo devem permanecer em `checkpoints/integrados_issue4/`:
 
 ```text
 cnn__post-early__central__seed-42__final-v2.pt
@@ -28,42 +30,107 @@ resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt
 resnet50__tres__maior-tumor__seed-42__final-v2.pt
 ```
 
-O script `scripts/verificar_checkpoints_integrados_issue4.py` foi feito especificamente para **esses quatro modelos**. Ele confere a integridade dos arquivos (SHA-256), os metadados e a recarga estrita dos pesos.
+Os outros oito selecionados continuam em seus caminhos originais. O comando
+`--listar` informa os 12 e se cada peso está disponível. A fonte dessa lista é
+o [catálogo integrado](../resultados/grade_definitiva_issue4_20261117_01/artigo/shortlist_integrada_validacao_12.csv),
+que não foi alterado: três redes × duas configurações temporais × dois cortes.
+Não acrescentamos 2,5D, ensembles ou candidatos novos.
 
-### 1. Conferir o código (Git Bash, Windows)
+## Dataset
 
-```bash
-mkdir -p .venv/pytest-tmp
-export PYTEST_DEBUG_TEMPROOT="$(pwd)/.venv/pytest-tmp"
-./.venv/Scripts/python.exe -m pytest -q -o cache_dir=.venv/pytest-cache
+O padrão é o CSV `dataset/BreastDCEDL_SPY1_min_crop_metadata.csv` e a pasta
+`dataset/BreastDCEDL_ISPY1_min_crop/`, contendo `dce/` e `mask/`.
+Para dados em outro local, configurar `PAI_CSV` e `PAI_DATASET_DIR` antes de executar.
+Exemplo em PowerShell:
+
+```powershell
+$env:PAI_DATASET_DIR = 'D:\dados\BreastDCEDL_ISPY1_min_crop'
+$env:PAI_CSV = 'D:\dados\BreastDCEDL_SPY1_min_crop_metadata.csv'
 ```
 
-### 2. Carregar os pesos sem abrir o dataset
+Não é necessário definir essas variáveis se o dataset já está no local padrão.
 
-```bash
-./.venv/Scripts/python.exe scripts/verificar_checkpoints_integrados_issue4.py --device cpu
+## Verificar tudo com um comando
+
+```text
+python scripts/verificar_issue4.py
 ```
 
-Esse comando executa **apenas uma verificação estrutural**, com entrada artificial. Não treina e **não mede desempenho real**. O esperado é exibir `Recarga estrita OK` para cada um dos quatro arquivos.
+Executa, em ordem, interrompendo diante de qualquer erro:
 
-### 3. Reproduzir os resultados na validação real
+1. Suíte completa de testes, com temporários/cache próprios na `.venv`.
+2. SHA-256, metadados, recarga estrita e saída sintética dos quatro pesos em **CPU**.
+3. Validação real desses quatro nos **33 pacientes oficiais**, em **CUDA ou CPU**.
 
-O dataset oficial deve estar na pasta `dataset/BreastDCEDL_ISPY1_min_crop/` com `dce/` e `mask/`, e o CSV oficial deve estar em `dataset/`. Alternativamente, configurar as variáveis `PAI_DATASET_DIR` e `PAI_CSV`.
+A etapa sintética só verifica a estrutura. A etapa real recalcula sensibilidade,
+especificidade, precisão, acurácia, F1, AUC, acurácia balanceada, loss e confusão.
+Compara com os valores salvos no checkpoint, com tolerância absoluta de 0,001.
+Confere também os 33 IDs/rótulos. **Não abre imagens de treino/teste nessa etapa.**
 
-```bash
-./.venv/Scripts/python.exe scripts/verificar_checkpoints_integrados_issue4.py --device cuda --validar-dataset
+A validação mantém as dez variações de cada paciente; as métricas usam a média
+das probabilidades por paciente. São 33 pacientes, não 330 independentes.
+O limiar vem de `selecao_validacao.limiar`, sem novo ajuste ou arredondamento.
+O batch de inferência é no máximo quatro para caber na GPU de 4 GB; os pesos,
+o batch de treinamento registrado e os metadados não são modificados.
+
+Cada chamada cria uma saída exclusiva em `resultados/verificacoes_issue4/<data-hora>/`:
+logs, `resumo.json`, relatórios CPU/validação e probabilidades dos 33 pacientes.
+O sucesso termina com `APROVADO`. Uma falha exibe sua causa e retorna código não
+zero. Para escolher outro destino, usar `--saida pasta_nova`; saídas existentes
+são preservadas e recusadas, sem sobrescrita.
+
+Os comandos anteriores continuam disponíveis para verificações isoladas:
+
+```text
+.venv/Scripts/python.exe scripts/verificar_checkpoints_integrados_issue4.py --device cpu
+.venv/Scripts/python.exe scripts/verificar_checkpoints_integrados_issue4.py --device cuda --validar-dataset
 ```
 
-Se a GPU não estiver disponível, substitua `--device cuda` por `--device cpu`.
+## Prever um paciente individual
 
-O script recalcula as métricas nos **33 pacientes de validação**, usando as configurações registradas dentro de cada checkpoint, e compara os resultados com os metadados salvos. Ele **não treina** e **não avalia o conjunto de teste**. Uma divergência de métricas gera erro para podermos investigar diferenças no pré-processamento ou no ambiente.
+```text
+python scripts/inferir_paciente_issue4.py --listar
+python scripts/inferir_paciente_issue4.py --modelo 6 --paciente ISPY1_1009
+```
 
-A classificação é obtida usando a probabilidade e o limiar salvo; não é recalibrado um novo limiar. Esse teste não salva um novo modelo.
+Escolha o número de 1 a 12 mostrado na lista e um ID existente no CSV. Exemplos:
+modelo 1 = CNN/uma fase/central; 2 = CNN/uma fase/maior tumor;
+6 = ResNet50/uma fase/maior tumor/ImageNet; 8 = ResNet50/três fases/maior tumor;
+11 = MobileNetV2/três fases/central. Para fornecer o arquivo diretamente:
 
-## Como usar o modelo depois, em uma imagem nova?
+```text
+python scripts/inferir_paciente_issue4.py --checkpoint checkpoints/integrados_issue4/cnn__post-early__central__seed-42__final-v2.pt --paciente ISPY1_1009
+```
 
-A lógica é a mesma: carregar arquitetura e pesos, preparar a imagem exatamente como foi preparada no treino (fases, corte, normalização, tamanho), executar `modelo.eval()`, aplicar `sigmoid` à saída e apresentar a probabilidade de pCR. Não precisamos do rótulo verdadeiro para fazer uma previsão; ele é necessário apenas para avaliar se a previsão foi correta.
+O programa lê apenas as imagens do paciente escolhido, usa as fases e o corte
+do checkpoint, aplica percentis 1/99 conjuntos e, quando registrado, ImageNet.
+Na ResNet50 monocanal ImageNet, média 0,449 e desvio 0,226. A validação aplica
+essa padronização **antes** das rotações/espelhamentos, como no treinamento.
+A máscara seleciona o corte; não vira canal nem filtro da imagem.
 
-A integração dessa previsão com a **interface gráfica e o Grad-CAM** é tratada na Issue #5; o script de verificação da Issue #4 é destinado à recarga e à conferência das métricas, não à interface para escolher pacientes.
+A previsão individual não aplica augmentation. Exibe arquivo, device, fases,
+corte Z, normalização, probabilidade, limiar completo e classe pCR=0/1.
+Usa `inference_mode()`, sem gradientes ou atualização de parâmetros. O rótulo do
+CSV não entra na previsão. Uma previsão individual pode diferir da média das
+dez transformações usada nas tabelas de validação; isso é esperado.
 
-**Importante:** o ZIP principal da entrega não deve incluir o dataset nem os pesos; os checkpoints são distribuídos separadamente conforme o enunciado. Consulte também [a síntese da Issue #4](SINTESE_INTEGRADA_ISSUE_4.md).
+## Demonstração mínima ao professor
+
+```text
+python scripts/verificar_issue4.py
+python scripts/inferir_paciente_issue4.py --modelo 6 --paciente ISPY1_1009
+```
+
+No computador verificado: **72 testes passaram**, quatro recargas CPU e quatro
+validações CUDA reproduzidas. Os 12 selecionados também foram recarregados em CPU
+e produziram previsão CUDA para esse paciente. Com o modelo 6, a previsão única
+registrada foi 0,3113216161727905, limiar 0,25, classe pCR=1.
+[Evidências da execução](../resultados/verificacao_integrados_issue4_20261117_01/README.md).
+
+**A demonstração gráfica definitiva e o Grad-CAM serão concluídos na Issue #5.**
+Este terminal demonstra a inferência; não substitui essa interface.
+Não incluir dataset ou pesos no Git ou no ZIP principal. Consultar a
+[síntese integrada](SINTESE_INTEGRADA_ISSUE_4.md) para resultados e limitações.
+
+Código/documentação desta integração tiveram auxílio de Codex/OpenAI; os
+integrantes devem revisar ambos e registrar esse auxílio na declaração de IAG.
