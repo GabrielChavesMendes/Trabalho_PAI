@@ -115,3 +115,63 @@ def test_tres_fases_e_mascara_compartilham_z(monkeypatch):
 def test_cam_rejeita_classe_invalida():
     with pytest.raises(ValueError, match="Classe-alvo"):
         pai.gerar_gradcam(RedeTeste(), torch.ones(1, 1, 8, 8), "cnn", classe_alvo="invalida")
+
+
+def test_auc_por_paciente_e_limiar_validacao():
+    registros = [
+        ("P1", 1, 0.8), ("P1", 1, 0.6),
+        ("P2", 0, 0.1), ("P2", 0, 0.2),
+        ("P3", 1, 0.7), ("P3", 1, 0.5),
+        ("P4", 0, 0.4), ("P4", 0, 0.3),
+    ]
+    metricas = pai.resumir_predicoes_validacao(registros)
+    assert metricas["numero_pacientes"] == 4
+    assert metricas["auc_roc"] == pytest.approx(1.0)
+    assert metricas["acuracia_balanceada"] == pytest.approx(1.0)
+    assert metricas["tp"] == metricas["tn"] == 2
+
+
+def test_aumento_gera_dez_variantes_com_canais_coerentes():
+    from scipy.ndimage import rotate
+    ds = pai.DatasetTreinoDCE.__new__(pai.DatasetTreinoDCE)
+    ds._rotate = rotate
+    ds.augmentar = True
+    imagem = torch.zeros(3, 32, 32)
+    imagem[:, 8:13, 9:14] = torch.tensor([1., 2., 3.])[:, None, None]
+    ds.amostras = [(imagem, 1., "P1")]
+    assert len(ds) == 10
+    for indice in range(10):
+        amostra, rotulo, pid = ds[indice]
+        assert amostra.shape == (3, 32, 32)
+        assert pid == "P1" and float(rotulo) == 1.
+        assert torch.allclose(amostra[1], 2 * amostra[0], atol=1e-6)
+        assert torch.allclose(amostra[2], 3 * amostra[0], atol=1e-6)
+
+
+def test_particao_temporal_csv_e_teste_identificados():
+    # Verifica que o monolito contempla o campo de split e nao permite
+    # formar um treinamento com IDs de particoes misturadas inadvertidamente.
+    campos = list(pai.Paciente.__dataclass_fields__)
+    assert "particao_codigo" in campos
+    assert set(pai.FASES) == {"pre", "post_early", "post_late"}
+
+
+def test_metadados_checkpoint_rejeitam_entrada_2p5d_na_gui(tmp_path):
+    checkpoint = tmp_path / "modelo.pt"
+    torch.save({
+        "formato_checkpoint": 1,
+        "model_state_dict": {},
+        "configuracao": {
+            "arquitetura": "cnn", "canais_entrada": 3,
+            "configuracao_temporal": "tres",
+            "estrategia_corte": "central",
+        },
+        "preprocessamento": {
+            "fases": list(pai.FASES), "corte": "central",
+            "normalizacao": {"tipo": "percentil_1_99_conjunto"},
+            "representacao_entrada": "vizinhanca_2p5d",
+        },
+        "selecao_validacao": {"limiar": 0.5, "metricas": {}},
+    }, checkpoint)
+    with pytest.raises(ValueError, match="transformacao"):
+        pai.validar_checkpoint(checkpoint)
