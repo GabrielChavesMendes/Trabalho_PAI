@@ -14,13 +14,13 @@ import pandas as pd
 
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
-from modulos.rodada_final_issue4 import carregar_modelo_registrado, criar_carregador
+from modulos.variantes_experimentais import carregar_modelo_registrado, criar_carregador
 from modulos.modulo_treinamento import (
     avaliar_modelo, escolher_dispositivo, configurar_reprodutibilidade,
     salvar_resultado_json, salvar_matriz_confusao, RegistroPredicao, calcular_metricas,
 )
-from modulos.grade_final_issue4 import familia, selecionar_representantes
-from modulos.analise_validacao_issue4 import estabilidade_limiar
+from modulos.grade_experimental import familia, selecionar_representantes
+from modulos.analise_validacao import estabilidade_limiar
 
 
 def resolver(caminho):

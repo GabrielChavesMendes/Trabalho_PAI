@@ -9,10 +9,10 @@ RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 import numpy as np
 import pandas as pd
-from modulos.grade_final_issue4 import familia, chave_selecao, selecionar_representantes
-from modulos.analise_validacao_issue4 import diferenca_auc_bootstrap
-from scripts.analisar_rodada_final_issue4 import analisar, registros
-from scripts.preparar_ultima_grade_issue4 import sha
+from modulos.grade_experimental import familia, chave_selecao, selecionar_representantes
+from modulos.analise_validacao import diferenca_auc_bootstrap
+from scripts.analisar_experimentos import analisar, registros
+from scripts.preparar_grade_final import sha
 
 
 def ler(p):
@@ -166,15 +166,15 @@ def congelar(base):
                      revisao_validacao_arquivo=relativo(base/'REVISAO_VALIDACAO_27.md'),
                      revisao_validacao_sha256=sha(base/'REVISAO_VALIDACAO_27.md'),
                      fontes_avaliacao_sha256={s: sha(RAIZ/s) for s in
-                         ['scripts/avaliar_manifesto_issue4.py', 'modulos/modulo_treinamento.py',
-                          'modulos/rodada_final_issue4.py', 'modulos/grade_final_issue4.py',
+                         ['scripts/avaliar_manifesto.py', 'modulos/modulo_treinamento.py',
+                          'modulos/variantes_experimentais.py', 'modulos/grade_experimental.py',
                           'modulos/modulo_redes.py', 'modulos/modulo_dataset.py',
-                          'scripts/consolidar_coorte_issue4.py', 'scripts/verificar_coorte_issue4.py']},
+                          'scripts/consolidar_coorte.py', 'scripts/verificar_coorte_issue4.py']},
                      protocolo_teste=dict(pacientes=35, codigo_particao=1, aumento=False,
                                           limiar='fixo de cada checkpoint; sem arredondamento',
                                           selecionar_vencedor_no_teste=False))
     # Preflight completo antes de escrever o manifesto final.
-    from scripts.avaliar_manifesto_issue4 import validar_manifesto
+    from scripts.avaliar_manifesto import validar_manifesto
     validar_manifesto(manifesto)
     gravar(base/'preservacao_antes_teste.json', auditoria_preservacao)
     gravar(destino, manifesto)

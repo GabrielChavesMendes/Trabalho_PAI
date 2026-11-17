@@ -14,12 +14,12 @@ import torch
 
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(RAIZ))
-from modulos.rodada_final_issue4 import carregar_modelo_registrado
+from modulos.variantes_experimentais import carregar_modelo_registrado
 from modulos.modulo_treinamento import RegistroPredicao, calcular_metricas, selecionar_limiar_validacao
-from modulos.analise_validacao_issue4 import (
+from modulos.analise_validacao import (
     distribuicao_probabilidades, estabilidade_limiar, diferenca_auc_bootstrap, recomendar_candidato,
 )
-from scripts.refinar_limiares_validacao_issue4 import candidatos_por_escores
+from scripts.refinar_limiares import candidatos_por_escores
 
 
 def sha(p):
