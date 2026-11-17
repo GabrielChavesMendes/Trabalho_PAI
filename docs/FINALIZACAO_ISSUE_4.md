@@ -7,6 +7,13 @@ Este roteiro mantém o protocolo com **172 pacientes I-SPY1**, partições ofici
 Aumento ×10 exclusivamente em treino/validação; teste sem aumento.
 **Não utilizar os resultados do teste para modificar hiperparâmetros, limiares ou escolher um modelo.**
 
+**Limitação metodológica que deve ser relatada:** o grupo já consultou os resultados
+originais do teste (ResNet50, 35 pacientes) antes desta revisão. Portanto, o teste
+desse trabalho não é completamente cego para as decisões subsequentes. Nenhum
+novo hiperparâmetro deve ser selecionado usando suas métricas; no artigo, indicar
+claramente o que foi decidido com base na validação e essa limitação histórica.
+
+
 ## O que foi implementado nesta branch
 1. Métricas adicionais de **AUC-ROC** e **acurácia balanceada**, calculadas **por paciente**, além das cinco métricas exigidas pelo professor.
 2. Escolha do limiar por F1 **ou** acurácia balanceada usando **apenas a validação**.
