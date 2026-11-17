@@ -1,5 +1,7 @@
 # Grade definitiva e avaliação final da Issue #4
 
+> **Leitura dos códigos de experimento:** A = primeira grade de modelos; B = três investigações intermediárias; C = rodada de intervenções finais. Os números (por exemplo, A12 ou C11) são identificadores internos de execução, não nomes de arquiteturas nem configurações adicionais. A comparação única das 12 configurações, em linguagem descritiva e com resultados integrados, está em [SINTESE_INTEGRADA_ISSUE_4.md](SINTESE_INTEGRADA_ISSUE_4.md).
+
 Branch `feature/felipe-issue4-finalizacao`. Registro iniciado antes do treino.
 O prompt definitivo de 17/11/2026 autoriza 12 novos treinos e a avaliação automática
 dos 27 após seleção e verificações. Substitui a espera por aprovação dos registros
