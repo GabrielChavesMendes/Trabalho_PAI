@@ -40,6 +40,7 @@ class ConfiguracaoTreinamento:
     limiar: float = 0.5
     seed: int = 42
     taxa_aprendizado_backbone: float | None = None
+    criterio_checkpoint: str = "loss"
 
     def __post_init__(self) -> None:
         if self.canais_entrada not in (1, 3):
@@ -54,6 +55,8 @@ class ConfiguracaoTreinamento:
             raise ValueError("limiar deve estar entre 0 e 1")
         if self.taxa_aprendizado_backbone is not None and self.taxa_aprendizado_backbone <= 0:
             raise ValueError("taxa_aprendizado_backbone deve ser positiva")
+        if self.criterio_checkpoint not in ("loss", "auc_roc", "acuracia_balanceada"):
+            raise ValueError("criterio_checkpoint invalido")
 
 
 @dataclass
@@ -483,6 +486,7 @@ def treinar_experimento(
 
     historico: list[ResultadoEpoca] = []
     melhor_loss = float("inf")
+    melhor_pontuacao = -float("inf")
     epocas_sem_melhora = 0
     for epoca in range(1, configuracao.epocas + 1):
         inicio = time.perf_counter()
@@ -512,7 +516,17 @@ def treinar_experimento(
             f"F1 val={float(metricas['f1']):.4f} | {resultado.tempo_segundos:.1f}s"
         )
 
-        if loss_validacao < melhor_loss:
+        if configuracao.criterio_checkpoint == "loss":
+            pontuacao = -loss_validacao
+        else:
+            valor = metricas.get(configuracao.criterio_checkpoint)
+            pontuacao = -float("inf") if valor is None else float(valor)
+        # Empate na metrica: preferir menor loss da validacao.
+        melhorou = pontuacao > melhor_pontuacao or (
+            pontuacao == melhor_pontuacao and loss_validacao < melhor_loss
+        )
+        if melhorou:
+            melhor_pontuacao = pontuacao
             melhor_loss = loss_validacao
             epocas_sem_melhora = 0
             salvar_checkpoint(
