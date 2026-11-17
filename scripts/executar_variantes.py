@@ -12,7 +12,7 @@ import torch
 
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
-from modulos.rodada_final_issue4 import (
+from modulos.variantes_experimentais import (
     criar_carregador, criar_modelo_registrado, carregar_modelo_registrado, metadados_rodada,
 )
 from modulos.modulo_treinamento import (
@@ -21,7 +21,7 @@ from modulos.modulo_treinamento import (
     salvar_historico_csv, salvar_grafico_convergencia, salvar_resultado_json,
     salvar_matriz_confusao, selecionar_limiar_validacao,
 )
-from scripts.refinar_limiares_validacao_issue4 import candidatos_por_escores
+from scripts.refinar_limiares import candidatos_por_escores
 
 
 def nome_caso(caso, seed=42):
@@ -46,10 +46,10 @@ def executar_caso(caso, plano, base, checkpoints, device, plano_hash):
     )
     meta = metadados_rodada(caso)
     if caso.get('grade_final'):
-        meta['grade_final_issue4'] = caso
-        meta['rodada_final_issue4']['pre_treinado'] = caso['arquitetura'] != 'cnn_groupnorm'
-        meta['rodada_final_issue4']['fine_tuning'] = caso['arquitetura'] in ('resnet50', 'mobilenetv2')
-        meta['rodada_final_issue4']['normalizacao_interna_cnn'] = 'GroupNorm(4)'
+        meta['grade_experimental'] = caso
+        meta['variantes_experimentais']['pre_treinado'] = caso['arquitetura'] != 'cnn_groupnorm'
+        meta['variantes_experimentais']['fine_tuning'] = caso['arquitetura'] in ('resnet50', 'mobilenetv2')
+        meta['variantes_experimentais']['normalizacao_interna_cnn'] = 'GroupNorm(4)'
     meta['plano_antes_treinamento_sha256'] = plano_hash
     (pasta / 'configuracao_antes_treino.json').write_text(
         json.dumps({'configuracao': asdict(conf), 'preprocessamento': meta}, indent=2), encoding='utf-8')
@@ -59,7 +59,7 @@ def executar_caso(caso, plano, base, checkpoints, device, plano_hash):
     modelo = criar_modelo_registrado(conf.arquitetura, conf.canais_entrada,
                                     pre_treinado=conf.arquitetura in ('resnet50', 'mobilenetv2'))
     if caso.get('grade_final'):
-        from modulos.grade_final_issue4 import preparar_fine_tuning
+        from modulos.grade_experimental import preparar_fine_tuning
         preparar_fine_tuning(modelo, conf.arquitetura)
     if device.type == 'cuda':
         torch.cuda.reset_peak_memory_stats(device)

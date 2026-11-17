@@ -47,9 +47,9 @@ def main():
                                   intervencao=intervencao, normalizacao_adicional='nenhuma', grade_final=True,
                                   comparador=f'{familia}__{fase.replace("_", "-")}__{corte.replace("_", "-")}__seed-42'))
     fontes = ['modulos/modulo_treinamento.py', 'modulos/modulo_redes.py', 'modulos/modulo_dataset.py',
-              'modulos/modulo_dataset_issue1.py', 'modulos/rodada_final_issue4.py', 'modulos/grade_final_issue4.py',
-              'scripts/executar_rodada_final_issue4.py', 'scripts/executar_ultima_grade_issue4.py',
-              'scripts/refinar_limiares_validacao_issue4.py']
+              'modulos/dataset_aumentado.py', 'modulos/variantes_experimentais.py', 'modulos/grade_experimental.py',
+              'scripts/executar_variantes.py', 'scripts/executar_grade_final.py',
+              'scripts/refinar_limiares.py']
     plano = dict(registrado_em_utc=datetime.now(timezone.utc).isoformat(),
                  finalidade='Última rodada autorizada: exatamente 12 treinamentos; sem busca posterior',
                  seed=42, batch=4, epocas=30, paciencia=5, pos_weight=3., weight_decay=1e-4,

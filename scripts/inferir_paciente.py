@@ -7,7 +7,7 @@ import sys
 
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
-from modulos.execucao_issue4 import usar_venv_projeto, escolher_device
+from modulos.ambiente import usar_venv_projeto, escolher_device
 
 CATALOGO = RAIZ / "resultados/grade_definitiva_issue4_20261117_01/artigo/shortlist_integrada_validacao_12.csv"
 
@@ -39,7 +39,7 @@ def main():
         return 0
     if not a.paciente or (a.modelo is None and a.checkpoint is None):
         p.error("Informe --modelo 1..12 (ou --checkpoint) e --paciente; use --listar para ver as opcoes")
-    from modulos.checkpoints_integrados_issue4 import carregar_modelo_checkpoint, pacientes_dataset, prever_paciente
+    from modulos.checkpoints import carregar_modelo_checkpoint, pacientes_dataset, prever_paciente
     device = escolher_device(a.device)
     cp = a.checkpoint.resolve() if a.checkpoint else RAIZ / modelos[a.modelo-1]["caminho_checkpoint"]
     pacientes = [paciente for paciente in pacientes_dataset() if paciente.identificador == a.paciente]
