@@ -649,10 +649,10 @@ class AplicacaoPAI:
         if self.figura is not None:
             from matplotlib import pyplot as plt
             plt.close(self.figura)
-        figura = Figure(figsize=(13, 4.5), dpi=120)
+        figura = Figure(figsize=(10, 7), dpi=110)
         if titulo:
-            figura.suptitle(titulo, fontsize=11, fontweight="bold", y=0.98)
-        eixos = figura.subplots(1, 4)
+            figura.suptitle(titulo, fontsize=10, y=0.98)
+        eixos = figura.subplots(2, 2).ravel()
         eixos[0].imshow(original, cmap="gray", vmin=0, vmax=1)
         eixos[0].set_title(f"DCE-MRI ({fase})")
         eixos[1].imshow(original, cmap="gray", vmin=0, vmax=1)
