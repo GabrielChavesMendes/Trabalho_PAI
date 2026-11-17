@@ -16,7 +16,7 @@ from torch.torch_version import TorchVersion
 from modulos.modulo_redes import criar_modelo
 from modulos.modulo_dataset import carregar_metadados, criar_manifesto, DatasetDCE
 from modulos.fabrica_carregadores import DatasetCacheMemoria, DatasetNormalizacaoImageNet
-from modulos.modulo_dataset_issue1 import DatasetDCEAumentado
+from modulos.dataset_aumentado import DatasetDCEAumentado
 
 FASES_TRES = ["pre", "post_early", "post_late"]
 ARQUITETURAS = {"cnn", "resnet50", "mobilenetv2"}

@@ -22,7 +22,7 @@ from modulos.modulo_dataset import (
     selecionar_particao,
     verificar_arquivos,
 )
-from modulos.modulo_dataset_issue1 import DatasetDCEAumentado
+from modulos.dataset_aumentado import DatasetDCEAumentado
 
 
 RAIZ_REPOSITORIO = Path(__file__).resolve().parents[1]
