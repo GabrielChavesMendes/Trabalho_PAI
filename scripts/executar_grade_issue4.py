@@ -14,7 +14,7 @@ RAIZ = Path(__file__).resolve().parents[1]
 def main() -> int:
     parser = argparse.ArgumentParser(description="Executar grade 3 redes x 2 fases x 2 cortes")
     parser.add_argument("--epocas", type=int, default=30)
-    parser.add_argument("--batch", type=int, default=64)
+    parser.add_argument("--batch", type=int, default=8)
     parser.add_argument("--paciencia", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
