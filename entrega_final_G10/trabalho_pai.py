@@ -1,7 +1,7 @@
 """Entrega integrada PAI - Grupo G10.
 
 Arquivo monolitico: interface Tkinter, leitura DCE-MRI, validacao segura de
-checkpoint, inferencia binaria e Grad-CAM. Nao realiza treinamento.
+checkpoint, inferencia binaria e Grad-CAM. Treinamento opcional via --treinar.
 Requer: torch, torchvision, numpy, nibabel, matplotlib e Tkinter.
 """
 from __future__ import annotations
@@ -368,6 +368,7 @@ class AplicacaoPAI:
         self.mascara_volume = None
         self.paciente_visualizacao = None
         self.gradcam_atual = None
+        self._ultimo_preview = None
         self._construir_interface()
         self.status.set(f"Dispositivo: {self.dispositivo}. Carregue um checkpoint .pt compativel.")
 
@@ -439,6 +440,7 @@ class AplicacaoPAI:
         self.mascara_volume = None
         self.paciente_visualizacao = None
         self.gradcam_atual = None
+        self._ultimo_preview = None
         self.corte_var.set(0)
         self.controle_corte.configure(to=0)
         self.corte_info.set("Sem volume")
@@ -481,6 +483,7 @@ class AplicacaoPAI:
             modelo, dados = carregar_modelo_checkpoint(caminho, self.dispositivo)
             self.modelo, self.checkpoint, self.caminho_checkpoint = modelo, dados, caminho
             self.gradcam_atual = None
+            self._ultimo_preview = None
             conf = dados["configuracao"]
             self.resultado.set(
                 f"Modelo: {conf['arquitetura']} | Fases: {conf['configuracao_temporal']} "
@@ -550,6 +553,10 @@ class AplicacaoPAI:
         fase = self.fase_visualizacao.get()
         if fase not in self.volumes_visualizacao:
             fase = "post_early"
+        chave = (self.paciente_visualizacao, z, fase, id(self.gradcam_atual))
+        if chave == self._ultimo_preview:
+            return
+        self._ultimo_preview = chave
         # Esta imagem e EXCLUSIVAMENTE de exibicao: a rede usa seu
         # proprio tensor conforme os metadados do checkpoint.
         original = normalizar_percentis(self.volumes_visualizacao[fase][z][None])[0]
