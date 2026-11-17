@@ -1,0 +1,28 @@
+{
+  "criterio_selecao": "maior AUC-ROC de validacao; desempate por acuracia balanceada, F1, loss e nome",
+  "experimento": "resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84",
+  "checkpoint_local": "checkpoints/busca_imagenet_issue4/resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt",
+  "limiar_validacao": 0.25,
+  "metricas_validacao": {
+    "loss": 0.6386979991739447,
+    "sensibilidade": 0.5454545454545454,
+    "especificidade": 0.8181818181818182,
+    "precisao": 0.6,
+    "acuracia": 0.7272727272727273,
+    "f1": 0.5714285714285713,
+    "auc_roc": 0.6983471074380165,
+    "acuracia_balanceada": 0.6818181818181819,
+    "tn": 18,
+    "fp": 4,
+    "fn": 5,
+    "tp": 6
+  },
+  "configuracao": {
+    "arquitetura": "resnet50",
+    "fases": "post-early",
+    "corte": "maior-tumor",
+    "seed": "84",
+    "melhor_epoca": 1
+  },
+  "observacao": "O checkpoint e local e ignorado pelo Git; o teste nao participa desta selecao."
+}

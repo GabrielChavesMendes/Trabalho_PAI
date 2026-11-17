@@ -111,3 +111,23 @@ canal separado.
 O teste ja havia sido consultado no baseline anterior. Essa limitacao e
 preservada no historico; nenhuma metrica de teste foi usada para escolher os
 ajustes ou promover um modelo na execucao final.
+
+## Busca prolongada posterior
+
+Depois da grade final, foi solicitado investigar um alvo de AUC 0,78 no teste.
+Para nao transformar o teste em validacao, foram predefinidas e comparadas na
+validacao cinco seeds da CNN e cinco seeds da ResNet50. Uma seed da CNN foi
+executada por 50 epocas completas; a AUC caiu de 0,649 na epoca 1 para 0,318 na
+epoca 50. Nas demais, seis epocas sem melhora foram suficientes para detectar o
+mesmo comportamento.
+
+Tambem foram testados recorte ROI com contexto, normalizacao ImageNet nas redes
+transferidas e uma/tres fases. O recorte usa somente a mascara de segmentacao:
+uma caixa quadrada com duas vezes o maior lado do tumor, minimo 64 pixels, e
+redimensionamento para 256 x 256. A opcao fica registrada no checkpoint por
+`recorte_roi` e pode ser reproduzida com `--recorte-roi`.
+
+A normalizacao ImageNet e selecionada por `--normalizacao-entrada imagenet`.
+Ela e aplicada depois dos percentis 1/99, com medias/desvios RGB nas tres fases
+e a aproximacao escalar 0,449/0,226 para uma fase. Essa comparacao elevou a
+melhor AUC de validacao, mas nao autorizou selecionar modelos pelo teste.

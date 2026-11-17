@@ -110,7 +110,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--normalizacao-entrada",
-        choices=("percentil", "zscore_treino"),
+        choices=("percentil", "zscore_treino", "imagenet"),
         default="percentil",
     )
     parser.add_argument(

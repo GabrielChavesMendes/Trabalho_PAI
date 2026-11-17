@@ -54,7 +54,7 @@ loss de validacao subiu a 1,390 na epoca selecionada, evidencia de sobreajuste.
 | ResNet50 | tres | central | 1 | 0,450 | 0,523 | 0,091 | 0,955 | 0,500 | 0,667 | 0,154 | 0,684 |
 | ResNet50 | post early | central | 1 | 0,421 | 0,523 | 0,909 | 0,136 | 0,345 | 0,394 | 0,500 | 0,678 |
 
-O melhor modelo por AUC de validacao e
+O melhor modelo desta grade por AUC de validacao e
 `cnn__post-early__maior-tumor__seed-42__final-v2.pt`. O alvo desejado de AUC
 0,70 nao foi atingido: o melhor valor medido foi 0,669. A melhor alternativa sem
 mascara e `cnn__post-early__central__seed-42__final-v2.pt`, AUC 0,603.
@@ -105,12 +105,44 @@ maquina-legiveis completas sao `comparacao_validacao.csv` e
 `comparacao_teste.csv`.
 
 Os 12 checkpoints existem em `checkpoints/finais_issue4/` e permanecem fora do
-Git. Para a tarefa "Modelo do Trabalho", enviar separadamente
-`cnn__post-early__maior-tumor__seed-42__final-v2.pt`. Se a nova base nao tiver
-mascaras, usar a alternativa central documentada, sem alegar equivalencia de
-desempenho.
+Git. A busca prolongada posterior substituiu o peso indicado para a tarefa
+"Modelo do Trabalho"; o arquivo atualizado e informado na ultima secao. Se a
+nova base nao tiver mascaras, usar a alternativa central documentada, sem
+alegar equivalencia de desempenho.
 
-Os ajustes corrigiram a metodologia e elevaram o melhor AUC de validacao de
-0,574 no baseline para 0,669, mas nao sustentam uma alegacao de desempenho
+Os ajustes da grade corrigiram a metodologia e elevaram o melhor AUC de
+validacao de 0,574 no baseline para 0,669, mas nao sustentam uma alegacao de desempenho
 clinico ou de AUC >= 0,70. Estudos futuros devem usar mais seeds ou validacao
 cruzada sem reutilizar o teste ja conhecido para ajuste.
+
+## Busca prolongada e alvo posterior de 0,78
+
+Uma busca adicional foi executada apos a grade final. Cinco seeds da CNN
+`post_early`/maior tumor produziram AUCs de validacao entre 0,587 e 0,674. O
+ensemble pela media das cinco probabilidades obteve 0,657, portanto nao foi
+promovido. Na execucao longa de 50 epocas, a AUC caiu de 0,649 para 0,318;
+treinar por mais tempo piorou a generalizacao.
+
+Cinco seeds da ResNet50 equivalente, com `layer4` liberada, ficaram entre 0,583
+e 0,665. O recorte ROI obteve 0,517 na CNN e 0,620 na ResNet, abaixo das imagens
+completas. A normalizacao ImageNet foi o unico ganho adicional consistente:
+
+| Experimento | AUC val. | BAcc val. | AUC teste | BAcc teste |
+|---|---:|---:|---:|---:|
+| CNN seed 123, busca longa | 0,674 | 0,659 | 0,536 | 0,560 |
+| ResNet, ImageNet, uma fase, seed 42 | 0,665 | 0,591 | nao avaliado | nao avaliado |
+| **ResNet, ImageNet, uma fase, seed 84** | **0,698** | **0,682** | **0,558** | **0,591** |
+| ResNet, ImageNet, tres fases, seed 84 | 0,607 | 0,614 | nao avaliado | nao avaliado |
+| MobileNetV2, ImageNet, seed 42 | 0,607 | 0,523 | nao avaliado | nao avaliado |
+
+O novo vencedor por validacao e
+`resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt`, com limiar
+0,25. No teste teve sensibilidade 0,833, especificidade 0,348, precisao 0,400,
+acuracia 0,514, F1 0,541 e AUC 0,558. Assim, o alvo solicitado de AUC 0,78 no
+teste nao foi atingido. Continuar escolhendo seeds ou combinacoes pela metrica
+de teste seria vazamento e produziria uma estimativa sem validade experimental.
+
+Para uma entrega posterior dos pesos, o arquivo acima substitui o vencedor
+anterior por ter a maior AUC de validacao. Ele continua fora do Git em
+`checkpoints/busca_imagenet_issue4/` e requer mascara para o corte de maior
+tumor.

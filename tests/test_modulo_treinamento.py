@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader, Dataset
 
 from modulos.modulo_redes import CNNSimples, configurar_fine_tuning, criar_modelo
 from modulos import fabrica_carregadores
+from modulos.fabrica_carregadores import DatasetRecorteROI
 from modulos.modulo_treinamento import (
     ConfiguracaoTreinamento,
     RegistroPredicao,
@@ -143,6 +144,28 @@ def test_seed_antes_do_modelo_reproduz_inicializacao_da_cabeca():
     segundo = criar_modelo("resnet50", 3, pre_treinado=False)
     assert torch.equal(primeiro.fc.weight, segundo.fc.weight)
     assert torch.equal(primeiro.fc.bias, segundo.fc.bias)
+
+
+def test_recorte_roi_preserva_formato_e_amplia_tumor():
+    class DatasetROI(Dataset):
+        pacientes = [object()]
+
+        def __len__(self):
+            return 1
+
+        def __getitem__(self, indice):
+            imagem = torch.zeros(1, 256, 256)
+            mascara = torch.zeros(1, 256, 256)
+            imagem[:, 100:120, 130:150] = 1
+            mascara[:, 100:120, 130:150] = 1
+            return {"imagem": imagem, "mascara": mascara}
+
+    original = DatasetROI()[0]
+    recortado = DatasetRecorteROI(DatasetROI())[0]
+    assert recortado["imagem"].shape == original["imagem"].shape
+    assert recortado["mascara"].shape == original["mascara"].shape
+    assert recortado["mascara"].sum() > original["mascara"].sum()
+    assert recortado["recorte_roi"]["lado"] == 64
 
 
 def test_treino_salva_checkpoint_recarregavel(tmp_path: Path):

@@ -24,7 +24,7 @@ def main() -> int:
     parser.add_argument("--lr-transferencia", type=float, default=1e-4)
     parser.add_argument("--lr-backbone", type=float)
     parser.add_argument("--fine-tuning-resnet", choices=("congelado", "layer4", "layer4_ultimo_bloco"), default="congelado")
-    parser.add_argument("--normalizacao-entrada", choices=("percentil", "zscore_treino"), default="percentil")
+    parser.add_argument("--normalizacao-entrada", choices=("percentil", "zscore_treino", "imagenet"), default="percentil")
     parser.add_argument("--criterio-limiar", choices=("f1", "acuracia_balanceada"), default="acuracia_balanceada")
     parser.add_argument("--criterio-checkpoint", choices=("loss", "auc_roc", "acuracia_balanceada"), default="auc_roc")
     parser.add_argument("--tag", default="")

@@ -199,8 +199,8 @@ def criar_carregadores(
     num_workers = int(os.environ.get("PAI_NUM_WORKERS", "0"))
     if tamanho_lote < 1 or num_workers < 0:
         raise ValueError("tamanho_lote deve ser positivo e PAI_NUM_WORKERS nao negativo")
-    if normalizacao_entrada not in ("percentil", "zscore_treino"):
-        raise ValueError("normalizacao_entrada deve ser percentil ou zscore_treino")
+    if normalizacao_entrada not in ("percentil", "zscore_treino", "imagenet"):
+        raise ValueError("normalizacao_entrada deve ser percentil, zscore_treino ou imagenet")
 
     tabela = carregar_metadados(caminho_csv)
     manifesto = criar_manifesto(tabela, pasta_dataset)
@@ -249,6 +249,22 @@ def criar_carregadores(
             "tipo": "percentil_1_99_conjunto_seguido_zscore_treino_por_canal",
             "medias_treino": medias.tolist(),
             "desvios_treino": desvios.tolist(),
+        }
+    elif normalizacao_entrada == "imagenet":
+        if fase == "tres":
+            medias = torch.tensor([0.485, 0.456, 0.406])
+            desvios = torch.tensor([0.229, 0.224, 0.225])
+        else:
+            # Aproximacao para a convolucao RGB adaptada por soma dos filtros.
+            medias = torch.tensor([0.449])
+            desvios = torch.tensor([0.226])
+        treino_base = DatasetPadronizado(treino_base, medias, desvios)
+        validacao_base = DatasetPadronizado(validacao_base, medias, desvios)
+        teste_base = DatasetPadronizado(teste_base, medias, desvios)
+        estatisticas_normalizacao = {
+            "tipo": "percentil_1_99_seguido_normalizacao_imagenet",
+            "medias": medias.tolist(),
+            "desvios": desvios.tolist(),
         }
     treino = DatasetDCEAumentado(treino_base, "treino")
     validacao = DatasetDCEAumentado(validacao_base, "validacao")
