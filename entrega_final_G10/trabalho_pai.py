@@ -584,6 +584,7 @@ class AplicacaoPAI:
             original, mascara,
             dados["mapa"] if dados else None,
             fase, dados["diagnostico"] if dados else None,
+            dados["titulo"] if dados else None,
         )
         if dados is None:
             self.diagnostico_var.set(
@@ -614,9 +615,14 @@ class AplicacaoPAI:
             )
             previsto = int(prob >= limiar)
             resumo = resumir_relevancia_gradcam(mapa, mascara, diagnostico)
+            titulo_figura = (
+                f"{pid} | real={paciente.pcr} | previsto={previsto} | "
+                f"pCR=1: {prob:.4f} | limiar={limiar:.4f} | corte Z={z}"
+            )
             self.gradcam_atual = {
                 "paciente": pid, "z": z, "mapa": mapa,
                 "diagnostico": diagnostico, "resumo": resumo,
+                "titulo": titulo_figura,
             }
             self.resultado.set(
                 f"{pid} | pCR real={paciente.pcr} | probabilidade pCR=1: {prob:.6f} "
@@ -631,7 +637,7 @@ class AplicacaoPAI:
             messagebox.showerror("Falha na inferencia", str(exc))
             self.status.set("Nao foi possivel concluir a inferencia.")
 
-    def _mostrar_figuras(self, original, mascara, mapa, fase, diagnostico=None):
+    def _mostrar_figuras(self, original, mascara, mapa, fase, diagnostico=None, titulo=None):
         try:
             from matplotlib.figure import Figure
             from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -643,7 +649,9 @@ class AplicacaoPAI:
         if self.figura is not None:
             from matplotlib import pyplot as plt
             plt.close(self.figura)
-        figura = Figure(figsize=(13, 4), dpi=100)
+        figura = Figure(figsize=(13, 4.5), dpi=120)
+        if titulo:
+            figura.suptitle(titulo, fontsize=11, fontweight="bold", y=0.98)
         eixos = figura.subplots(1, 4)
         eixos[0].imshow(original, cmap="gray", vmin=0, vmax=1)
         eixos[0].set_title(f"DCE-MRI ({fase})")
@@ -687,6 +695,7 @@ class AplicacaoPAI:
         paciente = self.paciente_visualizacao or "paciente"
         caminho = filedialog.asksaveasfilename(
             title="Salvar figura para o artigo",
+            initialdir=str(RAIZ / "entrega_final_G10" / "material_artigo" / "figuras"),
             initialfile=f"gradcam_{paciente}.png",
             defaultextension=".png",
             filetypes=[("Imagem PNG", "*.png"), ("Imagem PDF", "*.pdf"), ("Imagem SVG", "*.svg")],
