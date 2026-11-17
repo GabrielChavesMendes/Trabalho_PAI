@@ -147,3 +147,23 @@ anterior por ter a maior AUC de validacao. Ele continua fora do Git em
 `checkpoints/busca_imagenet_issue4/` e requer mascara para o corte de maior
 tumor. Uma copia foi publicada como asset da release
 [`issue-4-modelo-selecionado-v2`](https://github.com/GabrielChavesMendes/Trabalho_PAI/releases/tag/issue-4-modelo-selecionado-v2).
+
+## Ensemble com validacao cruzada
+
+Como ultima tentativa de reduzir a variancia, os 137 pacientes de treino e
+validacao foram reunidos e divididos em cinco folds estratificados. Cada
+ResNet50 foi treinada em quatro folds e selecionada exclusivamente no quinto.
+Assim, cada paciente de desenvolvimento recebeu uma previsao out-of-fold de um
+modelo que nao o utilizou no treino. O limiar 0,10 foi escolhido apenas nas 137
+previsoes OOF. No teste, a probabilidade final foi a media dos cinco modelos.
+
+| Conjunto | AUC | BAcc | Sens. | Esp. | Prec. | Acc. | F1 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| OOF, 137 pacientes | 0,597 | 0,594 | 0,649 | 0,540 | 0,343 | 0,569 | 0,449 |
+| Teste, 35 pacientes | **0,703** | 0,571 | 0,750 | 0,391 | 0,391 | 0,514 | 0,514 |
+
+O ensemble elevou a AUC de teste de 0,558 para 0,703, mas continuou abaixo do
+alvo de aproximadamente 0,8. A AUC OOF inferior mostra que o resultado do teste
+tem alta variancia e nao justifica novas escolhas guiadas pelos mesmos 35
+pacientes. Os artefatos estao em `resultados/ensemble_cv_issue4/`; os cinco
+checkpoints locais somam aproximadamente 1 GB e permanecem ignorados pelo Git.

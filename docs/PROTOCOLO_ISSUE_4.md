@@ -131,3 +131,8 @@ A normalizacao ImageNet e selecionada por `--normalizacao-entrada imagenet`.
 Ela e aplicada depois dos percentis 1/99, com medias/desvios RGB nas tres fases
 e a aproximacao escalar 0,449/0,226 para uma fase. Essa comparacao elevou a
 melhor AUC de validacao, mas nao autorizou selecionar modelos pelo teste.
+
+Uma tentativa final usa `scripts/executar_ensemble_cv_issue4.py`: cinco folds
+estratificados sobre os 137 pacientes originalmente reservados a treino e
+validacao, teste sempre excluido do treinamento, selecao de epoca em cada fold,
+limiar calculado nas previsoes out-of-fold e media dos cinco modelos no teste.
