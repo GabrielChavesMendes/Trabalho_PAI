@@ -4,8 +4,8 @@ import pytest
 from modulos.modulo_treinamento import (
     RegistroPredicao, calcular_metricas, selecionar_limiar_validacao,
 )
-from scripts.avaliar_grade_teste_issue4 import configuracoes
-from scripts.ajustar_issue4 import CANDIDATOS
+from scripts.avaliar_grade import configuracoes
+from scripts.ajustar_modelos import CANDIDATOS
 
 
 def test_auc_perfeita_e_balanced_accuracy():

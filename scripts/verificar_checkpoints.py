@@ -18,7 +18,7 @@ import torch
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
 
-from modulos.checkpoints_integrados_issue4 import (
+from modulos.checkpoints import (
     carregar_modelo_checkpoint, normalizacao_checkpoint, pacientes_dataset, dataset_checkpoint,
 )
 from modulos.modulo_treinamento import avaliar_modelo, salvar_resultado_json

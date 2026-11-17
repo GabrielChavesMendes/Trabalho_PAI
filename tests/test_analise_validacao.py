@@ -1,10 +1,10 @@
 import pytest
 
 from modulos.modulo_treinamento import RegistroPredicao
-from modulos.analise_validacao_issue4 import (
+from modulos.analise_validacao import (
     distribuicao_probabilidades, estabilidade_limiar, diferenca_auc_bootstrap,
 )
-from scripts import avaliar_manifesto_issue4
+from scripts import avaliar_manifesto
 
 
 def test_bootstrap_pareado_identico_tem_delta_e_intervalo_zero():
@@ -31,17 +31,17 @@ def test_escore_constante_e_fragilidade_do_limiar_sao_visiveis():
 
 
 def test_avaliador_nao_abre_manifesto_ou_teste_sem_confirmacao(monkeypatch,tmp_path):
-    monkeypatch.setattr('sys.argv',['avaliar_manifesto_issue4.py','--manifesto',str(tmp_path/'inexistente.json'),
+    monkeypatch.setattr('sys.argv',['avaliar_manifesto.py','--manifesto',str(tmp_path/'inexistente.json'),
                                     '--saida',str(tmp_path/'saida')])
     with pytest.raises(SystemExit) as exc:
-        avaliar_manifesto_issue4.main()
+        avaliar_manifesto.main()
     assert exc.value.code==2
     assert not (tmp_path/'saida').exists()
 
 
 def test_manifesto_incompleto_e_rejeitado_antes_do_teste():
     with pytest.raises(ValueError,match='12 configurações'):
-        avaliar_manifesto_issue4.validar_manifesto({'teste_usado_para_selecao':False,'modelos':[]})
+        avaliar_manifesto.validar_manifesto({'teste_usado_para_selecao':False,'modelos':[]})
 
 
 def test_pesos_modificados_sao_rejeitados_antes_de_carregar_modelo(tmp_path,monkeypatch):
@@ -54,9 +54,9 @@ def test_pesos_modificados_sao_rejeitados_antes_de_carregar_modelo(tmp_path,monk
               for f in ('post_early','tres') for c in ('central','maior_tumor')]
     def proibido(*args,**kwargs):
         raise AssertionError('Modelo não pode carregar antes de validar seu hash')
-    monkeypatch.setattr(avaliar_manifesto_issue4,'carregar_modelo_registrado',proibido)
+    monkeypatch.setattr(avaliar_manifesto,'carregar_modelo_registrado',proibido)
     with pytest.raises(ValueError,match='Checkpoint alterado'):
-        avaliar_manifesto_issue4.validar_manifesto({'teste_usado_para_selecao':False,'modelos':entradas})
+        avaliar_manifesto.validar_manifesto({'teste_usado_para_selecao':False,'modelos':entradas})
 
 
 def test_saida_existente_impede_repetir_avaliacao_final(tmp_path,monkeypatch):
@@ -64,8 +64,8 @@ def test_saida_existente_impede_repetir_avaliacao_final(tmp_path,monkeypatch):
     saida.mkdir()
     registro=saida/'protegido.json'
     registro.write_text('preservar',encoding='utf-8')
-    monkeypatch.setattr('sys.argv',['avaliar_manifesto_issue4.py','--manifesto',str(tmp_path/'inexistente.json'),
+    monkeypatch.setattr('sys.argv',['avaliar_manifesto.py','--manifesto',str(tmp_path/'inexistente.json'),
                                     '--saida',str(saida),'--confirmar-validacao-fechada'])
     with pytest.raises(FileExistsError):
-        avaliar_manifesto_issue4.main()
+        avaliar_manifesto.main()
     assert registro.read_text(encoding='utf-8')=='preservar'

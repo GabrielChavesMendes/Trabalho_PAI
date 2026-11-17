@@ -10,7 +10,7 @@ from uuid import uuid4
 
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ))
-from modulos.execucao_issue4 import usar_venv_projeto, escolher_device
+from modulos.ambiente import usar_venv_projeto, escolher_device
 
 
 def executar_etapa(titulo, argumentos, log, ambiente):
@@ -50,7 +50,7 @@ def main():
                        "-c", str(RAIZ / "pytest.ini"), "--rootdir", str(RAIZ), "--confcutdir", str(RAIZ),
                        "--basetemp", str(temporarios / "tmp"), "-o", f"cache_dir={temporarios / 'cache'}"],
                        saida / "testes.txt", ambiente)
-        script = RAIZ / "scripts/verificar_checkpoints_integrados_issue4.py"
+        script = RAIZ / "scripts/verificar_checkpoints.py"
         executar_etapa("2/3 Recarga dos quatro em CPU", [script, "--pasta", pasta, "--device", "cpu",
                        "--saida", saida / "recarga_cpu"], saida / "recarga_cpu.txt", ambiente)
         executar_etapa("3/3 Validacao real: 33 pacientes", [script, "--pasta", pasta, "--device", device,

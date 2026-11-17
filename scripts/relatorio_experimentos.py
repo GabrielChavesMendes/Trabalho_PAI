@@ -13,9 +13,9 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sklearn.metrics import (roc_auc_score, confusion_matrix, accuracy_score,
                              balanced_accuracy_score, precision_score, recall_score, f1_score)
-from scripts.consolidar_coorte_issue4 import ler, gravar, tabela
-from scripts.preparar_ultima_grade_issue4 import sha
-from modulos.grade_final_issue4 import familia
+from scripts.consolidar_coorte import ler, gravar, tabela
+from scripts.preparar_grade_final import sha
+from modulos.grade_experimental import familia
 
 METRICAS = ['sensibilidade','especificidade','precisao','acuracia','f1','acuracia_balanceada','auc_roc','loss']
 
