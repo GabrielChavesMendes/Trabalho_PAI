@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 from modulos.modulo_augmentacao import gerar_variacoes, transformar_par
 from modulos.modulo_balanceamento import calcular_pos_weight_treino, contar_classes
-from modulos.modulo_dataset_issue1 import DatasetDCEAumentado
+from modulos.dataset_aumentado import DatasetDCEAumentado
 
 
 def test_dez_variacoes_por_padrao():

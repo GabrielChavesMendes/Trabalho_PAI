@@ -6,7 +6,7 @@ import torch
 from torch.utils.data import Dataset
 
 from modulos.fabrica_carregadores import DatasetNormalizacaoImageNet
-from modulos.checkpoints_integrados_issue4 import (
+from modulos.checkpoints import (
     normalizacao_checkpoint, validar_configuracao,
 )
 

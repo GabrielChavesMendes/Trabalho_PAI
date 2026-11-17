@@ -5,12 +5,12 @@ import pytest
 import torch
 from torch import nn
 
-from modulos import checkpoints_integrados_issue4 as integrados
-from modulos.execucao_issue4 import escolher_device
+from modulos import checkpoints as integrados
+from modulos.ambiente import escolher_device
 from modulos.modulo_redes import criar_modelo
-from scripts.inferir_paciente_issue4 import modelos_selecionados
-from scripts.verificar_issue4 import executar_etapa
-from tests.test_checkpoints_integrados_issue4 import _checkpoint_minimo
+from scripts.inferir_paciente import modelos_selecionados
+from scripts.verificar_modelos import executar_etapa
+from tests.test_checkpoints import _checkpoint_minimo
 
 
 def test_recarga_segura_dos_pesos_proprios_no_mesmo_adaptador(tmp_path):
@@ -45,7 +45,7 @@ class BaseSintetica:
 
 
 def test_padronizacao_ocorre_antes_da_rotacao_da_validacao(monkeypatch):
-    from modulos import modulo_dataset_issue1 as aumento
+    from modulos import dataset_aumentado as aumento
     monkeypatch.setattr(integrados,'DatasetDCE',BaseSintetica)
     transformar_original=aumento.transformar_par
     chamadas=[]
@@ -106,7 +106,7 @@ def test_comando_unico_propaga_falha_e_guarda_log(tmp_path):
 
 
 def test_verificacao_nao_sobrescreve_saida_anterior(tmp_path,monkeypatch):
-    from scripts import verificar_checkpoints_integrados_issue4 as script
+    from scripts import verificar_checkpoints as script
     arquivo=tmp_path/'protegido.txt'
     arquivo.write_text('preservar',encoding='utf-8')
     monkeypatch.setattr('sys.argv',['verificar','--saida',str(tmp_path)])

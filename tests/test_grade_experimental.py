@@ -2,12 +2,12 @@ import pytest
 import torch
 from torch import nn
 
-from modulos.grade_final_issue4 import CNNGroupNorm, preparar_fine_tuning, selecionar_representantes
+from modulos.grade_experimental import CNNGroupNorm, preparar_fine_tuning, selecionar_representantes
 from modulos.modulo_redes import CNNSimples
 from modulos.modulo_treinamento import (
     ConfiguracaoTreinamento, grupos_parametros_otimizador, _batchnorm_congelado_em_eval,
 )
-from modulos.rodada_final_issue4 import criar_modelo_registrado, carregar_modelo_registrado
+from modulos.variantes_experimentais import criar_modelo_registrado, carregar_modelo_registrado
 
 
 def test_groupnorm_inicializacao_conv_linear_e_recarga(tmp_path):
@@ -98,7 +98,7 @@ def coorte_sintetica():
 
 
 def test_coorte_27_rejeita_quantidade_e_representantes_duplicados_antes_de_abrir_pesos():
-    from scripts.avaliar_manifesto_issue4 import validar_coorte_27
+    from scripts.avaliar_manifesto import validar_coorte_27
     m = coorte_sintetica()
     m['modelos'].pop()
     with pytest.raises(ValueError,match='A=12'):
@@ -114,7 +114,7 @@ def test_coorte_27_rejeita_quantidade_e_representantes_duplicados_antes_de_abrir
 
 
 def test_plano_recusa_variar_intervencao_apos_primeiro_resultado():
-    from scripts.executar_ultima_grade_issue4 import validar_plano
+    from scripts.executar_grade_final import validar_plano
     casos = [dict(id=f'{a}-{f}-{c}',arquitetura=a,fase=f,corte=c,lr=1e-4)
              for a in ('cnn_groupnorm','resnet50','mobilenetv2')
              for f in ('post_early','tres') for c in ('central','maior_tumor')]
