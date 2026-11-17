@@ -15,6 +15,10 @@
 
 **Professor:** Alexei Manso Correa Machado
 
+## Resultado consolidado e documentação para o artigo
+
+Leia primeiro a **[síntese integrada para o artigo](docs/SINTESE_INTEGRADA_ISSUE_4.md)**: tabela única com as 12 combinações, comparação das duas linhas de experimentação e encadeamento das intervenções. Os resultados de 27 checkpoints e a auditoria continuam preservados em [`docs/GRADE_DEFINITIVA_ISSUE_4_20261117.md`](docs/GRADE_DEFINITIVA_ISSUE_4_20261117.md). Os pesos treinados na branch paralela exigem recarga/verificação antes de uso no executável.
+
 ## Objetivo
 Treinar e avaliar **três modelos** (CNN autoral ≥5 camadas com parâmetros, ResNet50 ImageNet e MobileNetV2) para prever pCR a partir de imagens DCE-MRI. Comparar uma fase temporal isolada com a combinação de três fases e ao menos duas estratégias de cortes de volumes 3D.
 
