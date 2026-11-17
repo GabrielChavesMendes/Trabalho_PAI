@@ -2,7 +2,7 @@
 
 **Grupo G10 — PUC Minas — classificação da resposta patológica completa (pCR) ao tratamento de câncer de mama usando DCE-MRI.**
 
-> **Estado:** preparação e implementação em andamento. A branch `develop` contém a estrutura inicial, sem substituir a implementação anterior preservada na `main`.
+> **Estado (17/11/2026):** a execução experimental da Issue #4 foi concluída na branch `feature/felipe-issue4-finalizacao` (27 checkpoints, avaliação final com 35 pacientes, 12 representantes). A integração à `develop`, a interface final/Grad-CAM e o arquivo Python único ainda exigem revisão. Resultados: [`docs/GRADE_DEFINITIVA_ISSUE_4_20261117.md`](docs/GRADE_DEFINITIVA_ISSUE_4_20261117.md).
 
 ## Integrantes e professor
 
@@ -65,7 +65,7 @@ python modulos/modulo_dataset.py --inspecionar-paciente ISPY1_1001 --fase pre --
 python -m pytest -q
 ```
 
-O segundo comando verifica os caminhos de todas as fases DCE e máscaras; os dois comandos seguintes **carregam imagens reais** e verificam cortes/canais e normalização. Os 9 testes automatizados incluem exemplos sintéticos e teste de regressão do eixo Z, sem precisar dos volumes completos. **Treinamento e augmentação ainda pertencem às Issues #4 e #1.**
+O segundo comando verifica os caminhos de todas as fases DCE e máscaras; os dois comandos seguintes **carregam imagens reais** e verificam cortes/canais e normalização. Os testes automatizados do dataset incluem exemplos sintéticos e regressão do eixo Z. **Treinamento e augmentation já foram executados para a Issue #4 na branch de finalização**; os 58 testes automatizados da coorte experimental passaram, conforme relatório. A integração final permanece pendente.
 
 Partições oficiais da coluna `test`: `0=treino` (104 pacientes), `1=teste` (35) e `2=validação` (33), conforme o artigo do BreastDCEDL. Cada paciente permanece numa única partição.
 
