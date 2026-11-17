@@ -269,7 +269,23 @@ def resolver_camada_gradcam(modelo: nn.Module, arquitetura: str):
     raise ValueError("Nao foi possivel resolver a camada Grad-CAM.")
 
 
-def gerar_gradcam(modelo: nn.Module, imagem: torch.Tensor, arquitetura: str):
+def gerar_gradcam(
+    modelo: nn.Module,
+    imagem: torch.Tensor,
+    arquitetura: str,
+    classe_alvo: str = "prevista",
+    limiar: float = 0.5,
+):
+    """Grad-CAM do logit positivo (pCR=1) ou da classe prevista.
+
+    A classe pCR=0 e explicada pelo logit negativo (-logit); nao se
+    reutiliza o mapa da classe positiva. Nenhum mascaramento espacial
+    e aplicado ao mapa para forcar coincidencia com o tumor.
+    """
+    if classe_alvo not in ("prevista", "pcr1"):
+        raise ValueError("Classe-alvo invalida: use prevista ou pcr1.")
+    if imagem.ndim != 4 or imagem.shape[0] != 1 or not bool(torch.isfinite(imagem).all()):
+        raise ValueError("Grad-CAM requer tensor finito [1,C,H,W].")
     camada = resolver_camada_gradcam(modelo, arquitetura)
     ativacoes, gradientes = [], []
 
@@ -290,26 +306,51 @@ def gerar_gradcam(modelo: nn.Module, imagem: torch.Tensor, arquitetura: str):
             if logits.shape != (1, 1) or not bool(torch.isfinite(logits).all()):
                 raise ValueError("Modelo deve retornar um logit finito [1,1].")
             logit = logits.reshape(-1)[0]
-            logit.backward()
+            prob = float(torch.sigmoid(logit.detach()).cpu())
+            prevista = int(prob >= limiar)
+            classe_explicada = prevista if classe_alvo == "prevista" else 1
+            escore_explicado = logit if classe_explicada == 1 else -logit
+            escore_explicado.backward()
         if not ativacoes or not gradientes:
             raise RuntimeError("Ativacoes/gradientes Grad-CAM nao foram capturados.")
         pesos = gradientes[-1].mean(dim=(2, 3), keepdim=True)
-        mapa = F.relu((pesos * ativacoes[-1]).sum(dim=1, keepdim=True))
-        mapa = F.interpolate(mapa, size=imagem.shape[-2:], mode="bilinear", align_corners=False)
-        mapa = mapa - mapa.amin(dim=(2, 3), keepdim=True)
-        mapa = mapa / mapa.amax(dim=(2, 3), keepdim=True).clamp_min(1e-8)
-        return mapa[0, 0].detach().cpu().numpy(), float(torch.sigmoid(logit.detach()).cpu())
+        bruto = F.relu((pesos * ativacoes[-1]).sum(dim=1, keepdim=True))
+        minimo, maximo = float(bruto.min()), float(bruto.max())
+        amplitude = maximo - minimo
+        if amplitude <= 1e-12:
+            mapa = torch.zeros(
+                (1, 1, *imagem.shape[-2:]), device=bruto.device, dtype=bruto.dtype
+            )
+        else:
+            # Normalizacao antes do upsampling: documenta claramente a
+            # resolucao nativa do Grad-CAM de camadas profundas.
+            mapa = (bruto - minimo) / amplitude
+            mapa = F.interpolate(
+                mapa, size=imagem.shape[-2:],
+                mode="bilinear", align_corners=False,
+            )
+        diagnostico = {
+            "classe_explicada": classe_explicada,
+            "classe_prevista": prevista,
+            "minimo_bruto": minimo,
+            "maximo_bruto": maximo,
+            "amplitude_bruta": amplitude,
+            "resolucao_nativa": tuple(bruto.shape[-2:]),
+            "mapa_nulo": amplitude <= 1e-12,
+        }
+        return mapa[0, 0].detach().cpu().numpy(), prob, diagnostico
     finally:
         handle.remove()
         modelo.zero_grad(set_to_none=True)
         modelo.train(estava_treinando)
 
 
+
 class AplicacaoPAI:
     def __init__(self, raiz):
         self.raiz = raiz
         self.raiz.title("PAI — Classificacao pCR e Grad-CAM | Grupo G10")
-        self.raiz.geometry("1200x850")
+        self.raiz.geometry("1330x900")
         self.dispositivo = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.modelo = None
         self.checkpoint = None
@@ -317,6 +358,10 @@ class AplicacaoPAI:
         self.pacientes = []
         self.figura = None
         self.canvas = None
+        self.volumes_visualizacao = {}
+        self.mascara_volume = None
+        self.paciente_visualizacao = None
+        self.gradcam_atual = None
         self._construir_interface()
         self.status.set(f"Dispositivo: {self.dispositivo}. Carregue um checkpoint .pt compativel.")
 
@@ -332,10 +377,10 @@ class AplicacaoPAI:
         self.csv_var = tk.StringVar(value=str(CSV_PADRAO))
         ttk.Entry(topo, textvariable=self.csv_var, width=90).grid(row=1, column=1, padx=8, sticky="ew", pady=(10, 0))
         ttk.Button(topo, text="Escolher CSV", command=self.selecionar_csv).grid(row=1, column=2, pady=(10, 0))
-        ttk.Label(topo, text="Pasta do dataset:").grid(row=2, column=0, sticky="w", pady=(10, 0))
+        ttk.Label(topo, text="Pasta do dataset:").grid(row=2, column=0, sticky="w")
         self.dataset_var = tk.StringVar(value=str(DATASET_PADRAO))
-        ttk.Entry(topo, textvariable=self.dataset_var, width=90).grid(row=2, column=1, padx=8, sticky="ew", pady=(10, 0))
-        ttk.Button(topo, text="Escolher pasta", command=self.selecionar_dataset).grid(row=2, column=2, pady=(10, 0))
+        ttk.Entry(topo, textvariable=self.dataset_var, width=90).grid(row=2, column=1, padx=8, sticky="ew")
+        ttk.Button(topo, text="Escolher pasta", command=self.selecionar_dataset).grid(row=2, column=2)
         topo.columnconfigure(1, weight=1)
 
         selecao = ttk.Frame(self.raiz, padding=(12, 0, 12, 8))
@@ -344,18 +389,67 @@ class AplicacaoPAI:
         self.paciente_var = tk.StringVar()
         self.combo = ttk.Combobox(selecao, textvariable=self.paciente_var, state="readonly", width=22)
         self.combo.pack(side="left", padx=8)
+        self.combo.bind("<<ComboboxSelected>>", self._paciente_selecionado)
         ttk.Button(selecao, text="Carregar pacientes", command=self.carregar_pacientes).pack(side="left")
         ttk.Button(selecao, text="Classificar e gerar Grad-CAM", command=self.classificar).pack(side="left", padx=8)
+
+        controles = ttk.Frame(self.raiz, padding=(12, 0, 12, 8))
+        controles.pack(fill="x")
+        ttk.Label(controles, text="Fase exibida:").pack(side="left")
+        self.fase_visualizacao = tk.StringVar(value="post_early")
+        fases_combo = ttk.Combobox(
+            controles, textvariable=self.fase_visualizacao,
+            values=FASES, state="readonly", width=16,
+        )
+        fases_combo.pack(side="left", padx=6)
+        fases_combo.bind("<<ComboboxSelected>>", self.atualizar_visualizacao)
+        ttk.Label(controles, text="Corte Z:").pack(side="left", padx=(12, 0))
+        self.corte_var = tk.DoubleVar(value=0)
+        self.controle_corte = ttk.Scale(
+            controles, from_=0, to=0, orient="horizontal",
+            variable=self.corte_var, command=self.atualizar_visualizacao,
+        )
+        self.controle_corte.pack(side="left", fill="x", expand=True, padx=8)
+        self.corte_info = tk.StringVar(value="Sem volume")
+        ttk.Label(controles, textvariable=self.corte_info, width=12).pack(side="left")
+        ttk.Label(controles, text="Explicar:").pack(side="left", padx=(10, 0))
+        self.classe_gradcam = tk.StringVar(value="prevista")
+        ttk.Combobox(
+            controles, textvariable=self.classe_gradcam,
+            values=("prevista", "pcr1"), state="readonly", width=11,
+        ).pack(side="left", padx=5)
 
         self.resultado = tk.StringVar(value="Aguardando checkpoint.")
         ttk.Label(self.raiz, textvariable=self.resultado, padding=12, font=("Segoe UI", 11, "bold")).pack(fill="x")
         self.status = tk.StringVar(value="")
         ttk.Label(self.raiz, textvariable=self.status, padding=(12, 0)).pack(fill="x")
+        self.diagnostico_var = tk.StringVar(value="O Grad-CAM nao foi calculado.")
+        ttk.Label(self.raiz, textvariable=self.diagnostico_var, padding=(12, 2)).pack(fill="x")
         self.area = ttk.Frame(self.raiz, padding=8)
         self.area.pack(fill="both", expand=True)
 
+    def _limpar_visualizacao(self):
+        self.volumes_visualizacao = {}
+        self.mascara_volume = None
+        self.paciente_visualizacao = None
+        self.gradcam_atual = None
+        self.corte_var.set(0)
+        self.controle_corte.configure(to=0)
+        self.corte_info.set("Sem volume")
+        self.diagnostico_var.set("O Grad-CAM nao foi calculado.")
+        if self.canvas is not None:
+            self.canvas.get_tk_widget().destroy()
+            self.canvas = None
+        if self.figura is not None:
+            from matplotlib import pyplot as plt
+            plt.close(self.figura)
+            self.figura = None
+
     def selecionar_checkpoint(self):
-        caminho = filedialog.askopenfilename(title="Selecionar checkpoint treinado", filetypes=[("Checkpoint PyTorch", "*.pt")])
+        caminho = filedialog.askopenfilename(
+            title="Selecionar checkpoint treinado",
+            filetypes=[("Checkpoint PyTorch", "*.pt")],
+        )
         if caminho:
             self.caminho_var.set(caminho)
 
@@ -364,24 +458,40 @@ class AplicacaoPAI:
         if caminho:
             self.csv_var.set(caminho)
             self.pacientes = []
+            self.combo.set("")
+            self._limpar_visualizacao()
 
     def selecionar_dataset(self):
         caminho = filedialog.askdirectory(title="Selecionar pasta contendo dce/ e mask/")
         if caminho:
             self.dataset_var.set(caminho)
             self.pacientes = []
+            self.combo.set("")
+            self._limpar_visualizacao()
 
     def carregar_checkpoint(self):
         try:
             caminho = Path(self.caminho_var.get()).expanduser().resolve()
             modelo, dados = carregar_modelo_checkpoint(caminho, self.dispositivo)
             self.modelo, self.checkpoint, self.caminho_checkpoint = modelo, dados, caminho
+            self.gradcam_atual = None
             conf = dados["configuracao"]
-            self.resultado.set(f"Modelo: {conf['arquitetura']} | Fases: {conf['configuracao_temporal']} | Corte: {conf['estrategia_corte']} | Limiar: {float(dados['selecao_validacao']['limiar']):.8f}")
-            self.status.set(f"Checkpoint validado com strict=True. Dispositivo: {self.dispositivo}. Nenhum treinamento executado.")
-            messagebox.showinfo("Checkpoint validado", "Pesos e metadados compativeis. O modelo foi carregado em modo de inferencia.")
+            self.resultado.set(
+                f"Modelo: {conf['arquitetura']} | Fases: {conf['configuracao_temporal']} "
+                f"| Corte: {conf['estrategia_corte']} "
+                f"| Limiar: {float(dados['selecao_validacao']['limiar']):.8f}"
+            )
+            self.status.set(
+                f"Checkpoint validado com strict=True. Dispositivo: {self.dispositivo}. Nenhum treinamento executado."
+            )
+            messagebox.showinfo(
+                "Checkpoint validado",
+                "Pesos e metadados compativeis. O modelo foi carregado em modo de inferencia.",
+            )
+            self.atualizar_visualizacao()
         except Exception as exc:
             self.modelo = self.checkpoint = None
+            self.gradcam_atual = None
             self.resultado.set("Checkpoint nao carregado.")
             messagebox.showerror("Falha ao validar checkpoint", str(exc))
 
@@ -389,17 +499,77 @@ class AplicacaoPAI:
         try:
             global DATASET_PADRAO
             DATASET_PADRAO = Path(self.dataset_var.get()).expanduser().resolve()
+            self._limpar_visualizacao()
             self.pacientes = carregar_metadados(Path(self.csv_var.get()).expanduser().resolve())
             self.combo["values"] = [p.identificador for p in self.pacientes]
             if self.pacientes:
                 self.combo.current(0)
+                self._paciente_selecionado()
             self.status.set(f"{len(self.pacientes)} pacientes carregados do CSV.")
         except Exception as exc:
             messagebox.showerror("Falha ao carregar pacientes", str(exc))
 
+    def _paciente_selecionado(self, _evento=None):
+        pid = self.paciente_var.get()
+        paciente = next((p for p in self.pacientes if p.identificador == pid), None)
+        if paciente is None:
+            return
+        try:
+            self._limpar_visualizacao()
+            mascara, affine_mascara = ler_volume(paciente.caminho_mascara)
+            volumes = {}
+            for fase, caminho in zip(FASES, paciente.caminhos_dce):
+                volume, affine = ler_volume(caminho)
+                if volume.shape != mascara.shape or not np.allclose(
+                    affine, affine_mascara, rtol=1e-4, atol=1e-3
+                ):
+                    raise ValueError(f"DCE e mascara desalinhados: {pid} / {fase}")
+                volumes[fase] = volume
+            self.volumes_visualizacao = volumes
+            self.mascara_volume = mascara
+            self.paciente_visualizacao = pid
+            self.controle_corte.configure(to=mascara.shape[0] - 1)
+            self.corte_var.set(float(mascara.shape[0] // 2))
+            self.atualizar_visualizacao()
+        except Exception as exc:
+            self._limpar_visualizacao()
+            messagebox.showerror("Falha ao abrir volumes", str(exc))
+
+    def atualizar_visualizacao(self, _evento=None):
+        if self.mascara_volume is None or self.paciente_visualizacao != self.paciente_var.get():
+            return
+        z = int(round(self.corte_var.get()))
+        z = max(0, min(z, self.mascara_volume.shape[0] - 1))
+        self.corte_info.set(f"{z}/{self.mascara_volume.shape[0]-1}")
+        fase = self.fase_visualizacao.get()
+        if fase not in self.volumes_visualizacao:
+            fase = "post_early"
+        # Esta imagem e EXCLUSIVAMENTE de exibicao: a rede usa seu
+        # proprio tensor conforme os metadados do checkpoint.
+        original = normalizar_percentis(self.volumes_visualizacao[fase][z][None])[0]
+        mascara = (self.mascara_volume[z] > 0).astype(np.uint8)
+        dados = self.gradcam_atual
+        if dados is not None and (
+            dados["z"] != z or dados["paciente"] != self.paciente_var.get()
+        ):
+            dados = None
+        self._mostrar_figuras(
+            original, mascara,
+            dados["mapa"] if dados else None,
+            fase, dados["diagnostico"] if dados else None,
+        )
+        if dados is None:
+            self.diagnostico_var.set(
+                "Visualizacao do corte Z. O Grad-CAM so e exibido no corte efetivamente classificado."
+            )
+        else:
+            self.diagnostico_var.set(dados["resumo"])
+
     def classificar(self):
         if self.modelo is None or self.checkpoint is None:
-            messagebox.showwarning("Checkpoint necessario", "Selecione e valide um checkpoint antes da inferencia.")
+            messagebox.showwarning(
+                "Checkpoint necessario", "Selecione e valide um checkpoint antes da inferencia."
+            )
             return
         pid = self.paciente_var.get()
         paciente = next((p for p in self.pacientes if p.identificador == pid), None)
@@ -410,45 +580,72 @@ class AplicacaoPAI:
             conf, prep = self.checkpoint["configuracao"], self.checkpoint["preprocessamento"]
             imagem, mascara, z = preparar_paciente(paciente, conf, prep)
             entrada = imagem.unsqueeze(0).to(self.dispositivo)
-            mapa, prob = gerar_gradcam(self.modelo, entrada, conf["arquitetura"])
             limiar = float(self.checkpoint["selecao_validacao"]["limiar"])
+            mapa, prob, diagnostico = gerar_gradcam(
+                self.modelo, entrada, conf["arquitetura"],
+                classe_alvo=self.classe_gradcam.get(), limiar=limiar,
+            )
             previsto = int(prob >= limiar)
-            self.resultado.set(f"{pid} | pCR real={paciente.pcr} | probabilidade pCR=1: {prob:.6f} | limiar: {limiar:.8f} | previsto: pCR={previsto} | corte Z={z}")
-            self._mostrar_figuras(imagem.numpy(), mascara, mapa, conf["configuracao_temporal"])
-            self.status.set("Inferencia concluida sem retreinamento. Grad-CAM e mascara correspondem ao mesmo paciente/corte.")
+            resumo = resumir_relevancia_gradcam(mapa, mascara, diagnostico)
+            self.gradcam_atual = {
+                "paciente": pid, "z": z, "mapa": mapa,
+                "diagnostico": diagnostico, "resumo": resumo,
+            }
+            self.resultado.set(
+                f"{pid} | pCR real={paciente.pcr} | probabilidade pCR=1: {prob:.6f} "
+                f"| limiar: {limiar:.8f} | previsto: pCR={previsto} | corte Z={z}"
+            )
+            self.corte_var.set(float(z))
+            self.atualizar_visualizacao()
+            self.status.set(
+                "Inferencia por checkpoint, sem retreino. Grad-CAM no corte selecionado pelo protocolo."
+            )
         except Exception as exc:
             messagebox.showerror("Falha na inferencia", str(exc))
             self.status.set("Nao foi possivel concluir a inferencia.")
 
-    def _mostrar_figuras(self, imagem, mascara, mapa, fase):
+    def _mostrar_figuras(self, original, mascara, mapa, fase, diagnostico=None):
         try:
-            import matplotlib
-            matplotlib.use("TkAgg")
             from matplotlib.figure import Figure
             from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-            from matplotlib import cm
         except ImportError as exc:
             raise ImportError("Instale matplotlib para visualizar imagem, mascara e Grad-CAM.") from exc
         if self.canvas is not None:
             self.canvas.get_tk_widget().destroy()
-        figura = Figure(figsize=(13, 4.5), dpi=100)
-        eixos = figura.subplots(1, 3)
-        if imagem.shape[0] == 1:
-            original = imagem[0]
-            eixos[0].imshow(original, cmap="gray")
-            base = np.clip(original, 0, 1)
-            rgb = np.repeat(base[..., None], 3, axis=2)
+            self.canvas = None
+        if self.figura is not None:
+            from matplotlib import pyplot as plt
+            plt.close(self.figura)
+        figura = Figure(figsize=(13, 4), dpi=100)
+        eixos = figura.subplots(1, 4)
+        eixos[0].imshow(original, cmap="gray", vmin=0, vmax=1)
+        eixos[0].set_title(f"DCE-MRI ({fase})")
+        eixos[1].imshow(original, cmap="gray", vmin=0, vmax=1)
+        if mascara.any():
+            eixos[1].contour(mascara, levels=[0.5], colors=["lime"], linewidths=1.2)
+        eixos[1].set_title("Mascara sobre a imagem")
+        if mapa is None:
+            for eixo in eixos[2:]:
+                eixo.text(
+                    0.5, 0.5, "Classifique para\nver o Grad-CAM",
+                    ha="center", va="center", transform=eixo.transAxes,
+                )
+            eixos[2].set_title("Grad-CAM")
+            eixos[3].set_title("Grad-CAM + tumor")
         else:
-            rgb = np.moveaxis(imagem, 0, -1)
-            rgb = np.clip((rgb - rgb.min()) / max(float(rgb.max() - rgb.min()), 1e-8), 0, 1)
-            eixos[0].imshow(rgb)
-        eixos[0].set_title(f"Imagem original ({fase})")
-        calor = cm.jet(np.clip(mapa, 0, 1))[..., :3]
-        sobreposicao = np.clip(0.60 * rgb + 0.40 * calor, 0, 1)
-        eixos[1].imshow(sobreposicao)
-        eixos[1].set_title("Grad-CAM — relevancia da classe pCR=1")
-        eixos[2].imshow(mascara, cmap="gray")
-        eixos[2].set_title("Mascara tumoral — mesmo corte")
+            # O fundo NAO e removido do Grad-CAM: informacao importante
+            # para detectar modelos que usam artefatos de aquisicao.
+            for eixo in eixos[2:]:
+                eixo.imshow(original, cmap="gray", vmin=0, vmax=1)
+                eixo.imshow(
+                    mapa, cmap="turbo", vmin=0, vmax=1,
+                    alpha=np.clip(mapa * 0.65, 0, 0.65),
+                )
+            if mascara.any():
+                eixos[3].contour(mascara, levels=[0.5], colors=["lime"], linewidths=1.2)
+            classe = diagnostico["classe_explicada"] if diagnostico else 1
+            eixos[2].set_title(f"Grad-CAM pCR={classe}")
+            eixos[3].set_title("Grad-CAM + tumor")
         for eixo in eixos:
             eixo.axis("off")
         figura.tight_layout()
@@ -456,6 +653,28 @@ class AplicacaoPAI:
         self.canvas = FigureCanvasTkAgg(figura, master=self.area)
         self.canvas.draw()
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
+
+
+def resumir_relevancia_gradcam(mapa: np.ndarray, mascara: np.ndarray, diagnostico: dict) -> str:
+    """Diagnostico descritivo: fracao de ativacao no tumor vs area da mascara.
+
+    Nao e medida clinica nem prova de que o modelo explica a lesao.
+    """
+    if mapa.shape != mascara.shape or mapa.ndim != 2:
+        raise ValueError("Mapa e mascara devem ter o mesmo formato 2D.")
+    if not np.isfinite(mapa).all():
+        raise ValueError("Mapa Grad-CAM contem valores invalidos.")
+    proporcao_area = float(np.mean(mascara > 0))
+    soma = float(np.sum(mapa))
+    fracao_tumor = float(np.sum(mapa[mascara > 0]) / soma) if soma > 1e-12 else 0.0
+    aviso = " [MAPA NULO]" if diagnostico["mapa_nulo"] else ""
+    return (
+        f"Classe explicada pCR={diagnostico['classe_explicada']} | "
+        f"relevancia no tumor: {fracao_tumor:.1%} | area tumoral: {proporcao_area:.1%} "
+        f"| resolucao CAM: {diagnostico['resolucao_nativa']} "
+        f"| maximo bruto: {diagnostico['maximo_bruto']:.3g}{aviso}"
+    )
+
 
 
 def main():
