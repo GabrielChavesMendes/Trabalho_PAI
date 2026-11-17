@@ -27,6 +27,7 @@ def main() -> int:
     parser.add_argument("--lr-transfer", type=float, default=1e-4)
     parser.add_argument("--criterio-limiar", choices=("f1", "acuracia_balanceada"), default="acuracia_balanceada")
     parser.add_argument("--criterio-modelo", choices=("f1", "acuracia_balanceada", "auc_roc"), default="auc_roc")
+    parser.add_argument("--criterio-checkpoint", choices=("loss", "auc_roc", "acuracia_balanceada"), default="auc_roc")
     parser.add_argument("--refazer", action="store_true")
     args = parser.parse_args()
 
@@ -70,6 +71,7 @@ def main() -> int:
             "--lr", str(args.lr_cnn if arquitetura == "cnn" else args.lr_transfer),
             "--lr-backbone", str(args.lr_backbone),
             "--criterio-limiar", args.criterio_limiar,
+            "--criterio-checkpoint", args.criterio_checkpoint,
             "--saida", str(args.saida),
             "--checkpoints", str(args.checkpoints),
         ]
