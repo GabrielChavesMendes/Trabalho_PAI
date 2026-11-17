@@ -54,10 +54,26 @@ def carregar_metadados(caminho: Path) -> list[Paciente]:
             raise ValueError(f"Registro/identificador invalido no CSV: {pid}")
         vistos.add(pid)
         try:
-            rotulo = int(linha["pCR"])
-            indices = [int(linha[f]) for f in FASES]
-        except (TypeError, ValueError) as exc:
-            raise ValueError(f"Metadados invalidos para {pid}") from exc
+            def converter_inteiro(valor, campo):
+                numero = float(valor)
+
+                if not numero.is_integer():
+                    raise ValueError(
+                        f"Valor nao inteiro no campo {campo}: {valor}"
+                    )
+
+                return int(numero)
+
+            rotulo = converter_inteiro(linha["pCR"], "pCR")
+            indices = [
+                converter_inteiro(linha[f], f)
+                for f in FASES
+            ]
+
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise ValueError(
+                f"Metadados invalidos para {pid}: {exc}"
+            ) from exc
         if rotulo not in (0, 1) or min(indices) < 0:
             raise ValueError(f"Rotulo ou indices temporais invalidos para {pid}")
         prefixo = f"{pid}_spy1_vis1"
