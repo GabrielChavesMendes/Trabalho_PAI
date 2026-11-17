@@ -70,12 +70,13 @@ def _avaliar_e_exportar(
     limiar: float,
     prefixo: Path,
     selecionar_limiar: bool,
+    criterio_limiar: str = "f1",
 ) -> tuple[float, dict[str, float | int]]:
     loss, _, predicoes = avaliar_modelo(
         modelo, carregador, criterio, dispositivo, limiar
     )
     if selecionar_limiar:
-        limiar, metricas = selecionar_limiar_validacao(predicoes)
+        limiar, metricas = selecionar_limiar_validacao(predicoes, criterio=criterio_limiar)
     else:
         metricas = calcular_metricas(predicoes, limiar)
     metricas = {**metricas, "loss": loss}
@@ -97,6 +98,10 @@ def main() -> int:
     parser.add_argument("--batch", type=int, default=8)
     parser.add_argument("--lr", type=float)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
+    parser.add_argument("--pos-weight", type=float, help="Sobrescreve peso de classe calculado do treino; registrar no artigo")
+    parser.add_argument("--finetune-resnet", action="store_true", help="Descongelar layer4 da ResNet50")
+    parser.add_argument("--lr-backbone", type=float, default=1e-5, help="Learning rate para layer4")
+    parser.add_argument("--criterio-limiar", choices=("f1", "acuracia_balanceada"), default="acuracia_balanceada")
     parser.add_argument("--paciencia", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", choices=("cpu", "cuda"))
@@ -125,9 +130,16 @@ def main() -> int:
         pos_weight, negativos, positivos = calcular_pos_weight_treino(
             carregadores["treino"]
         )
+    peso_original = pos_weight
+    if args.pos_weight is not None:
+        if args.pos_weight <= 0:
+            raise ValueError("--pos-weight precisa ser positivo")
+        pos_weight = args.pos_weight
+    if args.finetune_resnet and args.arquitetura != "resnet50":
+        raise ValueError("--finetune-resnet exige --arquitetura resnet50")
     print(
         f"Treino por paciente: negativos={negativos}, positivos={positivos}, "
-        f"pos_weight={pos_weight:.6g}"
+        f"peso_observado={peso_original:.6g}, pos_weight_usado={pos_weight:.6g}"
     )
     taxa = args.lr if args.lr is not None else (1e-3 if args.arquitetura == "cnn" else 1e-4)
     configuracao = ConfiguracaoTreinamento(
@@ -142,6 +154,7 @@ def main() -> int:
         pos_weight=pos_weight,
         paciencia=args.paciencia,
         seed=args.seed,
+        taxa_aprendizado_backbone=args.lr_backbone if args.finetune_resnet else None,
     )
     nome = _nome_experimento(configuracao)
     checkpoint = args.checkpoints / f"{nome}.pt"
@@ -151,6 +164,16 @@ def main() -> int:
         args.canais,
         pre_treinado=args.arquitetura != "cnn",
     )
+    if args.finetune_resnet:
+        for parametro in modelo.layer4.parameters():
+            parametro.requires_grad = True
+    carregadores["metadados"]["ajuste_hyperparametros"] = {
+        "pos_weight_observado": peso_original,
+        "pos_weight_utilizado": pos_weight,
+        "fine_tuning_resnet_layer4": bool(args.finetune_resnet),
+        "lr_backbone": args.lr_backbone if args.finetune_resnet else None,
+        "criterio_limiar": args.criterio_limiar,
+    }
     historico = treinar_experimento(
         modelo,
         carregadores["treino"],
@@ -175,8 +198,9 @@ def main() -> int:
         configuracao.limiar,
         args.saida / f"{nome}__validation",
         selecionar_limiar=True,
+        criterio_limiar=args.criterio_limiar,
     )
-    registrar_validacao_checkpoint(checkpoint, limiar, metricas_validacao)
+    registrar_validacao_checkpoint(checkpoint, limiar, {**metricas_validacao, "criterio_selecao_limiar": args.criterio_limiar})
     print(
         f"Checkpoint selecionado na epoca {dados['epoca']}; "
         f"limiar escolhido na validacao={limiar:.3f}"
