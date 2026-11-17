@@ -48,3 +48,8 @@ resultados/*.npz
 *.fls
 *.fdb_latexmk
 
+
+# Evitar versionar novamente logs temporarios redundantes da auditoria
+resultados/**/testes_antes_*.txt
+resultados/**/testes_avaliador_27.txt
+resultados/**/testes_preparacao_final.txt

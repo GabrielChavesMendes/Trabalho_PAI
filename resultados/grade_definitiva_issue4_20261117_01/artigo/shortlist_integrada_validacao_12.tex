@@ -1,0 +1,24 @@
+\begin{table*}[t]
+\centering
+\caption{Doze combinações representativas por maior AUC de validação reportada, considerando as duas linhas experimentais. Esta comparação retrospectiva não altera as seleções prévias ao teste e depende da verificação dos checkpoints externos.}
+\label{tab:shortlist-integrada}
+\small
+\begin{tabular}{lllp{4.1cm}rrrr}
+\hline
+Rede & Fases & Corte & Linha experimental & AUC & BA & Sens. & F1 \\
+\hline
+CNN & 1 & Central & Linha paralela v2 & 0.6033 & 0.5909 & 0.5455 & 0.4800 \\
+CNN & 1 & Maior tumor & Coorte A/B/C & 0.6818 & 0.7273 & 0.5455 & 0.6316 \\
+CNN & 3 & Central & Coorte A/B/C & 0.5950 & 0.6591 & 0.8182 & 0.5806 \\
+CNN & 3 & Maior tumor & Coorte A/B/C & 0.6281 & 0.6591 & 0.9091 & 0.5882 \\
+ResNet50 & 1 & Central & Linha paralela v2 & 0.4215 & 0.5227 & 0.9091 & 0.5000 \\
+ResNet50 & 1 & Maior tumor & Linha paralela ImageNet & 0.6983 & 0.6818 & 0.5455 & 0.5714 \\
+ResNet50 & 3 & Central & Linha paralela v2 & 0.4504 & 0.5227 & 0.0909 & 0.1538 \\
+ResNet50 & 3 & Maior tumor & Linha paralela v2 & 0.6074 & 0.6591 & 0.6364 & 0.5600 \\
+MobileNetV2 & 1 & Central & Coorte A/B/C & 0.5372 & 0.5909 & 0.9091 & 0.5405 \\
+MobileNetV2 & 1 & Maior tumor & Linha paralela ImageNet & 0.6074 & 0.5227 & 0.9091 & 0.5000 \\
+MobileNetV2 & 3 & Central & Coorte A/B/C & 0.6488 & 0.6591 & 0.8182 & 0.5806 \\
+MobileNetV2 & 3 & Maior tumor & Coorte A/B/C & 0.5661 & 0.6136 & 0.4545 & 0.4762 \\
+\hline
+\end{tabular}
+\end{table*}

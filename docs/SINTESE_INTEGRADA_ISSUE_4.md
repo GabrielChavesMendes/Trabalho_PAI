@@ -41,6 +41,8 @@ Dessa forma, **os três ajustes intermediários NÃO aparecem como testes soltos
 - Treinamentos diferentes usaram limiares, otimizadores, pesos e normalizações em condições distintas. Não comparar diretamente os valores de loss como se fossem a mesma função e escala sem verificar as configurações. Diferenças de AUC pequenas não provam superioridade. **Nenhum resultado autoriza afirmar utilidade clínica**.
 - O ensemble com cinco folds é um experimento metodologicamente distinto (validação OOF) e não entra nos 12 representantes únicos da grade fase/corte. Pode ser citado como discussão de variação/generalização se houver espaço, não como uma 13ª combinação equivalente.
 
+A tabela em [LaTeX](../resultados/grade_definitiva_issue4_20261117_01/artigo/shortlist_integrada_validacao_12.tex) está pronta para servir como base do artigo SBC. Reduzir colunas caso o espaço da versão final de até 12 páginas exija.
+
 ## Fontes e próximo passo técnico
 
 - Coorte de 27: [GRADE_DEFINITIVA_ISSUE_4_20261117.md](GRADE_DEFINITIVA_ISSUE_4_20261117.md), [RELATORIO_FINAL.md](../resultados/grade_definitiva_issue4_20261117_01/RELATORIO_FINAL.md), [ranking dos 12 da coorte](../resultados/grade_definitiva_issue4_20261117_01/artigo/ranking_teste_12_acuracia_balanceada.csv).
