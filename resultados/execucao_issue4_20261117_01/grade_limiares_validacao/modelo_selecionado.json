@@ -1,0 +1,29 @@
+{
+  "criterio_selecao": "maior auc_roc de validacao; desempate por acuracia balanceada, sensibilidade e loss",
+  "experimento": "cnn__post-early__maior-tumor__seed-42",
+  "checkpoint_local": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__post-early__maior-tumor__seed-42.pt",
+  "limiar_validacao": 0.49848052859306335,
+  "metricas_validacao": {
+    "loss": 1.1562655037099665,
+    "sensibilidade": 0.5454545454545454,
+    "especificidade": 0.9090909090909091,
+    "precisao": 0.75,
+    "acuracia": 0.7878787878787878,
+    "f1": 0.631578947368421,
+    "acuracia_balanceada": 0.7272727272727273,
+    "auc_roc": 0.6818181818181818,
+    "tn": 20,
+    "fp": 2,
+    "fn": 5,
+    "tp": 6
+  },
+  "configuracao": {
+    "arquitetura": "cnn",
+    "fases": "post-early",
+    "corte": "maior-tumor",
+    "seed": "42",
+    "melhor_epoca": 6,
+    "criterio_checkpoint": "auc_roc"
+  },
+  "observacao": "O checkpoint e local e ignorado pelo Git; o teste nao participa desta selecao."
+}

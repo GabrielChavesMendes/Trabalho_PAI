@@ -1,4 +1,8 @@
 # Ambientes Python e ferramentas
+# Cache local criado pelo PowerShell no Windows
+/Microsoft/
+# Texto auxiliar extraido do PDF original; manter apenas localmente
+resultados/**/enunciado_extraido.txt
 .venv/
 venv/
 env/

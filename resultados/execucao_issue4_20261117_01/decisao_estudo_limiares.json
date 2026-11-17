@@ -1,0 +1,22 @@
+{
+  "etapa": "estudo_suplementar_limiares",
+  "motivo": "grade fixa perde separacoes de escores estreitos de validacao",
+  "decidido_apos_inspecao_validacao": true,
+  "algoritmo": "pontos medios entre escores unicos + min/2 + (1+max)/2 + 0.5, restritos a (0,1)",
+  "criterio": "acuracia_balanceada",
+  "desempates": [
+    "especificidade",
+    "sensibilidade",
+    "proximidade_0.5"
+  ],
+  "modelos": 12,
+  "pesos_e_auc_inalterados": true,
+  "teste_utilizado": false,
+  "baseline_preservado": "grade/",
+  "novo_resultado": "grade_limiares_validacao/",
+  "limitacoes": [
+    "selecao otimista na mesma validacao de 33 pacientes",
+    "CNN com escores quase constantes e limiar potencialmente instavel",
+    "nao demonstra generalizacao"
+  ]
+}

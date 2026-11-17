@@ -1,0 +1,138 @@
+{
+  "estado": "aguardando_revisao_do_usuario",
+  "avaliacao_teste_executada": false,
+  "autorizacao_teste_recebida": false,
+  "modelos": 12,
+  "configuracao_escolhida": {
+    "criterio_selecao": "maior auc_roc de validacao; desempate por acuracia balanceada, sensibilidade e loss",
+    "experimento": "cnn__post-early__maior-tumor__seed-42",
+    "checkpoint_local": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__post-early__maior-tumor__seed-42.pt",
+    "limiar_validacao": 0.49848052859306335,
+    "metricas_validacao": {
+      "loss": 1.1562655037099665,
+      "sensibilidade": 0.5454545454545454,
+      "especificidade": 0.9090909090909091,
+      "precisao": 0.75,
+      "acuracia": 0.7878787878787878,
+      "f1": 0.631578947368421,
+      "acuracia_balanceada": 0.7272727272727273,
+      "auc_roc": 0.6818181818181818,
+      "tn": 20,
+      "fp": 2,
+      "fn": 5,
+      "tp": 6
+    },
+    "configuracao": {
+      "arquitetura": "cnn",
+      "fases": "post-early",
+      "corte": "maior-tumor",
+      "seed": "42",
+      "melhor_epoca": 6,
+      "criterio_checkpoint": "auc_roc"
+    },
+    "observacao": "O checkpoint e local e ignorado pelo Git; o teste nao participa desta selecao."
+  },
+  "modelos_congelados": [
+    {
+      "experimento": "cnn__post-early__central__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__post-early__central__seed-42.pt",
+      "checkpoint_sha256": "4b9b7feef5cd7d2a511b750d6037c35b1ab3869d1b9c4883d0f69b5ef481e4e8",
+      "limiar": 0.4938041865825653,
+      "auc_validacao": 0.4297520661157025
+    },
+    {
+      "experimento": "cnn__post-early__maior-tumor__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__post-early__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "206bc055e52464cd3144ab833eb92c3e835beb9d6d9bde2022eeafe027807d0b",
+      "limiar": 0.49848052859306335,
+      "auc_validacao": 0.6818181818181818
+    },
+    {
+      "experimento": "cnn__tres__central__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__tres__central__seed-42.pt",
+      "checkpoint_sha256": "b91bc79c6a9a798981ce2d7dd926e5f3378f1a515ab3a426b4a63fe79b653693",
+      "limiar": 0.47722066491842274,
+      "auc_validacao": 0.5950413223140496
+    },
+    {
+      "experimento": "cnn__tres__maior-tumor__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\cnn__tres__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "b5c16ac90174fad578ef1f0e79fd36a0fb3275e01bb9328b901e686eb2b9994d",
+      "limiar": 0.4819288983941078,
+      "auc_validacao": 0.628099173553719
+    },
+    {
+      "experimento": "mobilenetv2__post-early__central__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__post-early__central__seed-42.pt",
+      "checkpoint_sha256": "a3221c0c06029f0bdefad8f5f85c7f02681f361a749ac6b68f28a20a6b40adc3",
+      "limiar": 0.566841208934784,
+      "auc_validacao": 0.49586776859504134
+    },
+    {
+      "experimento": "mobilenetv2__post-early__maior-tumor__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__post-early__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "5197c482d6adce90ac12b7713a89f785c95dc907c39a0df0e32ad3c6d7c0c663",
+      "limiar": 0.42850990891456603,
+      "auc_validacao": 0.47520661157024796
+    },
+    {
+      "experimento": "mobilenetv2__tres__central__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__tres__central__seed-42.pt",
+      "checkpoint_sha256": "eef4a548ef4921160da3c231e01c81916d8280526be1944d7e0846932f987b4e",
+      "limiar": 0.5431677505373955,
+      "auc_validacao": 0.5206611570247934
+    },
+    {
+      "experimento": "mobilenetv2__tres__maior-tumor__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\mobilenetv2__tres__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "897d36ffb7354f627831e9a5bac2ce32f26031b050b05f51c6248a24fe73c6e8",
+      "limiar": 0.4458016857504845,
+      "auc_validacao": 0.49173553719008267
+    },
+    {
+      "experimento": "resnet50__post-early__central__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__post-early__central__seed-42.pt",
+      "checkpoint_sha256": "5e9923f8f7db0ca1da197e9baea58ff2087f52bd033d25cfcc99f5bddd72b030",
+      "limiar": 0.010471966626937501,
+      "auc_validacao": 0.32231404958677684
+    },
+    {
+      "experimento": "resnet50__post-early__maior-tumor__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__post-early__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "5e071152a56e5348d23eaa66b67d6278b310037867be6782baf83609d969979f",
+      "limiar": 0.756848182529211,
+      "auc_validacao": 0.5247933884297521
+    },
+    {
+      "experimento": "resnet50__tres__central__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__tres__central__seed-42.pt",
+      "checkpoint_sha256": "98443ab06fb237d3d273ea9a1f1d4679648959bd50307f0ebea16f9231c5bafe",
+      "limiar": 0.7724838942289352,
+      "auc_validacao": 0.4049586776859504
+    },
+    {
+      "experimento": "resnet50__tres__maior-tumor__seed-42",
+      "checkpoint": "checkpoints\\execucao_issue4_20261117_01\\grade_limiares_validacao\\resnet50__tres__maior-tumor__seed-42.pt",
+      "checkpoint_sha256": "2f62d0c246ce58fbf1114e1d889cc77ea7046f11f6c85a13f68b4537f9f3ab43",
+      "limiar": 0.3762133240699768,
+      "auc_validacao": 0.6033057851239669
+    }
+  ],
+  "validacoes_originais_16_preservadas": true,
+  "fontes_treino_e_csv_preservados": true,
+  "comando_preparado_nao_executado": [
+    ".venv/Scripts/python.exe",
+    "scripts/avaliar_grade_teste_issue4.py",
+    "--device",
+    "cuda",
+    "--checkpoints",
+    "checkpoints/execucao_issue4_20261117_01/grade_limiares_validacao",
+    "--resultados-validacao",
+    "resultados\\execucao_issue4_20261117_01\\grade_limiares_validacao",
+    "--saida",
+    "resultados\\execucao_issue4_20261117_01\\teste_final_limiares_validacao",
+    "--confirmar-validacao-fechada"
+  ],
+  "tempo_total_treinamento_16_segundos": 3698.748275199847,
+  "observacao": "Resultados exploratorios; revisar fragilidade dos escores da CNN e busca adaptativa de limiar antes de autorizar teste. Nao ajustar apos avaliar teste."
+}

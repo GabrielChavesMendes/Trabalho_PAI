@@ -1,0 +1,23 @@
+{
+  "modulos\\fabrica_carregadores.py": "15d083d7001cbf8af0e5e21e64d7c4dbd3d572dba7d3878336aa369bb370669a",
+  "modulos\\interface_nifti.py": "bf6f2a3d0b75a59804223263d0ea6ac8f9bcd6cee6a94b859d81b5b3fb6cd0c2",
+  "modulos\\modulo_augmentacao.py": "e37c177fa647cc6ddd83bc795251b9a02a24427e6acde2bea9728c3fdfd330ae",
+  "modulos\\modulo_balanceamento.py": "db95db3a97bddcd0e9a1abc3e87a8427757f996145d3d7fb46c5f45419eda51f",
+  "modulos\\modulo_dataset.py": "f770346aac826771a69d20b284aeb433d5bd4e005f955119fb006aefef74aab8",
+  "modulos\\modulo_dataset_issue1.py": "a0c667bfc697d02625390a6e8da1b8cccd9c0edadde16e24271b2acb13989d19",
+  "modulos\\modulo_redes.py": "0670a659a6365ec02cede918904998a19ce5527788209cf872790a239b4658dd",
+  "modulos\\modulo_treinamento.py": "25105bfb438c3db644636bef8b60b655ac9f9d57fc7c96164304600aec8b3459",
+  "modulos\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "scripts\\ajustar_issue4.py": "54b2c828f1595bebe7bfff4b442f12f79556d4889fe47774460003bfcd33569a",
+  "scripts\\avaliar_grade_teste_issue4.py": "a5025a7a28757bf4375a4605909d40bcb17537cee86d36f8c4990571e2980616",
+  "scripts\\avaliar_teste_final.py": "6143475343ca4c3a52d4bd4489d0c16ddbb99586142ae2bcf971f8daa71506d5",
+  "scripts\\consolidar_resultados.py": "93c4fadf69eaec7fb95a5242aef37464f6cb5bf3fddb80d9453e85ddd033b8f1",
+  "scripts\\executar_experimento.py": "21c912c1fa22f8c74f65dc232ad303889dc10c5d203472422b66def673b127c5",
+  "scripts\\executar_grade_issue4.py": "d82f50a0c1e59c719bbcf6161577091ec2ff5806a6d20ef26aa0f3575adbba7f",
+  "scripts\\validar_issue4.py": "79f1694e243816ec352c3f0900f298bb867ae79126d56244c895ad4c605955a6",
+  "tests\\test_consolidar_resultados.py": "e329d0e6c4a8fae4184c294f012e943067e2e93bb7a8138aa79db70af91e4252",
+  "tests\\test_issue1.py": "de6d5742ab47d40090d0cce5f991f21d2d990ed394217c3057d026aa5f671147",
+  "tests\\test_issue4_ajustes.py": "84bb0cd7510e1f7704d743731d2319f34a9fe8f25420ed11c440882984e554a6",
+  "tests\\test_modulo_dataset.py": "8f9a3af9ea054b9698d368d463bb34a314a5e353a6c61543b4422862ffe1ede4",
+  "tests\\test_modulo_treinamento.py": "c2791a93a57a94fc18327fdcc6eccf4f5b222fadeb7a3fb464ef417657dc11a3"
+}

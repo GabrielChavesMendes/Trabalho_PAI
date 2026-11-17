@@ -42,7 +42,17 @@ def main() -> int:
         conteudo = json.loads(caminho.read_text(encoding="utf-8"))
         metricas = conteudo["metricas"]
         historico = args.resultados / f"{nome}__history.csv"
-        tempo, epocas, melhor_epoca = _ler_historico(historico)
+        tempo, epocas, epoca_menor_loss = _ler_historico(historico)
+        # A menor loss pode pertencer a outra epoca quando a selecao usa AUC.
+        # O checkpoint e a fonte da epoca efetivamente selecionada.
+        import torch
+        checkpoint = args.checkpoints / f"{nome}.pt"
+        bruto = torch.load(checkpoint, map_location="cpu", weights_only=False)
+        melhor_epoca = int(bruto["epoca"])
+        criterio_checkpoint = bruto["configuracao"].get("criterio_checkpoint", "loss")
+        if not 1 <= melhor_epoca <= epocas:
+            raise ValueError(f"Epoca do checkpoint fora do historico: {checkpoint}")
+        del bruto
         # Compatibilidade com resultados antigos que nao registraram AUC/balanced.
         predicoes = conteudo.get("predicoes_por_paciente", [])
         if "auc_roc" not in metricas or "acuracia_balanceada" not in metricas:
@@ -59,6 +69,8 @@ def main() -> int:
             "seed": seed.removeprefix("seed-"),
             "epocas_executadas": epocas,
             "melhor_epoca": melhor_epoca,
+            "criterio_checkpoint": criterio_checkpoint,
+            "epoca_menor_loss_validacao": epoca_menor_loss,
             "tempo_treinamento_segundos": tempo,
             **{chave: metricas.get(chave) for chave in (
                 "loss", "limiar", "sensibilidade", "especificidade", "precisao",
@@ -107,6 +119,7 @@ def main() -> int:
             "corte": vencedor["corte"],
             "seed": vencedor["seed"],
             "melhor_epoca": vencedor["melhor_epoca"],
+            "criterio_checkpoint": vencedor["criterio_checkpoint"],
         },
         "observacao": "O checkpoint e local e ignorado pelo Git; o teste nao participa desta selecao.",
     }

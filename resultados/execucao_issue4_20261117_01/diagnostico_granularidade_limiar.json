@@ -1,0 +1,40 @@
+{
+  "origem": "resultados\\execucao_issue4_20261117_01\\grade\\cnn__post-early__maior-tumor__seed-42__validation.json",
+  "uso_teste": false,
+  "diagnostico": "comparacao descritiva em validacao; nao altera artefatos originais",
+  "prob_min": 0.49847758412361143,
+  "prob_max": 0.49848098754882814,
+  "candidatos": 35,
+  "original": {
+    "sensibilidade": 0.0,
+    "especificidade": 1.0,
+    "precisao": 0.0,
+    "acuracia": 0.6666666666666666,
+    "f1": 0.0,
+    "acuracia_balanceada": 0.5,
+    "auc_roc": 0.6818181818181818,
+    "tn": 22,
+    "fp": 0,
+    "fn": 11,
+    "tp": 0,
+    "numero_pacientes": 33,
+    "limiar": 0.49999999999999994,
+    "loss": 1.1562655037099665
+  },
+  "limiar_por_pontos_medios": 0.49848052859306335,
+  "metricas_por_pontos_medios": {
+    "sensibilidade": 0.5454545454545454,
+    "especificidade": 0.9090909090909091,
+    "precisao": 0.75,
+    "acuracia": 0.7878787878787878,
+    "f1": 0.631578947368421,
+    "acuracia_balanceada": 0.7272727272727273,
+    "auc_roc": 0.6818181818181818,
+    "tn": 20,
+    "fp": 2,
+    "fn": 5,
+    "tp": 6,
+    "numero_pacientes": 33,
+    "limiar": 0.49848052859306335
+  }
+}

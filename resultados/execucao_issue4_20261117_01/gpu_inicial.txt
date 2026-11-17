@@ -1,0 +1,2 @@
+﻿name, driver_version, memory.total [MiB], memory.used [MiB]
+NVIDIA GeForce GTX 1650 SUPER, 616.92, 4096 MiB, 1130 MiB

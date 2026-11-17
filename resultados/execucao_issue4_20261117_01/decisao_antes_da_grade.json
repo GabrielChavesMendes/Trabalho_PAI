@@ -1,0 +1,21 @@
+{
+  "decisao": "peso_3_finetune",
+  "criterio": "AUC, acuracia balanceada e F1 de validacao; definido antes dos ajustes",
+  "pos_weight": 3.0,
+  "finetune_resnet_layer4": true,
+  "lr_backbone": 1e-05,
+  "lr_transfer": 0.0001,
+  "lr_cnn": 0.001,
+  "batch": 4,
+  "seed": 42,
+  "epocas_maximas": 30,
+  "paciencia": 5,
+  "weight_decay": 0.0001,
+  "criterio_checkpoint": "auc_roc",
+  "criterio_limiar": "acuracia_balanceada",
+  "criterio_grade": "auc_roc; desempates acuracia balanceada, sensibilidade, loss, nome",
+  "teste_consultado_nesta_execucao": false,
+  "grade_resultados": "resultados\\execucao_issue4_20261117_01\\grade",
+  "grade_checkpoints": "checkpoints/execucao_issue4_20261117_01/grade",
+  "limite": "AUC modesta, forte sobreajuste e baixa sensibilidade. Ganho exploratorio; nao prova melhora nas outras combinacoes."
+}

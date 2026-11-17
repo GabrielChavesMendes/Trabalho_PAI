@@ -1,0 +1,2 @@
+# Preservar bytes dos artefatos experimentais e seus hashes no Windows.
+resultados/execucao_issue4_20261117_01/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
