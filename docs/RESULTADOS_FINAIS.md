@@ -46,7 +46,7 @@ Os **seis arquivos externos** recebidos foram abertos com `weights_only=True` (c
 - **ResNet50, uma fase, maior tumor**: `resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt`; SHA-256 `924a6b00ca7ee951b6e79f698f2a63f61ee7324de44c616ddfe15ece78dd9733`.
 - **ResNet50, três fases, maior tumor**: `resnet50__tres__maior-tumor__seed-42__final-v2.pt`; SHA-256 `ec6a1fac483c0fc188d6a580e5aee777aaeb5ce7dde4531ba7f750bcad8ec95b`.
 
-O código adicional é restrito a `modulos/checkpoints_integrados_issue4.py`, ao modo opcional de normalização ImageNet em `modulos/fabrica_carregadores.py` e ao script de verificação. O pipeline e os experimentos anteriores continuam com a normalização padrão `percentil`; **nenhuma alteração retroativa dos pesos é feita**.
+O código adicional é restrito a `modulos/checkpoints.py`, ao modo opcional de normalização ImageNet em `modulos/fabrica_carregadores.py` e ao script de verificação. O pipeline e os experimentos anteriores continuam com a normalização padrão `percentil`; **nenhuma alteração retroativa dos pesos é feita**.
 
 Arquivos de histórico, loss, validação, teste e matrizes de confusão dos quatro modelos externos estão em `resultados/grade_definitiva_issue4_20261117_01/integracao_gustavo/`. Os checkpoints binários **não vão para Git** nem para o ZIP principal.
 
@@ -56,14 +56,14 @@ Copiar os quatro pesos citados para `checkpoints/integrados_issue4/` (pasta plan
 
 ```bash
 python -m pytest -q
-python scripts/verificar_checkpoints_integrados_issue4.py --device cpu
+python scripts/verificar_checkpoints.py --device cpu
 # Com PAI_DATASET_DIR e PAI_CSV configurados e GPU disponível:
-python scripts/verificar_checkpoints_integrados_issue4.py --device cuda --validar-dataset
+python scripts/verificar_checkpoints.py --device cuda --validar-dataset
 ```
 
 **Verificação local concluída:** os quatro externos passaram pela recarga estrita CPU e reproduziram as cinco métricas obrigatórias, AUC, BA, loss e confusão nos 33 pacientes reais em CUDA, preservando seus limiares. Os outros oito, em seus caminhos originais, também foram recarregados em CPU; os 12 produziram previsão CUDA de um paciente de validação. Isso não representa nova validação completa dos oito nesta sessão. Evidências em [verificação da integração](../resultados/verificacao_integrados_issue4_20261117_01/README.md).
 
-Execução simplificada: `python scripts/verificar_issue4.py`. Inferência individual: `python scripts/inferir_paciente_issue4.py --listar` e `python scripts/inferir_paciente_issue4.py --modelo 6 --paciente ISPY1_1009`. Os comandos usam a `.venv` existente e detectam CUDA/CPU. A seleção de 12 configurações e os resultados históricos não foram modificados.
+Execução simplificada: `python scripts/verificar_modelos.py`. Inferência individual: `python scripts/inferir_paciente.py --listar` e `python scripts/inferir_paciente.py --modelo 6 --paciente ISPY1_1009`. Os comandos usam a `.venv` existente e detectam CUDA/CPU. A seleção de 12 configurações e os resultados históricos não foram modificados.
 
 ## Apresentação dos resultados e limitações
 

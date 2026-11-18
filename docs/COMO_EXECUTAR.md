@@ -3,9 +3,9 @@
 Na raiz do projeto, em PowerShell ou Git Bash, com a `.venv` existente:
 
 ```text
-python scripts/verificar_issue4.py
-python scripts/inferir_paciente_issue4.py --listar
-python scripts/inferir_paciente_issue4.py --modelo 6 --paciente ISPY1_1009
+python scripts/verificar_modelos.py
+python scripts/inferir_paciente.py --listar
+python scripts/inferir_paciente.py --modelo 6 --paciente ISPY1_1009
 ```
 
 Os comandos usam automaticamente o Python da **`.venv` do projeto**, mesmo que
@@ -53,7 +53,7 @@ Não é necessário definir essas variáveis se o dataset já está no local pad
 ## Verificar tudo com um comando
 
 ```text
-python scripts/verificar_issue4.py
+python scripts/verificar_modelos.py
 ```
 
 Executa, em ordem, interrompendo diante de qualquer erro:
@@ -82,15 +82,15 @@ são preservadas e recusadas, sem sobrescrita.
 Os comandos anteriores continuam disponíveis para verificações isoladas:
 
 ```text
-.venv/Scripts/python.exe scripts/verificar_checkpoints_integrados_issue4.py --device cpu
-.venv/Scripts/python.exe scripts/verificar_checkpoints_integrados_issue4.py --device cuda --validar-dataset
+.venv/Scripts/python.exe scripts/verificar_checkpoints.py --device cpu
+.venv/Scripts/python.exe scripts/verificar_checkpoints.py --device cuda --validar-dataset
 ```
 
 ## Prever um paciente individual
 
 ```text
-python scripts/inferir_paciente_issue4.py --listar
-python scripts/inferir_paciente_issue4.py --modelo 6 --paciente ISPY1_1009
+python scripts/inferir_paciente.py --listar
+python scripts/inferir_paciente.py --modelo 6 --paciente ISPY1_1009
 ```
 
 Escolha o número de 1 a 12 mostrado na lista e um ID existente no CSV. Exemplos:
@@ -99,7 +99,7 @@ modelo 1 = CNN/uma fase/central; 2 = CNN/uma fase/maior tumor;
 11 = MobileNetV2/três fases/central. Para fornecer o arquivo diretamente:
 
 ```text
-python scripts/inferir_paciente_issue4.py --checkpoint checkpoints/integrados_issue4/cnn__post-early__central__seed-42__final-v2.pt --paciente ISPY1_1009
+python scripts/inferir_paciente.py --checkpoint checkpoints/integrados_issue4/cnn__post-early__central__seed-42__final-v2.pt --paciente ISPY1_1009
 ```
 
 O programa lê apenas as imagens do paciente escolhido, usa as fases e o corte
@@ -117,8 +117,8 @@ dez transformações usada nas tabelas de validação; isso é esperado.
 ## Demonstração mínima ao professor
 
 ```text
-python scripts/verificar_issue4.py
-python scripts/inferir_paciente_issue4.py --modelo 6 --paciente ISPY1_1009
+python scripts/verificar_modelos.py
+python scripts/inferir_paciente.py --modelo 6 --paciente ISPY1_1009
 ```
 
 No computador verificado: **72 testes passaram**, quatro recargas CPU e quatro
