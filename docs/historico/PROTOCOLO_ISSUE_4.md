@@ -127,7 +127,7 @@ JSON de validacao sao ignoradas) com:
 ```bash
 PAI_DATASET_DIR=/mnt/d/PAI/dataset/BreastDCEDL_ISPY1_min_crop \
 TORCH_HOME=/mnt/d/PAI/torch \
-python scripts/executar_grade_issue4.py --device cuda --batch 64
+python scripts/executar_grade.py --device cuda --batch 64
 ```
 
 Somente entao, recarregar o checkpoint vencedor em outro processo e avaliar uma

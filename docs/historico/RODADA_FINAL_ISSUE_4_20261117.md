@@ -263,7 +263,7 @@ Também registra o hash do CSV e o modelo selecionado previamente pela validaç�
 Somente depois da revisão explícita do grupo, na raiz do projeto:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/avaliar_manifesto_issue4.py `
+.\.venv\Scripts\python.exe scripts/avaliar_manifesto.py `
   --manifesto resultados/rodada_final_issue4_20261117_01/manifesto_teste_congelado.json `
   --saida resultados/rodada_final_issue4_20261117_01/teste_final `
   --device cuda `
