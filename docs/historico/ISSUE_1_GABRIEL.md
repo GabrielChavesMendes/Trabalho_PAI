@@ -47,7 +47,7 @@ Para uso do aumento com a Issue #2:
 from modulos.modulo_dataset import (
     carregar_metadados, criar_manifesto, selecionar_particao, DatasetDCE,
 )
-from modulos.modulo_dataset_issue1 import DatasetDCEAumentado
+from modulos.dataset_aumentado import DatasetDCEAumentado
 
 tabela = carregar_metadados("dataset/BreastDCEDL_SPY1_min_crop_metadata.csv")
 manifesto = criar_manifesto(tabela, "dataset/BreastDCEDL_ISPY1_min_crop")
@@ -99,7 +99,7 @@ validacao = DatasetDCEAumentado(base_validacao, particao="validacao")
 ### Criados na implementação anterior e mantidos
 - `modulos/interface_nifti.py` — interface gráfica.
 - `modulos/modulo_augmentacao.py` — transformações geométricas.
-- `modulos/modulo_dataset_issue1.py` — adaptador de dataset.
+- `modulos/dataset_aumentado.py` — adaptador de dataset.
 - `modulos/modulo_balanceamento.py` — distribuição e peso de classe.
 - `tests/test_issue1.py` — testes da Issue #1.
 - `docs/ISSUE_1_GABRIEL.md` — documentação da Issue.
@@ -107,7 +107,7 @@ validacao = DatasetDCEAumentado(base_validacao, particao="validacao")
 ### Alterados nesta atualização
 - `modulos/interface_nifti.py` — integração direta com CSV, manifesto, fases e cortes da Issue #2; comparação sincronizada DCE/máscara.
 - `modulos/modulo_augmentacao.py` — simplificação de validações e fluxo das transformações, preservando a interpolação adequada.
-- `modulos/modulo_dataset_issue1.py` — validação real da partição e suporte a treino/validação, com bloqueio de teste.
+- `modulos/dataset_aumentado.py` — validação real da partição e suporte a treino/validação, com bloqueio de teste.
 - `tests/test_issue1.py` — testes para as duas partições permitidas e rejeição de teste/mistura.
 - `docs/ISSUE_1_GABRIEL.md` — documentação, resultados dos testes locais e situação das pendências.
 

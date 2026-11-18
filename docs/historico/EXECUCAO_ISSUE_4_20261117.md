@@ -111,7 +111,7 @@ Para usar o ambiente no terminal PowerShell:
 ```powershell
 $env:TORCH_HOME = Join-Path (Get-Location) '.venv/torch-cache'
 $env:PAI_NUM_WORKERS = '0'
-.\.venv\Scripts\python.exe scripts/ajustar_issue4.py --device cuda --batch 4 --saida resultados/execucao_issue4_20261117_01/ajustes
+.\.venv\Scripts\python.exe scripts/ajustar_modelos.py --device cuda --batch 4 --saida resultados/execucao_issue4_20261117_01/ajustes
 ```
 
 Log completo: `etapa1_treinamento.txt`. Resultados e checkpoints em
@@ -163,7 +163,7 @@ pesos de classe diferentes não são diretamente comparáveis.
 - Não alterar esses parâmetros usando resultados do teste.
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/executar_grade_issue4.py --device cuda --batch 4 --pos-weight 3 --finetune-resnet --lr-backbone 1e-5 --lr-cnn 1e-3 --lr-transfer 1e-4 --criterio-checkpoint auc_roc --criterio-limiar acuracia_balanceada --criterio-modelo auc_roc --saida resultados/execucao_issue4_20261117_01/grade --checkpoints checkpoints/execucao_issue4_20261117_01/grade
+.\.venv\Scripts\python.exe scripts/executar_grade.py --device cuda --batch 4 --pos-weight 3 --finetune-resnet --lr-backbone 1e-5 --lr-cnn 1e-3 --lr-transfer 1e-4 --criterio-checkpoint auc_roc --criterio-limiar acuracia_balanceada --criterio-modelo auc_roc --saida resultados/execucao_issue4_20261117_01/grade --checkpoints checkpoints/execucao_issue4_20261117_01/grade
 ```
 
 Correção de registro identificada antes da grade: `consolidar_resultados.py`
@@ -201,7 +201,7 @@ não pré-registrado antes de todos os experimentos. Essa decisão e o otimismo
 inerente a escolher época, modelo e limiar nos mesmos 33 pacientes devem ser
 relatados. O teste permanece sem avaliação e não orientou essa alteração.
 
-Procedimento preparado em `scripts/refinar_limiares_validacao_issue4.py`:
+Procedimento preparado em `scripts/refinar_limiares.py`:
 recusa pastas existentes, confere IDs/rótulos contra o CSV de validação e só
 inicia se os 12 checkpoints e resultados estiverem presentes. Gera pastas novas,
 compara os pesos tensor a tensor e registra a busca dentro do checkpoint.

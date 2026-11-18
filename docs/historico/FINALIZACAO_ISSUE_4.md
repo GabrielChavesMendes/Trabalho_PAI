@@ -54,7 +54,7 @@ O dataset deve existir em `dataset/BreastDCEDL_ISPY1_min_crop/`, com
 ## ETAPA 1 — quatro experimentos de ajuste (somente validação)
 
 ```bash
-python scripts/ajustar_issue4.py --device cuda --batch 4
+python scripts/ajustar_modelos.py --device cuda --batch 4
 ```
 
 O comando testa no cenário fixo **ResNet50, três fases, maior área tumoral**:
@@ -90,7 +90,7 @@ Depois de examinar a comparação dos ajustes, **escolha e registre
 a configuração** antes de executar a grade. A seguir há um exemplo **não definitivo**:
 
 ```bash
-python scripts/executar_grade_issue4.py --device cuda --batch 8 --pos-weight 1.73 --criterio-checkpoint auc_roc --criterio-limiar acuracia_balanceada
+python scripts/executar_grade.py --device cuda --batch 8 --pos-weight 1.73 --criterio-checkpoint auc_roc --criterio-limiar acuracia_balanceada
 ```
 
 Se o candidato selecionado realmente justificar fine-tuning da ResNet50,
@@ -119,7 +119,7 @@ novo ajuste**. Antes, confirme que há 12 arquivos JSON de validação e
 12 checkpoints correspondentes. O script se recusa a iniciar se algum faltar.
 
 ```bash
-python scripts/avaliar_grade_teste_issue4.py --device cuda --confirmar-validacao-fechada
+python scripts/avaliar_grade.py --device cuda --confirmar-validacao-fechada
 ```
 
 O script usa os **12 checkpoints já treinados** e seus limiares de validação,

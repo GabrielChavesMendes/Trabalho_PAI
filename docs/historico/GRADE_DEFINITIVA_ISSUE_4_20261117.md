@@ -143,16 +143,16 @@ o estudo atual não autoriza mais rodadas de otimização.
 $env:PYTHONIOENCODING = 'utf-8'
 $env:TORCH_HOME = Join-Path (Get-Location) '.venv/torch-cache'
 $env:PYTEST_DEBUG_TEMPROOT = Join-Path (Get-Location) '.venv/pytest-tmp'
-.\.venv\Scripts\python.exe scripts/preparar_ultima_grade_issue4.py --base resultados/grade_definitiva_issue4_20261117_01
-.\.venv\Scripts\python.exe scripts/executar_ultima_grade_issue4.py --base resultados/grade_definitiva_issue4_20261117_01 --checkpoints checkpoints/grade_definitiva_issue4_20261117_01 --device cuda
-.\.venv\Scripts\python.exe scripts/consolidar_coorte_issue4.py --base resultados/grade_definitiva_issue4_20261117_01
+.\.venv\Scripts\python.exe scripts/preparar_grade_final.py --base resultados/grade_definitiva_issue4_20261117_01
+.\.venv\Scripts\python.exe scripts/executar_grade_final.py --base resultados/grade_definitiva_issue4_20261117_01 --checkpoints checkpoints/grade_definitiva_issue4_20261117_01 --device cuda
+.\.venv\Scripts\python.exe scripts/consolidar_coorte.py --base resultados/grade_definitiva_issue4_20261117_01
 .\.venv\Scripts\python.exe scripts/documentar_resultados_issue4.py --base resultados/grade_definitiva_issue4_20261117_01 --somente-validacao
 .\.venv\Scripts\python.exe scripts/verificar_coorte_issue4.py --base resultados/grade_definitiva_issue4_20261117_01
-.\.venv\Scripts\python.exe scripts/consolidar_coorte_issue4.py --base resultados/grade_definitiva_issue4_20261117_01 --congelar
-.\.venv\Scripts\python.exe scripts/avaliar_manifesto_issue4.py --manifesto resultados/grade_definitiva_issue4_20261117_01/manifesto_final_27.json --saida resultados/grade_definitiva_issue4_20261117_01/teste_final --device cuda --confirmar-validacao-fechada
-.\.venv\Scripts\python.exe scripts/relatorio_final_issue4.py --base resultados/grade_definitiva_issue4_20261117_01
-.\.venv\Scripts\python.exe scripts/relatorio_final_issue4.py --base resultados/grade_definitiva_issue4_20261117_01 --somente-figura-limiares
-.\.venv\Scripts\python.exe scripts/relatorio_final_issue4.py --base resultados/grade_definitiva_issue4_20261117_01 --somente-ranking-legivel
+.\.venv\Scripts\python.exe scripts/consolidar_coorte.py --base resultados/grade_definitiva_issue4_20261117_01 --congelar
+.\.venv\Scripts\python.exe scripts/avaliar_manifesto.py --manifesto resultados/grade_definitiva_issue4_20261117_01/manifesto_final_27.json --saida resultados/grade_definitiva_issue4_20261117_01/teste_final --device cuda --confirmar-validacao-fechada
+.\.venv\Scripts\python.exe scripts/relatorio_experimentos.py --base resultados/grade_definitiva_issue4_20261117_01
+.\.venv\Scripts\python.exe scripts/relatorio_experimentos.py --base resultados/grade_definitiva_issue4_20261117_01 --somente-figura-limiares
+.\.venv\Scripts\python.exe scripts/relatorio_experimentos.py --base resultados/grade_definitiva_issue4_20261117_01 --somente-ranking-legivel
 .\.venv\Scripts\python.exe scripts/documentar_resultados_issue4.py --base resultados/grade_definitiva_issue4_20261117_01
 .\.venv\Scripts\python.exe scripts/auditar_finalizacao_issue4.py --base resultados/grade_definitiva_issue4_20261117_01
 .\.venv\Scripts\python.exe -m pytest -q -o cache_dir=.venv/pytest-cache
@@ -167,7 +167,7 @@ um teste mais favorável.
 
 ## Contrato para integração e inferência
 
-Usar `modulos.rodada_final_issue4.carregar_modelo_registrado(caminho, dispositivo)`:
+Usar `modulos.variantes_experimentais.carregar_modelo_registrado(caminho, dispositivo)`:
 retorna modelo em eval, checkpoint completo e normalização adicional. Suporta
 as três redes originais e as variantes `cnn_leaky` e `cnn_groupnorm`.
 Reconstrução com `strict=True`, sem baixar pesos e sem treinar. O módulo antigo
