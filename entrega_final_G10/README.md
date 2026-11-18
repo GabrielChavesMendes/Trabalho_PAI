@@ -1,22 +1,27 @@
 # Entrega final — Grupo G10
 
-Esta pasta representa **o conteúdo a ser colocado em `G10.zip`** para a entrega do Canvas.
+Este diretório reúne os materiais da entrega ao Canvas. **Não confunda a pasta de entrega com todo o histórico experimental do GitHub.**
 
-## Conteúdo esperado na conclusão
-- `trabalho_pai.py` — **UM único arquivo Python funcional**, integrando interface, dataset, modelos, treinamento e Grad-CAM
-- `relatorio.tex`, `relatorio.pdf`, `referencias.bib` e figuras necessárias à compilação
-- Declaração fiel de uso de IA (se o professor mantiver essa exigência documental)
-- Identificação de todos os integrantes nos arquivos conforme enunciado
+## Arquivos previstos para o ZIP
 
-**Não inclua imagens do dataset, CSV volumoso nem checkpoints/pesos** no ZIP. O ZIP deve ter no máximo **10 MB** e o nome externo deve ser **`G10.zip`**.
+- `trabalho_pai.py`: código Python monolítico com preparação, três modelos, treino básico, GUI, inferência e Grad-CAM.
+- `relatorio.pdf`: artigo SBC, máximo de 12 páginas.
+- `relatorio.tex`, `referencias.bib` e **apenas as figuras referenciadas**: fontes necessárias para recompilar o artigo.
+- `Declaracao_Uso_IA_Trabalho_PAI_G10.pdf`: declaração de utilização de IA.
+- `Declaracao_Uso_IA_Trabalho_PAI_G10.docx`: versão editável adicional; confirmar se deve entrar no ZIP, pois o professor pode não exigir o Word.
+- Identificação de integrantes (nomes, matrículas, curso e campus) nos arquivos pertinentes.
 
-### Empacotamento
-Ao finalizar, compacte **o conteúdo desta pasta** (arquivos na raiz do ZIP), com o nome `G10.zip`, e verifique o conteúdo antes de enviar. O PDF tem uma orientação divergente citando uma pasta pelo número da matrícula; confirmar com o professor se a pasta interna também é exigida.
+**O ZIP externo deve se chamar `G10.zip`, ter no máximo 10 MB e não incluir volumes DCE-MRI, máscaras NIfTI ou checkpoints `.pt`.** Os pesos foram destinados à tarefa separada *Modelo do Trabalho*. Comprimir apenas o conteúdo necessário da pasta, não as figuras históricas de `material_artigo/` que não aparecem no LaTeX.
 
-**Pesos:** enviar separadamente na atividade *Modelo do Trabalho*.
+## Execução
 
-**Prazo principal:** 16/11/2026, 19:00, sem atraso.
+```bash
+python entrega_final_G10/trabalho_pai.py
+python entrega_final_G10/trabalho_pai.py --treinar --grade
+```
 
-> O `trabalho_pai.py` foi consolidado como arquivo único executável, reunindo interface, preparação de dados, modelos, treinamento, inferência e Grad-CAM. A validação final com checkpoint real, a compilação do relatório e o empacotamento ainda precisam ser concluídos.
+O monolítico requer o CSV I-SPY1 oficial e os volumes extraídos localmente. Ele executa as 12 **combinações básicas**, mas não reproduz sozinho todos os experimentos históricos nem lê indiscriminadamente qualquer CSV novo.
 
-> O PDF de enunciado ficará em `docs/enunciado.pdf`, **fora** desta pasta de entrega; não incluí-lo no ZIP da atividade.
+**Antes de apresentar:** verificar abertura da GUI, carregamento estrito do checkpoint definitivo, inferência em pacientes conhecidos, alinhamento de máscara/Grad-CAM, treinamento com salvamento de um checkpoint e leitura do relatório. Nunca modificar o código entregue sem manter uma cópia da versão submetida.
+
+O enunciado apresenta orientação divergente quanto a arquivos na raiz ou pasta interna por matrícula; confirmar com o professor quando possível.

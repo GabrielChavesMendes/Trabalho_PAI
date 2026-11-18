@@ -4,7 +4,7 @@ import sys
 import pytest
 
 from modulos.modulo_treinamento import RegistroPredicao, selecionar_limiar_validacao
-from scripts.refinar_limiares_validacao_issue4 import candidatos_por_escores, main
+from scripts.refinar_limiares import candidatos_por_escores, main
 
 
 def test_limiar_discrimina_escores_estreitos_que_grade_fixa_perde():
@@ -38,7 +38,7 @@ def test_recusa_sobrescrever_experimentos(tmp_path, monkeypatch):
     protegido = origem / 'checkpoint_existente.pt'
     protegido.write_bytes(b'experimento-anterior')
     monkeypatch.setattr(sys, 'argv', [
-        'refinar_limiares_validacao_issue4.py', '--origem-resultados', str(origem),
+        'refinar_limiares.py', '--origem-resultados', str(origem),
         '--origem-checkpoints', str(origem), '--saida', str(origem),
         '--checkpoints', str(tmp_path / 'novos_checkpoints'),
     ])
