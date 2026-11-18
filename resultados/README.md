@@ -1,16 +1,18 @@
-# Resultados dos experimentos
+# Resultados experimentais — G10
 
-Guardar aqui tabelas pequenas (CSV/Markdown), matrizes de confusão e gráficos (PNG) dos experimentos reais, com identificação de modelo, fase, corte, hiperparâmetros e seed.
+Este diretório preserva os dados e figuras das diferentes rodadas, inclusive os resultados negativos. **Não é o conteúdo do ZIP de entrega.** Todos os checkpoints `.pt` são mantidos localmente e não são versionados.
 
-Não inserir dados clínicos identificáveis, imagens brutas volumosas ou checkpoints.
+## Ponto de partida
 
-Convenção recomendada: `arquitetura__fases__corte__seed-N_TIPO.ext`, em que `TIPO`
-pode ser `history`, `validation`, `test`, `loss` ou `confusion-matrix`. Resultados de
-smoke tests e dados sintéticos não devem ser armazenados nesta pasta.
+- [Tabela consolidada dos 12 representantes](grade_definitiva_issue4_20261117_01/artigo/shortlist_integrada_validacao_12.csv)
+- [Relatório da investigação de 27 experimentos](grade_definitiva_issue4_20261117_01/RELATORIO_FINAL.md)
+- [Síntese final para o artigo](../docs/RESULTADOS_FINAIS.md)
+- [Justificativas e decisões de hiperparâmetros](../docs/EXPERIMENTOS_E_DECISOES.md)
 
-Os artefatos atuais correspondem a 12 treinamentos reais (seed 42). A tabela
-principal e `comparacao_validacao.csv`; o protocolo e a interpretacao estao em
-`docs/RESULTADOS_ISSUE_4.md`. Apenas o checkpoint escolhido pela validacao possui
-artefatos `__test`; os checkpoints `.pt` permanecem ignorados pelo Git.
-`modelo_selecionado.json` e o contrato rastreavel para inferencia, Grad-CAM e
-empacotamento dos pesos nas Issues #5 e #8.
+Há artefatos históricos de três rodadas, auditorias, logs, tempos, matrizes de confusão e gráficos. Eles continuam preservados para rastreabilidade; não se devem misturar métricas de validação e teste nem alterar resultados antigos após observar o teste.
+
+Convenção predominante: `arquitetura__fases__corte__seed-N__tipo.ext`, com `tipo` como `history`, `validation`, `test`, `loss` ou `confusion-matrix`.
+
+Na versão limpa do projeto, os principais executáveis encontram-se em `scripts/verificar_modelos.py`, `scripts/inferir_paciente.py` e `entrega_final_G10/trabalho_pai.py`. Os nomes antigos de scripts podem ser encontrados no histórico Git.
+
+**Privacidade:** não acrescentar imagens DCE brutas, máscaras volumétricas nem dados clínicos pessoais ao repositório.
