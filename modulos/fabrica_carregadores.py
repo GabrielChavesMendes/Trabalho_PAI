@@ -10,7 +10,9 @@ import os
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import torch
+import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 
 from modulos.modulo_balanceamento import calcular_pos_weight_treino
@@ -19,7 +21,10 @@ from modulos.modulo_dataset import (
     DatasetDCE,
     carregar_metadados,
     criar_manifesto,
+    ler_volume,
+    normalizar_canais,
     selecionar_particao,
+    selecionar_corte,
     verificar_arquivos,
 )
 from modulos.modulo_dataset_issue1 import DatasetDCEAumentado
@@ -34,7 +39,8 @@ class DatasetCacheMemoria(Dataset):
 
     def __init__(self, dataset_base: Dataset):
         self.dataset_base = dataset_base
-        self.pacientes = dataset_base.pacientes
+        if hasattr(dataset_base, "pacientes"):
+            self.pacientes = dataset_base.pacientes
         self._cache: dict[int, dict[str, Any]] = {}
 
     def __len__(self) -> int:
@@ -46,12 +52,86 @@ class DatasetCacheMemoria(Dataset):
         return self._cache[indice]
 
 
-class DatasetNormalizacaoImageNet(Dataset):
-    """Padronizacao por canal apos percentis 1/99, antes do augmentation.
+class DatasetPadronizado(Dataset):
+    """Aplica estatisticas calculadas exclusivamente nos pacientes de treino."""
 
-    Uma fase usa a aproximacao monocanal 0.449/0.226 registrada nos pesos
-    de transferencia. Tres fases usam media/desvio ImageNet por canal.
-    """
+    def __init__(self, dataset_base: Dataset, medias: torch.Tensor, desvios: torch.Tensor):
+        self.dataset_base = dataset_base
+        self.pacientes = dataset_base.pacientes
+        self.medias = medias.reshape(-1, 1, 1)
+        self.desvios = desvios.reshape(-1, 1, 1)
+
+    def __len__(self) -> int:
+        return len(self.dataset_base)
+
+    def __getitem__(self, indice: int) -> dict[str, Any]:
+        amostra = dict(self.dataset_base[indice])
+        amostra["imagem"] = (amostra["imagem"] - self.medias) / self.desvios
+        return amostra
+
+
+class DatasetComMascara(Dataset):
+    """Zera o fundo usando a segmentacao, opcao explicitamente prevista no enunciado."""
+
+    def __init__(self, dataset_base: Dataset):
+        self.dataset_base = dataset_base
+        self.pacientes = dataset_base.pacientes
+
+    def __len__(self) -> int:
+        return len(self.dataset_base)
+
+    def __getitem__(self, indice: int) -> dict[str, Any]:
+        amostra = dict(self.dataset_base[indice])
+        amostra["imagem"] = amostra["imagem"] * amostra["mascara"]
+        return amostra
+
+
+class DatasetRecorteROI(Dataset):
+    """Amplia a regiao tumoral mantendo contexto e o tamanho original da entrada."""
+
+    def __init__(self, dataset_base: Dataset, fator_contexto: float = 2.0):
+        if fator_contexto < 1:
+            raise ValueError("fator_contexto deve ser pelo menos 1")
+        self.dataset_base = dataset_base
+        self.pacientes = dataset_base.pacientes
+        self.fator_contexto = fator_contexto
+
+    def __len__(self) -> int:
+        return len(self.dataset_base)
+
+    def __getitem__(self, indice: int) -> dict[str, Any]:
+        amostra = dict(self.dataset_base[indice])
+        imagem = amostra["imagem"]
+        mascara = amostra["mascara"]
+        posicoes = torch.nonzero(mascara[0] > 0, as_tuple=False)
+        if posicoes.numel() == 0:
+            raise ValueError("recorte ROI requer mascara nao vazia no corte selecionado")
+        altura, largura = imagem.shape[-2:]
+        y0, x0 = posicoes.min(dim=0).values.tolist()
+        y1, x1 = (posicoes.max(dim=0).values + 1).tolist()
+        centro_y = (y0 + y1) / 2
+        centro_x = (x0 + x1) / 2
+        lado = min(max(int(round(max(y1 - y0, x1 - x0) * self.fator_contexto)), 64), altura, largura)
+        inicio_y = min(max(int(round(centro_y - lado / 2)), 0), altura - lado)
+        inicio_x = min(max(int(round(centro_x - lado / 2)), 0), largura - lado)
+        fim_y, fim_x = inicio_y + lado, inicio_x + lado
+        imagem_roi = imagem[:, inicio_y:fim_y, inicio_x:fim_x].unsqueeze(0)
+        mascara_roi = mascara[:, inicio_y:fim_y, inicio_x:fim_x].unsqueeze(0)
+        amostra["imagem"] = F.interpolate(
+            imagem_roi, size=(altura, largura), mode="bilinear", align_corners=False
+        ).squeeze(0)
+        amostra["mascara"] = F.interpolate(
+            mascara_roi, size=(altura, largura), mode="nearest"
+        ).squeeze(0)
+        amostra["recorte_roi"] = {
+            "inicio_y": inicio_y, "inicio_x": inicio_x, "lado": lado,
+            "fator_contexto": self.fator_contexto,
+        }
+        return amostra
+
+
+class DatasetMapasRealce(Dataset):
+    """Converte tres fases em post-early e dois mapas de subtracao temporal."""
 
     def __init__(self, dataset_base: Dataset):
         self.dataset_base = dataset_base
@@ -63,17 +143,63 @@ class DatasetNormalizacaoImageNet(Dataset):
     def __getitem__(self, indice: int) -> dict[str, Any]:
         amostra = dict(self.dataset_base[indice])
         imagem = amostra["imagem"]
-        canais = imagem.shape[0]
-        if canais == 1:
-            medias = imagem.new_tensor([0.449]).reshape(1, 1, 1)
-            desvios = imagem.new_tensor([0.226]).reshape(1, 1, 1)
-        elif canais == 3:
-            medias = imagem.new_tensor([0.485, 0.456, 0.406]).reshape(3, 1, 1)
-            desvios = imagem.new_tensor([0.229, 0.224, 0.225]).reshape(3, 1, 1)
-        else:
-            raise ValueError("A normalizacao ImageNet requer 1 ou 3 canais")
-        amostra["imagem"] = (imagem - medias) / desvios
+        if imagem.shape[0] != 3:
+            raise ValueError("mapas de realce requerem pre, post_early e post_late")
+        pre, post_early, post_late = imagem
+        delta_early = ((post_early - pre) + 1.0) / 2.0
+        delta_late = ((post_late - pre) + 1.0) / 2.0
+        amostra["imagem"] = torch.stack(
+            (post_early, delta_early.clamp(0, 1), delta_late.clamp(0, 1))
+        )
         return amostra
+
+
+class DatasetVizinhanca2p5D(Dataset):
+    """Empilha as fatias vizinhas da fase post-early como tres canais."""
+
+    def __init__(self, pacientes):
+        self.pacientes = list(pacientes)
+
+    def __len__(self) -> int:
+        return len(self.pacientes)
+
+    def __getitem__(self, indice: int) -> dict[str, Any]:
+        paciente = self.pacientes[indice]
+        mascara, affine_mascara = ler_volume(paciente.caminho_mascara)
+        volume, affine_volume = ler_volume(paciente.caminhos_dce[1])
+        if volume.shape != mascara.shape or not np.allclose(
+            affine_volume, affine_mascara, rtol=1e-4, atol=1e-3
+        ):
+            raise ValueError(f"DCE/mask desalinhados: {paciente.identificador}")
+        z = selecionar_corte(mascara, "maior_tumor")
+        indices = (max(0, z - 1), z, min(volume.shape[0] - 1, z + 1))
+        imagem = normalizar_canais(np.stack([volume[i] for i in indices], axis=0))
+        mascara_2d = np.ascontiguousarray((mascara[z] > 0)[None], dtype=np.float32)
+        return {
+            "imagem": torch.from_numpy(imagem),
+            "mascara": torch.from_numpy(mascara_2d),
+            "rotulo": torch.tensor(float(paciente.pcr), dtype=torch.float32),
+            "paciente": paciente.identificador,
+            "corte_z": z,
+        }
+
+
+def _estatisticas_treino(dataset: Dataset) -> tuple[torch.Tensor, torch.Tensor]:
+    soma = soma_quadrados = None
+    quantidade_pixels = 0
+    for indice in range(len(dataset)):
+        imagem = dataset[indice]["imagem"].double()
+        atual = imagem.sum(dim=(1, 2))
+        atual_quadrados = imagem.square().sum(dim=(1, 2))
+        soma = atual if soma is None else soma + atual
+        soma_quadrados = atual_quadrados if soma_quadrados is None else soma_quadrados + atual_quadrados
+        quantidade_pixels += imagem.shape[1] * imagem.shape[2]
+    if soma is None or quantidade_pixels == 0:
+        raise ValueError("treino vazio para calcular normalizacao")
+    medias = soma / quantidade_pixels
+    variancias = soma_quadrados / quantidade_pixels - medias.square()
+    desvios = variancias.clamp_min(1e-12).sqrt()
+    return medias.float(), desvios.float()
 
 
 def _resolver_fase(configuracao_temporal: str) -> str:
@@ -114,13 +240,14 @@ def criar_carregadores(
     tamanho_lote: int,
     seed: int,
     normalizacao_entrada: str = "percentil",
+    usar_mascara: bool = False,
+    recorte_roi: bool = False,
+    representacao_entrada: str = "fases",
 ) -> dict[str, Any]:
     """Cria treino/validacao aumentados e teste reservado sem augmentation."""
 
     fase = _resolver_fase(configuracao_temporal)
     corte = _resolver_corte(estrategia_corte)
-    if normalizacao_entrada not in ("percentil", "imagenet"):
-        raise ValueError("normalizacao_entrada deve ser percentil ou imagenet")
     pasta_dataset = Path(
         os.environ.get(
             "PAI_DATASET_DIR",
@@ -131,6 +258,18 @@ def criar_carregadores(
     num_workers = int(os.environ.get("PAI_NUM_WORKERS", "0"))
     if tamanho_lote < 1 or num_workers < 0:
         raise ValueError("tamanho_lote deve ser positivo e PAI_NUM_WORKERS nao negativo")
+    if normalizacao_entrada not in ("percentil", "zscore_treino", "imagenet"):
+        raise ValueError("normalizacao_entrada deve ser percentil, zscore_treino ou imagenet")
+    if representacao_entrada not in ("fases", "mapas_realce", "vizinhanca_2p5d"):
+        raise ValueError(
+            "representacao_entrada deve ser fases, mapas_realce ou vizinhanca_2p5d"
+        )
+    if representacao_entrada == "mapas_realce" and fase != "tres":
+        raise ValueError("mapas_realce requer configuracao temporal tres")
+    if representacao_entrada == "vizinhanca_2p5d" and (
+        fase != "post_early" or corte != "maior_tumor"
+    ):
+        raise ValueError("vizinhanca_2p5d requer post_early e maior_tumor")
 
     tabela = carregar_metadados(caminho_csv)
     manifesto = criar_manifesto(tabela, pasta_dataset)
@@ -152,17 +291,55 @@ def criar_carregadores(
     if any(conjuntos_ids[i] & conjuntos_ids[j] for i in range(3) for j in range(i + 1, 3)):
         raise ValueError("Paciente presente em mais de uma particao")
 
-    treino_base = DatasetCacheMemoria(
-        DatasetDCE(pacientes_treino, fase=fase, estrategia=corte)
-    )
-    validacao_base = DatasetCacheMemoria(
-        DatasetDCE(pacientes_validacao, fase=fase, estrategia=corte)
-    )
-    teste = DatasetDCE(pacientes_teste, fase=fase, estrategia=corte)
-    if normalizacao_entrada == "imagenet":
-        treino_base = DatasetNormalizacaoImageNet(treino_base)
-        validacao_base = DatasetNormalizacaoImageNet(validacao_base)
-        teste = DatasetNormalizacaoImageNet(teste)
+    def criar_base(pacientes):
+        if representacao_entrada == "vizinhanca_2p5d":
+            return DatasetVizinhanca2p5D(pacientes)
+        return DatasetDCE(pacientes, fase=fase, estrategia=corte)
+
+    treino_base = DatasetCacheMemoria(criar_base(pacientes_treino))
+    validacao_base = DatasetCacheMemoria(criar_base(pacientes_validacao))
+    teste_base: Dataset = criar_base(pacientes_teste)
+    if representacao_entrada == "mapas_realce":
+        treino_base = DatasetMapasRealce(treino_base)
+        validacao_base = DatasetMapasRealce(validacao_base)
+        teste_base = DatasetMapasRealce(teste_base)
+    if recorte_roi:
+        if corte != "maior_tumor":
+            raise ValueError("recorte ROI requer estrategia maior_tumor")
+        treino_base = DatasetRecorteROI(treino_base)
+        validacao_base = DatasetRecorteROI(validacao_base)
+        teste_base = DatasetRecorteROI(teste_base)
+    if usar_mascara:
+        treino_base = DatasetComMascara(treino_base)
+        validacao_base = DatasetComMascara(validacao_base)
+        teste_base = DatasetComMascara(teste_base)
+    estatisticas_normalizacao: dict[str, Any] = {"tipo": "percentil_1_99_conjunto"}
+    if normalizacao_entrada == "zscore_treino":
+        medias, desvios = _estatisticas_treino(treino_base)
+        treino_base = DatasetPadronizado(treino_base, medias, desvios)
+        validacao_base = DatasetPadronizado(validacao_base, medias, desvios)
+        teste_base = DatasetPadronizado(teste_base, medias, desvios)
+        estatisticas_normalizacao = {
+            "tipo": "percentil_1_99_conjunto_seguido_zscore_treino_por_canal",
+            "medias_treino": medias.tolist(),
+            "desvios_treino": desvios.tolist(),
+        }
+    elif normalizacao_entrada == "imagenet":
+        if fase == "tres":
+            medias = torch.tensor([0.485, 0.456, 0.406])
+            desvios = torch.tensor([0.229, 0.224, 0.225])
+        else:
+            # Aproximacao para a convolucao RGB adaptada por soma dos filtros.
+            medias = torch.tensor([0.449])
+            desvios = torch.tensor([0.226])
+        treino_base = DatasetPadronizado(treino_base, medias, desvios)
+        validacao_base = DatasetPadronizado(validacao_base, medias, desvios)
+        teste_base = DatasetPadronizado(teste_base, medias, desvios)
+        estatisticas_normalizacao = {
+            "tipo": "percentil_1_99_seguido_normalizacao_imagenet",
+            "medias": medias.tolist(),
+            "desvios": desvios.tolist(),
+        }
     treino = DatasetDCEAumentado(treino_base, "treino")
     validacao = DatasetDCEAumentado(validacao_base, "validacao")
 
@@ -174,7 +351,7 @@ def criar_carregadores(
     return {
         "treino": DataLoader(treino, shuffle=True, generator=gerador, **opcoes),
         "validacao": DataLoader(validacao, shuffle=False, **opcoes),
-        "teste": DataLoader(teste, shuffle=False, **opcoes),
+        "teste": DataLoader(teste_base, shuffle=False, **opcoes),
         "pos_weight": float(peso.item()),
         "negativos_treino": negativos,
         "positivos_treino": positivos,
@@ -183,11 +360,11 @@ def criar_carregadores(
             "dataset_dir": str(pasta_dataset.resolve()),
             "csv": str(caminho_csv.resolve()),
             "fases": list(FASES) if fase == "tres" else [fase],
-            "normalizacao": (
-                "percentis 1/99 conjuntos por amostra; clip [0,1]"
-                + ("; padronizacao ImageNet por canal" if normalizacao_entrada == "imagenet" else "")
-            ),
+            "normalizacao": estatisticas_normalizacao,
             "corte": corte,
+            "mascara_como_filtro": usar_mascara,
+            "recorte_roi": recorte_roi,
+            "representacao_entrada": representacao_entrada,
             "augmentation": {
                 "particoes": ["treino", "validacao"],
                 "angulos_graus": [-20, -10, 0, 10, 20],
@@ -198,6 +375,6 @@ def criar_carregadores(
             "particoes": {"treino": 0, "validacao": 2, "teste": 1},
             "pacientes": {"treino": 104, "validacao": 33, "teste": 35},
             "num_workers": num_workers,
-            "cache_preprocessamento": "memoria por processo; sem alterar imagens",
+            "cache_preprocessamento": "cortes em memoria por processo; variantes sob demanda",
         },
     }
