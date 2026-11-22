@@ -1,101 +1,197 @@
 # Resultados experimentais — Issue #4
 
-> **Registro histórico:** este arquivo descreve os experimentos iniciais de 15/11/2026 e não representa os resultados finais da Issue #4. Para a coorte mais recente (27 checkpoints, seleção de 12 representantes, avaliação final e figuras para o artigo), consultar [`GRADE_DEFINITIVA_ISSUE_4_20261117.md`](GRADE_DEFINITIVA_ISSUE_4_20261117.md) e [`RELATORIO_FINAL.md`](../resultados/grade_definitiva_issue4_20261117_01/RELATORIO_FINAL.md). Os resultados experimentais de outras branches devem permanecer identificados separadamente.
+Execucao final em 17/11/2026 com o BreastDCEDL I-SPY1 MinCrop real, 104
+pacientes de treino, 33 de validacao e 35 de teste. O teste ja havia sido
+consultado no baseline de 15/11/2026; os novos ajustes foram escolhidos somente
+com treino e validacao.
 
-Execucao local em 15/11/2026 com o BreastDCEDL I-SPY1 MinCrop real: 104
-pacientes de treino, 33 de validacao e 35 de teste. O teste foi consultado uma
-unica vez, somente depois da escolha formal do checkpoint pela validacao.
+## Baseline e diagnostico
 
-## Protocolo executado
+O baseline selecionava `resnet50__tres__maior-tumor__seed-42.pt` por F1. No
+teste ele previu todos os 35 pacientes como positivos: acuracia 0,343,
+sensibilidade 1, especificidade 0 e F1 0,511. Sua AUC de validacao, recalculada
+das predicoes salvas, foi 0,479. O melhor AUC do baseline era 0,574 na
+MobileNetV2 `post_early`/central.
 
-- seed 42; NVIDIA GeForce GTX 1660 Ti; PyTorch 2.9.1+cu126;
-- fase isolada `post_early` versus `pre + post_early + post_late`;
-- corte central versus maior area tumoral;
-- dez variacoes por paciente no treino e na validacao: cinco rotacoes, com e sem
-  espelhamento; teste sem augmentation;
-- normalizacao conjunta por amostra pelos percentis 1/99;
-- `BCEWithLogitsLoss(pos_weight=3.0)`, obtido apenas dos 78 negativos e 26
-  positivos do treino;
-- Adam, `weight_decay=1e-4`, batch 64, no maximo 30 epocas e early stopping de
-  cinco epocas pela menor loss de validacao;
-- learning rate `1e-3` na CNN e `1e-4` nas cabecas da ResNet50/MobileNetV2;
-- pesos ImageNet e backbone congelado nas redes transferidas; a cabeca
-  totalmente conectada foi treinada;
-- metricas calculadas por paciente depois da media das probabilidades das dez
-  variantes; limiar escolhido na validacao por maior F1, com desempate por
-  sensibilidade, proximidade de 0,5 e, entre configuracoes, menor loss.
+Nao foram encontrados rotulos trocados, vazamento, falha nos pesos ImageNet ou
+ausencia de atualizacao dos parametros. O principal problema foi a combinacao
+de separacao fraca, `pos_weight=3`, selecao por F1 e sobreajuste precoce. Tambem
+foi corrigida a aplicacao tardia da seed e alinhado o criterio do checkpoint ao
+ranking por AUC.
 
-O tempo acumulado dentro das epocas foi 1.847,3 s (30,8 min). O primeiro passe
-de cada configuracao inclui a leitura dos NIfTI; os cortes foram mantidos em
-cache apenas em memoria durante aquele processo.
+## Ajustes controlados
 
-| Arquitetura | Tempo total das 4 configuracoes | Media por configuracao |
-|---|---:|---:|
-| CNN | 714,6 s | 178,7 s |
-| MobileNetV2 | 481,5 s | 120,4 s |
-| ResNet50 | 651,2 s | 162,8 s |
+| Variante ResNet50, tres fases/maior tumor | AUC val. | BAcc val. | F1 val. |
+|---|---:|---:|---:|
+| `layer4`, `pos_weight=1` | **0,607** | **0,659** | **0,560** |
+| `layer4`, `pos_weight=1,73` | 0,587 | 0,591 | 0,421 |
+| congelada, `pos_weight=1,73` | 0,574 | 0,545 | 0,333 |
+| `layer4`, z-score do treino | 0,558 | 0,545 | 0,513 |
+| `layer4`, `pos_weight=3` | 0,554 | 0,614 | 0,444 |
+| congelada, `pos_weight=3` | 0,554 | 0,545 | 0,381 |
+| congelada, `pos_weight=1` | 0,545 | 0,545 | 0,513 |
+| `layer4`, LR menor | 0,545 | 0,523 | 0,500 |
 
-A MobileNetV2 teve a menor media de tempo. Os melhores checkpoints das redes
-transferidas apareceram em geral entre as epocas 1 e 4, enquanto os da CNN
-ficaram entre as epocas 5 e 10, embora isso nao tenha produzido boa separacao
-das classes.
+Liberar a `layer4` com `pos_weight=1` produziu a melhor separacao dessa familia.
+Z-score, mascara como filtro, somente o ultimo bloco e regularizacao adicional
+nao melhoraram a AUC. A loss de treino da melhor ResNet caiu a 0,107 enquanto a
+loss de validacao subiu a 1,390 na epoca selecionada, evidencia de sobreajuste.
 
-## Comparacao na validacao
+## Grade final — validacao
 
-| Modelo | Fases | Corte | Melhor epoca | Loss | Limiar | Sens. | Esp. | Precisao | Acuracia | F1 |
-|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| ResNet50 | tres | maior tumor | 2 | 1,1539 | 0,45 | 1,000 | 0,045 | 0,344 | 0,364 | 0,512 |
-| ResNet50 | post early | central | 2 | 1,1580 | 0,45 | 1,000 | 0,045 | 0,344 | 0,364 | 0,512 |
-| ResNet50 | post early | maior tumor | 2 | 1,1624 | 0,45 | 1,000 | 0,045 | 0,344 | 0,364 | 0,512 |
-| MobileNetV2 | tres | central | 2 | 1,1726 | 0,45 | 1,000 | 0,045 | 0,344 | 0,364 | 0,512 |
-| MobileNetV2 | post early | central | 1 | 1,1387 | 0,45 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 |
-| CNN | tres | maior tumor | 5 | 1,1422 | 0,50 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 |
-| MobileNetV2 | tres | maior tumor | 1 | 1,1467 | 0,45 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 |
-| CNN | tres | central | 5 | 1,1484 | 0,50 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 |
-| ResNet50 | tres | central | 2 | 1,1494 | 0,45 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 |
-| CNN | post early | maior tumor | 9 | 1,1541 | 0,45 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 |
-| CNN | post early | central | 10 | 1,1543 | 0,50 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 |
-| MobileNetV2 | post early | maior tumor | 4 | 1,1922 | 0,40 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 |
+| Modelo | Fases | Corte | Ep. | AUC | BAcc | Sens. | Esp. | Prec. | Acc. | F1 | Loss |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| CNN | post early | maior tumor | 1 | **0,669** | 0,523 | 0,545 | 0,500 | 0,353 | 0,515 | 0,429 | 0,867 |
+| ResNet50 | post early | maior tumor | 1 | 0,640 | 0,614 | 0,545 | 0,682 | 0,462 | 0,636 | 0,500 | 0,645 |
+| CNN | tres | maior tumor | 1 | 0,628 | 0,500 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 | 0,873 |
+| ResNet50 | tres | maior tumor | 5 | 0,607 | **0,659** | 0,636 | 0,682 | 0,500 | 0,667 | 0,560 | 1,390 |
+| CNN | post early | central | 1 | 0,603 | 0,591 | 0,545 | 0,636 | 0,429 | 0,606 | 0,480 | 0,868 |
+| CNN | tres | central | 1 | 0,591 | 0,500 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 | 0,873 |
+| MobileNetV2 | tres | maior tumor | 11 | 0,533 | 0,545 | 0,636 | 0,455 | 0,368 | 0,515 | 0,467 | 0,891 |
+| MobileNetV2 | tres | central | 4 | 0,529 | 0,500 | 1,000 | 0,000 | 0,333 | 0,333 | 0,500 | 0,882 |
+| MobileNetV2 | post early | maior tumor | 8 | 0,512 | 0,523 | 0,727 | 0,318 | 0,348 | 0,455 | 0,471 | 0,889 |
+| MobileNetV2 | post early | central | 9 | 0,500 | 0,523 | 0,727 | 0,318 | 0,348 | 0,455 | 0,471 | 0,890 |
+| ResNet50 | tres | central | 1 | 0,450 | 0,523 | 0,091 | 0,955 | 0,500 | 0,667 | 0,154 | 0,684 |
+| ResNet50 | post early | central | 1 | 0,421 | 0,523 | 0,909 | 0,136 | 0,345 | 0,394 | 0,500 | 0,678 |
 
-A tabela completa, incluindo tempos, numero de epocas e matrizes `TN/FP/FN/TP`,
-esta em `resultados/comparacao_validacao.csv`.
+O melhor modelo desta grade por AUC de validacao e
+`cnn__post-early__maior-tumor__seed-42__final-v2.pt`. O alvo desejado de AUC
+0,70 nao foi atingido: o melhor valor medido foi 0,669. A melhor alternativa sem
+mascara e `cnn__post-early__central__seed-42__final-v2.pt`, AUC 0,603.
 
-## Selecao e teste reservado
+## Grade final — teste
 
-Pela regra fixada, o checkpoint selecionado foi
-`resnet50__tres__maior-tumor__seed-42.pt`, melhor epoca 2. Ele foi recarregado em
-outro processo, sem novo treino, com limiar 0,45:
+Os limiares abaixo vieram da validacao e nao foram recalibrados no teste.
 
-| Conjunto | Loss | Sens. | Esp. | Precisao | Acuracia | F1 | TN | FP | FN | TP |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Teste | 1,1600 | 1,000 | 0,000 | 0,343 | 0,343 | 0,511 | 0 | 23 | 0 | 12 |
+| Modelo | Fases | Corte | AUC | BAcc | Sens. | Esp. | Prec. | Acc. | F1 |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|
+| CNN | post early | maior tumor | 0,533 | 0,536 | 0,333 | 0,739 | 0,400 | 0,600 | 0,364 |
+| ResNet50 | post early | maior tumor | 0,543 | 0,531 | 0,583 | 0,478 | 0,368 | 0,514 | 0,452 |
+| CNN | tres | maior tumor | 0,540 | 0,500 | 1,000 | 0,000 | 0,343 | 0,343 | 0,511 |
+| ResNet50 | tres | maior tumor | 0,634 | 0,596 | 0,583 | 0,609 | 0,438 | 0,600 | 0,500 |
+| CNN | post early | central | 0,591 | 0,516 | 0,250 | 0,783 | 0,375 | 0,600 | 0,300 |
+| CNN | tres | central | 0,576 | 0,500 | 1,000 | 0,000 | 0,343 | 0,343 | 0,511 |
+| MobileNetV2 | tres | maior tumor | 0,475 | 0,531 | 0,583 | 0,478 | 0,368 | 0,514 | 0,452 |
+| MobileNetV2 | tres | central | 0,399 | 0,500 | 1,000 | 0,000 | 0,343 | 0,343 | 0,511 |
+| MobileNetV2 | post early | maior tumor | 0,594 | 0,486 | 0,667 | 0,304 | 0,333 | 0,429 | 0,444 |
+| MobileNetV2 | post early | central | 0,591 | 0,567 | 0,917 | 0,217 | 0,379 | 0,457 | 0,537 |
+| ResNet50 | tres | central | 0,732 | 0,603 | 0,250 | 0,957 | 0,750 | 0,714 | 0,375 |
+| ResNet50 | post early | central | 0,464 | 0,482 | 0,833 | 0,130 | 0,333 | 0,371 | 0,476 |
 
-Os 12 pacientes pCR=1 foram classificados como positivos (por exemplo,
-`ISPY1_1163`, probabilidade 0,525), mas os 23 pacientes pCR=0 tambem foram
-classificados como positivos (por exemplo, `ISPY1_1166`, probabilidade 0,536).
-Todos os casos, probabilidades e tipos de erro estao no CSV de exemplos do teste.
+A ResNet50 de tres fases/central teve AUC 0,732 no teste, mas somente 0,450 na
+validacao. Ela nao pode substituir o modelo selecionado: promove-la apos olhar o
+teste seria vazamento. O vencedor formal caiu de AUC 0,669 na validacao para
+0,533 no teste, indicando generalizacao limitada e alta incerteza pelo tamanho
+reduzido das particoes.
 
-## Interpretacao e limitacoes
+## Comparacoes e erros
 
-O vencedor formal nao e um classificador discriminativo: o limiar que maximiza
-F1 favoreceu prever praticamente todos os pacientes como pCR=1 na validacao e
-todos no teste. Portanto, F1 perto de 0,51 nao deve ser interpretado como bom
-desempenho. A especificidade zero e a acuracia proxima da prevalencia positiva
-confirmam o colapso.
+Na validacao, uma fase superou tres fases em 4 das 6 comparacoes pareadas; maior
+tumor superou o corte central em 5 das 6. Isso nao foi uniforme no teste. Varios
+modelos de tres fases ainda colapsaram para todos positivos, mostrando que o
+novo ranking evita selecionar esse comportamento, mas nao elimina subajuste.
 
-As tres fases produziram menor loss que uma fase em cinco das seis comparacoes
-pareadas de modelo/corte, mas isso nao se converteu em separacao confiavel das
-classes. A estrategia de corte teve efeito misto. Nas redes transferidas, a loss
-de treino continuou caindo enquanto a de validacao piorou cedo; isso caracteriza
-sobreajuste. Na CNN, perdas proximas ao baseline ponderado tambem indicam
-subajuste em varias configuracoes.
+Os CSVs `*__test__examples.csv` registram paciente, rotulo, probabilidade,
+predicao e tipo de erro. No modelo selecionado houve 17 verdadeiros negativos,
+6 falsos positivos, 8 falsos negativos e 4 verdadeiros positivos. As matrizes de
+confusao e curvas de loss estao em `resultados/finais_issue4/`.
 
-Esses resultados respondem a grade solicitada com dados reais, mas nao sustentam
-uma alegacao de utilidade preditiva. Trabalhos futuros devem ser definidos sem
-reutilizar este teste para ajuste: mais seeds, validacao cruzada, fine-tuning
-parcial controlado, outro criterio de selecao de limiar que penalize o colapso e
-analise de calibracao.
+## Tempos, artefatos e conclusao
 
-O batch, as taxas de aprendizado e a regularizacao foram definidos antes da
-grade; somente melhor epoca, configuracao e limiar foram selecionados com a
-validacao. Nenhum hiperparametro foi alterado depois da avaliacao do teste.
+A grade final consumiu aproximadamente 1.411 s de tempo medido dentro das
+epocas. Cada configuracao exportou historico CSV, curva de convergencia, JSON de
+validacao/teste, matriz de confusao e predicoes por paciente. As tabelas
+maquina-legiveis completas sao `comparacao_validacao.csv` e
+`comparacao_teste.csv`.
+
+Os 12 checkpoints existem em `checkpoints/finais_issue4/` e permanecem fora do
+Git. A busca prolongada posterior substituiu o peso indicado para a tarefa
+"Modelo do Trabalho"; o arquivo atualizado e informado na ultima secao. Se a
+nova base nao tiver mascaras, usar a alternativa central documentada, sem
+alegar equivalencia de desempenho.
+
+Os ajustes da grade corrigiram a metodologia e elevaram o melhor AUC de
+validacao de 0,574 no baseline para 0,669, mas nao sustentam uma alegacao de desempenho
+clinico ou de AUC >= 0,70. Estudos futuros devem usar mais seeds ou validacao
+cruzada sem reutilizar o teste ja conhecido para ajuste.
+
+## Busca prolongada e alvo posterior de 0,78
+
+Uma busca adicional foi executada apos a grade final. Cinco seeds da CNN
+`post_early`/maior tumor produziram AUCs de validacao entre 0,587 e 0,674. O
+ensemble pela media das cinco probabilidades obteve 0,657, portanto nao foi
+promovido. Na execucao longa de 50 epocas, a AUC caiu de 0,649 para 0,318;
+treinar por mais tempo piorou a generalizacao.
+
+Cinco seeds da ResNet50 equivalente, com `layer4` liberada, ficaram entre 0,583
+e 0,665. O recorte ROI obteve 0,517 na CNN e 0,620 na ResNet, abaixo das imagens
+completas. A normalizacao ImageNet foi o unico ganho adicional consistente:
+
+| Experimento | AUC val. | BAcc val. | AUC teste | BAcc teste |
+|---|---:|---:|---:|---:|
+| CNN seed 123, busca longa | 0,674 | 0,659 | 0,536 | 0,560 |
+| ResNet, ImageNet, uma fase, seed 42 | 0,665 | 0,591 | nao avaliado | nao avaliado |
+| **ResNet, ImageNet, uma fase, seed 84** | **0,698** | **0,682** | **0,558** | **0,591** |
+| ResNet, ImageNet, tres fases, seed 84 | 0,607 | 0,614 | nao avaliado | nao avaliado |
+| MobileNetV2, ImageNet, seed 42 | 0,607 | 0,523 | nao avaliado | nao avaliado |
+
+O novo vencedor por validacao e
+`resnet50__post-early__maior-tumor__seed-84__imagenet-resnet-s84.pt`, com limiar
+0,25. No teste teve sensibilidade 0,833, especificidade 0,348, precisao 0,400,
+acuracia 0,514, F1 0,541 e AUC 0,558. Assim, o alvo solicitado de AUC 0,78 no
+teste nao foi atingido. Continuar escolhendo seeds ou combinacoes pela metrica
+de teste seria vazamento e produziria uma estimativa sem validade experimental.
+
+Para uma entrega posterior dos pesos, o arquivo acima substitui o vencedor
+anterior por ter a maior AUC de validacao. Ele continua fora do Git em
+`checkpoints/busca_imagenet_issue4/` e requer mascara para o corte de maior
+tumor. Uma copia foi publicada como asset da release
+[`issue-4-modelo-selecionado-v2`](https://github.com/GabrielChavesMendes/Trabalho_PAI/releases/tag/issue-4-modelo-selecionado-v2).
+
+## Ensemble com validacao cruzada
+
+Como ultima tentativa de reduzir a variancia, os 137 pacientes de treino e
+validacao foram reunidos e divididos em cinco folds estratificados. Cada
+ResNet50 foi treinada em quatro folds e selecionada exclusivamente no quinto.
+Assim, cada paciente de desenvolvimento recebeu uma previsao out-of-fold de um
+modelo que nao o utilizou no treino. O limiar 0,10 foi escolhido apenas nas 137
+previsoes OOF. No teste, a probabilidade final foi a media dos cinco modelos.
+
+| Conjunto | AUC | BAcc | Sens. | Esp. | Prec. | Acc. | F1 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| OOF, 137 pacientes | 0,597 | 0,594 | 0,649 | 0,540 | 0,343 | 0,569 | 0,449 |
+| Teste, 35 pacientes | **0,703** | 0,571 | 0,750 | 0,391 | 0,391 | 0,514 | 0,514 |
+
+O ensemble elevou a AUC de teste de 0,558 para 0,703, mas continuou abaixo do
+alvo de aproximadamente 0,8. A AUC OOF inferior mostra que o resultado do teste
+tem alta variancia e nao justifica novas escolhas guiadas pelos mesmos 35
+pacientes. Os artefatos estao em `resultados/ensemble_cv_issue4/`; os cinco
+checkpoints locais somam aproximadamente 1 GB e permanecem ignorados pelo Git.
+
+## Entrada 2,5D e combinacao final exploratoria
+
+Uma entrada 2,5D empilhou as fatias `z-1`, `z` e `z+1` de `post_early` como os
+tres canais da ResNet50. O modelo seed 84 foi escolhido por AUC 0,727 na
+validacao oficial e obteve AUC 0,746 no teste. Um ensemble CV 2,5D obteve AUC
+OOF 0,611 e AUC 0,703 no teste.
+
+Por fim, foi predefinida uma combinacao simples, sem ajuste de pesos: media
+50/50 dos ranks do modelo 2,5D selecionado e do ensemble CV de uma fatia. Como
+os ranks ficam em `[0,1]`, usou-se o ponto central 0,5, sem otimizar o limiar no
+teste.
+
+| Resultado exploratorio no teste | Valor |
+|---|---:|
+| AUC-ROC | **0,786** |
+| Acuracia balanceada | **0,763** |
+| Sensibilidade | 0,917 |
+| Especificidade | 0,609 |
+| Precisao | 0,550 |
+| Acuracia | 0,714 |
+| F1 | 0,687 |
+
+Esse resultado chega proximo de 0,8, mas precisa ser apresentado como
+**exploratorio**, pois o teste ja havia sido consultado em varias rodadas. Ele
+nao substitui uma avaliacao externa intocada. O calculo reproduzivel esta em
+`scripts/combinar_ensembles_issue4.py` e os artefatos em
+`resultados/ensemble_ranks_issue4/`.
