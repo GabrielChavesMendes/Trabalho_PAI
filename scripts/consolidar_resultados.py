@@ -5,17 +5,16 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-import sys
 from pathlib import Path
 
-RAIZ = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(RAIZ))
 
-
-def _ler_historico(caminho: Path) -> tuple[float, int, int]:
+def _ler_historico(caminho: Path, criterio_checkpoint: str) -> tuple[float, int, int]:
     with caminho.open(newline="", encoding="utf-8") as arquivo:
         linhas = list(csv.DictReader(arquivo))
-    melhor = min(linhas, key=lambda linha: float(linha["loss_validacao"]))
+    if criterio_checkpoint == "loss":
+        melhor = min(linhas, key=lambda linha: float(linha["loss_validacao"]))
+    else:
+        melhor = max(linhas, key=lambda linha: float(linha[criterio_checkpoint]))
     return (
         sum(float(linha["tempo_segundos"]) for linha in linhas),
         len(linhas),
@@ -26,55 +25,43 @@ def _ler_historico(caminho: Path) -> tuple[float, int, int]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Consolidar as 12 validacoes da Issue #4")
     parser.add_argument("--resultados", type=Path, default=Path("resultados"))
-    parser.add_argument("--checkpoints", type=Path, default=Path("checkpoints"))
-    parser.add_argument("--criterio", choices=("f1", "acuracia_balanceada", "auc_roc"), default="f1")
     parser.add_argument("--saida", type=Path, default=Path("resultados/comparacao_validacao.csv"))
+    parser.add_argument(
+        "--criterio-checkpoint",
+        choices=("loss", "auc_roc", "acuracia_balanceada"),
+        default="loss",
+    )
+    parser.add_argument("--diretorio-checkpoints", default="checkpoints")
     args = parser.parse_args()
 
     linhas = []
     for caminho in sorted(args.resultados.glob("*__validation.json")):
         nome = caminho.name.removesuffix("__validation.json")
         partes = nome.split("__")
-        if len(partes) != 4:
+        if len(partes) < 4:
             print(f"Ignorado (nome inesperado): {caminho}")
             continue
-        arquitetura, fases, corte, seed = partes
+        arquitetura, fases, corte, seed = partes[:4]
+        tag = "__".join(partes[4:])
         conteudo = json.loads(caminho.read_text(encoding="utf-8"))
         metricas = conteudo["metricas"]
         historico = args.resultados / f"{nome}__history.csv"
-        tempo, epocas, epoca_menor_loss = _ler_historico(historico)
-        # A menor loss pode pertencer a outra epoca quando a selecao usa AUC.
-        # O checkpoint e a fonte da epoca efetivamente selecionada.
-        import torch
-        checkpoint = args.checkpoints / f"{nome}.pt"
-        bruto = torch.load(checkpoint, map_location="cpu", weights_only=False)
-        melhor_epoca = int(bruto["epoca"])
-        criterio_checkpoint = bruto["configuracao"].get("criterio_checkpoint", "loss")
-        if not 1 <= melhor_epoca <= epocas:
-            raise ValueError(f"Epoca do checkpoint fora do historico: {checkpoint}")
-        del bruto
-        # Compatibilidade com resultados antigos que nao registraram AUC/balanced.
-        predicoes = conteudo.get("predicoes_por_paciente", [])
-        if "auc_roc" not in metricas or "acuracia_balanceada" not in metricas:
-            from modulos.modulo_treinamento import RegistroPredicao, calcular_metricas
-            registros = [RegistroPredicao(p["paciente"], p["rotulo"], p["probabilidade"]) for p in predicoes]
-            if registros:
-                extras = calcular_metricas(registros, float(metricas["limiar"]))
-                metricas = {**extras, **metricas}
+        tempo, epocas, melhor_epoca = _ler_historico(
+            historico, args.criterio_checkpoint
+        )
         linha = {
             "experimento": nome,
             "arquitetura": arquitetura,
             "fases": fases,
             "corte": corte,
             "seed": seed.removeprefix("seed-"),
+            "tag": tag,
             "epocas_executadas": epocas,
             "melhor_epoca": melhor_epoca,
-            "criterio_checkpoint": criterio_checkpoint,
-            "epoca_menor_loss_validacao": epoca_menor_loss,
             "tempo_treinamento_segundos": tempo,
-            **{chave: metricas.get(chave) for chave in (
+            **{chave: metricas[chave] for chave in (
                 "loss", "limiar", "sensibilidade", "especificidade", "precisao",
-                "acuracia", "f1", "acuracia_balanceada", "auc_roc",
+                "acuracia", "f1", "auc_roc", "acuracia_balanceada",
                 "tn", "fp", "fn", "tp", "numero_pacientes",
             )},
         }
@@ -84,9 +71,9 @@ def main() -> int:
         raise SystemExit("Nenhum arquivo *__validation.json encontrado")
     linhas.sort(
         key=lambda item: (
-            -float(item[args.criterio]) if item[args.criterio] is not None else float("inf"),
-            -float(item["acuracia_balanceada"] or 0),
-            -float(item["sensibilidade"]),
+            -float(item["auc_roc"]),
+            -float(item["acuracia_balanceada"]),
+            -float(item["f1"]),
             float(item["loss"]),
             str(item["experimento"]),
         )
@@ -101,16 +88,17 @@ def main() -> int:
     vencedor = linhas[0]
     manifesto = {
         "criterio_selecao": (
-            f"maior {args.criterio} de validacao; desempate por acuracia balanceada, sensibilidade e loss"
+            "maior AUC-ROC de validacao; desempate por acuracia balanceada, F1, loss e nome"
         ),
         "experimento": vencedor["experimento"],
-        "checkpoint_local": str(args.checkpoints / f"{vencedor['experimento']}.pt"),
+        "checkpoint_local": f"{args.diretorio_checkpoints}/{vencedor['experimento']}.pt",
         "limiar_validacao": vencedor["limiar"],
         "metricas_validacao": {
             chave: vencedor[chave]
             for chave in (
                 "loss", "sensibilidade", "especificidade", "precisao",
-                "acuracia", "f1", "acuracia_balanceada", "auc_roc", "tn", "fp", "fn", "tp",
+                "acuracia", "f1", "auc_roc", "acuracia_balanceada",
+                "tn", "fp", "fn", "tp",
             )
         },
         "configuracao": {
@@ -119,7 +107,6 @@ def main() -> int:
             "corte": vencedor["corte"],
             "seed": vencedor["seed"],
             "melhor_epoca": vencedor["melhor_epoca"],
-            "criterio_checkpoint": vencedor["criterio_checkpoint"],
         },
         "observacao": "O checkpoint e local e ignorado pelo Git; o teste nao participa desta selecao.",
     }
@@ -129,7 +116,11 @@ def main() -> int:
         encoding="utf-8",
     )
     print(f"{len(linhas)} configuracoes consolidadas em {args.saida}")
-    print(f"Melhor pela validacao: {linhas[0]['experimento']} (F1={float(linhas[0]['f1']):.4f})")
+    print(
+        f"Melhor pela validacao: {linhas[0]['experimento']} "
+        f"(AUC={float(linhas[0]['auc_roc']):.4f}, "
+        f"BAcc={float(linhas[0]['acuracia_balanceada']):.4f})"
+    )
     print(f"Manifesto para as proximas issues: {caminho_manifesto}")
     return 0
 
