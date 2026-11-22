@@ -1046,8 +1046,46 @@ def executar_treinamento_cli():
         treinar_configuracao(pacientes, arq, fase, corte, args, dispositivo)
 
 
+
+
+# ---------------------------------------------------------------------------
+# MODOS DE APRESENTACAO: pipelines experimentais da Issue #4
+# ---------------------------------------------------------------------------
+# A interface/inferencia permanece neste arquivo. Os pipelines de pesquisa
+# completos estao integrados ao repositorio como scripts e modulos de apoio;
+# este dispatcher permite acioná-los pelo arquivo monolitico.
+PIPELINES_EXPERIMENTAIS = {
+    "grade": "scripts/executar_grade_issue4.py",
+    "experimento": "scripts/executar_experimento.py",
+    "ajustes": "scripts/executar_ajustes_issue4.py",
+    "busca_prolongada": "scripts/executar_busca_prolongada_issue4.py",
+    "busca_seeds_resnet": "scripts/executar_busca_resnet_seeds_issue4.py",
+    "avaliar_grade": "scripts/avaliar_grade_teste_issue4.py",
+    "consolidar": "scripts/consolidar_resultados.py",
+    "ensemble_cv": "scripts/executar_ensemble_cv_issue4.py",
+}
+
+def executar_pipeline_experimental(nome: str, argumentos: list[str] | None = None):
+    import subprocess
+    import sys
+    if nome not in PIPELINES_EXPERIMENTAIS:
+        raise ValueError(f"Pipeline desconhecido: {nome}. Opcoes: {sorted(PIPELINES_EXPERIMENTAIS)}")
+    script = RAIZ / PIPELINES_EXPERIMENTAIS[nome]
+    if not script.is_file():
+        raise FileNotFoundError(f"Script experimental ausente: {script}")
+    comando = [sys.executable, str(script), *(argumentos or [])]
+    print("Executando pipeline experimental:", " ".join(comando), flush=True)
+    return subprocess.run(comando, cwd=RAIZ, check=False).returncode
+
 def main():
     import sys
+    if "--pipeline-experimental" in sys.argv[1:]:
+        indice = sys.argv.index("--pipeline-experimental")
+        if indice + 1 >= len(sys.argv):
+            raise SystemExit("--pipeline-experimental exige nome do pipeline")
+        nome = sys.argv[indice + 1]
+        argumentos = sys.argv[indice + 2:]
+        raise SystemExit(executar_pipeline_experimental(nome, argumentos))
     if "--treinar" in sys.argv[1:]:
         executar_treinamento_cli()
         return
